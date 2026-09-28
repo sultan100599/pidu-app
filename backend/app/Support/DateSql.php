@@ -46,7 +46,7 @@ class DateSql
     {
         return match (self::driver()) {
             'mysql' => "YEAR($column)",
-            default => "strftime('%Y', $column)",
+            default => "CAST(strftime('%Y', $column) AS INTEGER)",
         };
     }
 
@@ -57,7 +57,7 @@ class DateSql
     {
         return match (self::driver()) {
             'mysql' => "MONTH($column)",
-            default => "strftime('%m', $column)",
+            default => "CAST(strftime('%m', $column) AS INTEGER)",
         };
     }
 }

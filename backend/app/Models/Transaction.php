@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Enums\PaymentMethod;
 use App\Enums\TransactionType;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Transaction extends Model
 {
@@ -42,29 +44,41 @@ class Transaction extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * Simpan selalu sebagai 'Y-m-d' (tanpa jam) supaya perbandingan string di SQLite konsisten.
+     */
+    protected function transactionDate(): Attribute
+    {
+        return Attribute::set(
+            fn ($value) => $value === null ? null : Carbon::parse($value)->toDateString()
+        );
+    }
+
     public function scopeBetween(Builder $query, $start, $end): Builder
     {
-        return $query->whereBetween('transaction_date', [$start, $end]);
+        return $query->whereBetween($query->qualifyColumn('transaction_date'), [$start, $end]);
     }
 
     public function scopeOfType(Builder $query, string $type): Builder
     {
-        return $query->where('type', $type);
+        return $query->where($query->qualifyColumn('type'), $type);
     }
 
     /**
      * Filter umum: type, category_id, payment_method, search (description/notes).
+     * Kolom di-qualify agar aman saat di-join dengan categories.
      */
     public function scopeFilter(Builder $query, array $filters): Builder
     {
         return $query
             ->when($filters['type'] ?? null, fn ($q, $type) => $q->ofType($type))
-            ->when($filters['category_id'] ?? null, fn ($q, $id) => $q->where('category_id', $id))
-            ->when($filters['payment_method'] ?? null, fn ($q, $pm) => $q->where('payment_method', $pm))
+            ->when($filters['category_id'] ?? null, fn ($q, $id) => $q->where($q->qualifyColumn('category_id'), $id))
+            ->when($filters['payment_method'] ?? null, fn ($q, $pm) => $q->where($q->qualifyColumn('payment_method'), $pm))
             ->when($filters['search'] ?? null, function ($q, $search) {
-                $q->where(function ($sub) use ($search) {
-                    $sub->where('description', 'like', "%{$search}%")
-                        ->orWhere('notes', 'like', "%{$search}%");
+                $like = '%'.$search.'%';
+                $q->where(function ($sub) use ($like) {
+                    $sub->where($sub->qualifyColumn('description'), 'like', $like)
+                        ->orWhere($sub->qualifyColumn('notes'), 'like', $like);
                 });
             });
     }

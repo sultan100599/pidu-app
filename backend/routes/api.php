@@ -1,8 +1,53 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BudgetController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\TransactionController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::pattern('id', '[0-9]+');
+
+Route::prefix('auth')->group(function () {
+    Route::middleware('throttle:5,1')->group(function () {
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register']);
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('me', [AuthController::class, 'me']);
+    });
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('transactions', [TransactionController::class, 'index']);
+    Route::post('transactions', [TransactionController::class, 'store']);
+    Route::get('transactions/{id}', [TransactionController::class, 'show']);
+    Route::put('transactions/{id}', [TransactionController::class, 'update']);
+    Route::delete('transactions/{id}', [TransactionController::class, 'destroy']);
+
+    Route::get('categories', [CategoryController::class, 'index']);
+    Route::post('categories', [CategoryController::class, 'store']);
+    Route::put('categories/{id}', [CategoryController::class, 'update']);
+    Route::patch('categories/{id}/toggle', [CategoryController::class, 'toggle']);
+    Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
+
+    Route::get('dashboard', DashboardController::class);
+
+    Route::prefix('reports')->controller(ReportController::class)->group(function () {
+        Route::get('daily', 'daily');
+        Route::get('weekly', 'weekly');
+        Route::get('monthly', 'monthly');
+        Route::get('yearly', 'yearly');
+        Route::get('calendar', 'calendar');
+        Route::get('day/{date}', 'day');
+    });
+
+    Route::get('budgets', [BudgetController::class, 'index']);
+    Route::post('budgets', [BudgetController::class, 'store']);
+    Route::put('budgets/{id}', [BudgetController::class, 'update']);
+    Route::delete('budgets/{id}', [BudgetController::class, 'destroy']);
+});
