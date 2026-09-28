@@ -47,6 +47,9 @@ export function AuthProvider({ children }) {
     retryRef.current = () => {
       setBootError(null)
       setBootRetrying(true)
+      // initializing=true mencegah ProtectedRoute/GuestRoute redirect selama
+      // user masih null (carry-over review-3: user harus kembali ke halaman asal).
+      setInitializing(true)
       bootstrap()
     }
 

@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import RegisterPage from './pages/RegisterPage'
+import CategoriesPage from './pages/categories/CategoriesPage'
+import TransactionsPage from './pages/transactions/TransactionsPage'
 import { useTheme } from './context/ThemeContext'
 
 export default function App() {
@@ -24,8 +26,8 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
             <Route index element={<PlaceholderPage title="Dashboard" phase={5} />} />
-            <Route path="transactions" element={<PlaceholderPage title="Transaksi" phase={4} />} />
-            <Route path="categories" element={<PlaceholderPage title="Kategori" phase={4} />} />
+            <Route path="transactions" element={<TransactionsPage />} />
+            <Route path="categories" element={<CategoriesPage />} />
             <Route path="reports/daily" element={<PlaceholderPage title="Rekap Harian" phase={6} />} />
             <Route path="reports/weekly" element={<PlaceholderPage title="Rekap Mingguan" phase={6} />} />
             <Route path="reports/monthly" element={<PlaceholderPage title="Rekap Bulanan" phase={6} />} />
