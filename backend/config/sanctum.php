@@ -50,7 +50,8 @@ return [
     |
     */
 
-    'expiration' => null,
+    // Menit. Default 30 hari; token kedaluwarsa → 401 → frontend mengarahkan ke login.
+    'expiration' => env('SANCTUM_EXPIRATION', 60 * 24 * 30),
 
     /*
     |--------------------------------------------------------------------------

@@ -61,6 +61,19 @@ class AuthTest extends TestCase
         $this->withToken($token)->getJson('/api/auth/me')->assertStatus(401);
     }
 
+    public function test_token_expires_after_configured_lifetime(): void
+    {
+        config(['sanctum.expiration' => 60]);
+        $user = User::factory()->create();
+        $token = $user->createToken('t')->plainTextToken;
+
+        $this->withToken($token)->getJson('/api/auth/me')->assertOk();
+
+        $this->travel(61)->minutes();
+        $this->app['auth']->forgetGuards();
+        $this->withToken($token)->getJson('/api/auth/me')->assertStatus(401);
+    }
+
     public function test_register_creates_user_with_default_categories(): void
     {
         $this->postJson('/api/auth/register', [

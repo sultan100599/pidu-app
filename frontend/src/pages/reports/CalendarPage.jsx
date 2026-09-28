@@ -21,20 +21,37 @@ function DayCell({ day, isToday, onOpen }) {
   const parts = [formatDate(day.date, 'long')]
   if (day.income > 0) parts.push(`pemasukan ${formatRupiah(day.income)}`)
   if (day.expense > 0) parts.push(`pengeluaran ${formatRupiah(day.expense)}`)
-  if (!hasData) parts.push('tidak ada transaksi')
+  if (hasData) parts.push(`${day.count} transaksi`)
+  else parts.push('tidak ada transaksi')
 
   return (
     <button
       type="button"
       className={`calendar-cell ${hasData ? '' : 'is-empty'} ${isToday ? 'is-today' : ''}`}
       onClick={() => onOpen(day.date)}
-      aria-label={parts.join(', ')}
+      aria-current={isToday ? 'date' : undefined}
     >
-      <span className="calendar-day">{date.getDate()}</span>
+      {/* Nama aksesibel = teks lengkap (tersembunyi); isi visual yang ringkas disembunyikan dari pembaca layar. */}
+      <span className="visually-hidden">{parts.join(', ')}</span>
+      <span className="calendar-day" aria-hidden="true">
+        {date.getDate()}
+      </span>
       {/* ≥ sm: nominal ringkas; < sm: sel terlalu sempit → titik warna saja (detail via tap) */}
-      {day.income > 0 && <span className="text-success text-truncate d-none d-sm-block">+{formatCompact(day.income)}</span>}
-      {day.expense > 0 && <span className="text-danger text-truncate d-none d-sm-block">−{formatCompact(day.expense)}</span>}
-      {hasData && <span className="text-body-secondary d-none d-sm-block">{day.count} trx</span>}
+      {day.income > 0 && (
+        <span className="text-success text-truncate d-none d-sm-block" aria-hidden="true">
+          +{formatCompact(day.income)}
+        </span>
+      )}
+      {day.expense > 0 && (
+        <span className="text-danger text-truncate d-none d-sm-block" aria-hidden="true">
+          −{formatCompact(day.expense)}
+        </span>
+      )}
+      {hasData && (
+        <span className="text-body-secondary d-none d-sm-block" aria-hidden="true">
+          {day.count} trx
+        </span>
+      )}
       {hasData && (
         <span className="d-flex gap-1 d-sm-none mt-auto" aria-hidden="true">
           {day.income > 0 && <span className="calendar-dot bg-success"></span>}
@@ -82,9 +99,10 @@ export default function CalendarPage() {
         <SummaryCards summary={data.totals} />
         <div className="card">
           <div className="card-body p-2 p-sm-3">
-            <div className="calendar-grid" role="grid" aria-label={`Kalender ${data.label}`}>
+            <div className="calendar-grid" role="group" aria-label={`Kalender ${data.label}`}>
+              {/* Nama hari hanya visual; tiap tombol tanggal sudah menyebut hari lengkap. */}
               {WEEKDAYS.map((w) => (
-                <div key={w} className="calendar-weekday" role="columnheader">
+                <div key={w} className="calendar-weekday" aria-hidden="true">
                   {w}
                 </div>
               ))}

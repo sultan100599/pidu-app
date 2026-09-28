@@ -64,7 +64,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="auth-page d-flex align-items-center justify-content-center p-3">
+    <main className="auth-page d-flex align-items-center justify-content-center p-3">
       <div className="position-absolute top-0 end-0 p-3">
         <button
           type="button"
@@ -187,6 +187,6 @@ export default function RegisterPage() {
           </p>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

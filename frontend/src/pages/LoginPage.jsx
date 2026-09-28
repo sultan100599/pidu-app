@@ -63,7 +63,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-page d-flex align-items-center justify-content-center p-3">
+    <main className="auth-page d-flex align-items-center justify-content-center p-3">
       <div className="position-absolute top-0 end-0 p-3">
         <button
           type="button"
@@ -149,17 +149,18 @@ export default function LoginPage() {
           </p>
 
           {import.meta.env.DEV && (
-            <div className="alert alert-secondary small mt-3 mb-0 d-flex align-items-center justify-content-between gap-2">
+            <div className="small mt-3 p-2 rounded border bg-body d-flex align-items-center justify-content-between gap-2">
               <div>
-                Akun demo: <code>demo@pidu.test</code> / <code>password</code>
+                Akun demo: <span className="font-monospace">demo@pidu.test</span> /{' '}
+                <span className="font-monospace">password</span>
               </div>
-              <button type="button" className="btn btn-sm btn-outline-secondary" onClick={fillDemoAccount}>
+              <button type="button" className="btn btn-sm btn-outline-primary" onClick={fillDemoAccount}>
                 Isi akun demo
               </button>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </main>
   )
 }

@@ -6,7 +6,9 @@
     "be": "cd backend && php artisan serve --host=127.0.0.1 --port=8001",
     "fe": "npm --prefix frontend run dev",
     "setup": "cd backend && composer install && (if not exist .env copy .env.example .env) && (if not exist database\\database.sqlite type nul > database\\database.sqlite) && php artisan key:generate && php artisan migrate:fresh --seed && cd .. && npm install && npm --prefix frontend install",
-    "db:reset": "cd backend && php artisan migrate:fresh --seed"
+    "db:reset": "cd backend && php artisan migrate:fresh --seed",
+    "test": "cd backend && php artisan test && cd .. && npm --prefix frontend run lint",
+    "build": "npm --prefix frontend run build"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
