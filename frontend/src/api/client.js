@@ -40,8 +40,12 @@ client.interceptors.response.use(
     const status = error.response?.status
     const url = error.config?.url ?? ''
     const isLoginRequest = url.includes('/auth/login')
+    const isLogoutRequest = url.includes('/auth/logout')
 
-    if (status === 401 && !isLoginRequest && getToken()) {
+    // 401 di login (kredensial salah, ditangani form) dan logout (token sudah
+    // dicabut; logout lokal tetap jalan) sengaja diabaikan supaya tidak ada
+    // double toast / logout paksa.
+    if (status === 401 && !isLoginRequest && !isLogoutRequest && getToken()) {
       setToken(null)
       if (!sessionExpiredToastShown && onUnauthorized) {
         sessionExpiredToastShown = true

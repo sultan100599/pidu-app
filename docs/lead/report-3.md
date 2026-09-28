@@ -81,3 +81,57 @@ dist/assets/index-CbgooTxy.js              347.07 kB │ gzip: 109.76 kB
 - Pola error 422 per field sudah dipakai di Login/Register — tinggal tiru untuk form CRUD.
 
 **Tidak dilanjutkan ke Phase 4 sesuai instruksi.**
+
+## Perbaikan review-3
+
+Tanggal: 2026-09-29 · Commit: lihat `Phase 3 fixes: desktop sidebar layout, mobile width, auth boot error handling`
+
+### 1. [BLOCKER] Layout desktop rusak — diperbaiki
+`src/styles/app.css` di `@media (min-width: 992px)`: `.sidebar.offcanvas-lg` sekarang `position: fixed; top: 0; bottom: 0; left: 0; overflow-y: auto; z-index: 1030;` (ditambah override `visibility/transform/background-color` yang sudah ada). `.app-content { margin-left: 250px }` tetap. Hasil: sidebar fixed setinggi layar di kiri dengan scroll sendiri, topbar sticky di atas konten kanan. **Belum diverifikasi visual di browser** (tidak ada akses browser); menunggu re-check lead di Chrome.
+
+### 2. Lebar sidebar mobile 100% layar — diperbaiki
+`.sidebar` mendapat `--bs-offcanvas-width: 280px;`, jadi `.offcanvas-start` Bootstrap (yang sebelumnya menang dengan `width: var(--bs-offcanvas-width)` = 400px) kini lebarnya 280px. Di layar 360px tersisa ±80px backdrop yang bisa diklik untuk menutup. **Belum diverifikasi visual di browser.**
+
+### 3. Token terhapus saat server mati — diperbaiki
+`src/context/AuthContext.jsx` bootstrap `me()` di-refactor: token **hanya** dihapus jika `err.response?.status === 401`. Error lain (network/`ERR_CONNECTION_REFUSED`, 5xx): token dibiarkan, state `bootError` diisi `getErrorMessage(err)` ("Tidak dapat terhubung ke server."). Varian baru `BootErrorScreen` di `src/components/FullPageSpinner.jsx` (ikon `bi-wifi-off` + pesan + tombol **"Coba lagi"** dengan spinner saat retry) dirender oleh `ProtectedRoute` dan `GuestRoute` selama `bootError` ada. Retry mengulang `me()` via ref (event handler, bukan effect, agar lint `set-state-in-effect` tetap bersih). Tidak ada setState sinkron di effect bootstrap. **Belum diverifikasi di browser** (butuh backend dimatikan saat halaman dibuka).
+
+### 4. Double toast saat logout token invalid — diperbaiki
+`src/api/client.js`: response interceptor sekarang mengabaikan 401 juga untuk URL yang mengandung `/auth/logout` (selain `/auth/login` yang sudah ada). Logout lokal tetap jalan dan hanya toast "Berhasil logout." yang muncul.
+
+### 5. Warning React Router — diperbaiki
+`src/main.jsx`: `<BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>`. **Belum dicek console browser**; flag ini resmi dari React Router v6.30 dan build tidak mengeluh.
+
+### 6. Kecil — diperbaiki
+`input-group` password di `LoginPage.jsx` dan `RegisterPage.jsx` diberi class `has-validation` supaya sudut input `is-invalid` tetap benar.
+
+### 7. Proses: server dihentikan — dibuktikan
+Proses sisa di port 8001 & 8010 dihentikan pakai PowerShell (`Get-NetTCPConnection ... | Stop-Process -Force`). Output pembuktian (perintah kedua):
+
+```
+TIDAK ADA LISTENER - port 8001 & 8010 kosong
+```
+
+`Get-NetTCPConnection -LocalPort 8001,8010 -State Listen` tidak mengembalikan baris apa pun.
+
+### Verifikasi
+`npm --prefix frontend run lint` → lolos, **0 warning 0 error** (satu warning sementara `react(set-state-in-effect)` muncul saat refactor poin 3; sudah dihilangkan dengan pola async-function-di-dalam-effect + retry via ref):
+
+```
+> oxlint
+(found 0 warnings, 0 errors)
+```
+
+`npm --prefix frontend run build` → lolos:
+
+```
+vite v8.3.1 building client environment for production...
+✓ 96 modules transformed.
+dist/index.html                             0.92 kB
+dist/assets/bootstrap-icons-mSm7cUeB.woff2 134.04 kB
+dist/assets/bootstrap-icons-BeopsB42.woff   180.28 kB
+dist/assets/index-CbDTg-gW.css              325.63 kB │ gzip:  47.77 kB
+dist/assets/index-DdLdAY5S.js               348.14 kB │ gzip: 110.01 kB
+✓ built in 448ms
+```
+
+**Catatan jujur:** tidak ada akses browser/headless di environment ini, jadi poin 1, 2, 3, dan 5 belum diverifikasi visual/console — menunggu re-check lead di Chrome sesuai instruksi review.

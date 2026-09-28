@@ -1,9 +1,13 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import FullPageSpinner from './FullPageSpinner'
+import FullPageSpinner, { BootErrorScreen } from './FullPageSpinner'
 
 export default function GuestRoute() {
-  const { user, initializing } = useAuth()
+  const { user, initializing, bootError, bootRetrying, retryBootstrap } = useAuth()
+
+  if (bootError) {
+    return <BootErrorScreen message={bootError} onRetry={retryBootstrap} retrying={bootRetrying} />
+  }
 
   if (initializing) {
     return <FullPageSpinner />

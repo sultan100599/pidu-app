@@ -1,10 +1,14 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import FullPageSpinner from './FullPageSpinner'
+import FullPageSpinner, { BootErrorScreen } from './FullPageSpinner'
 
 export default function ProtectedRoute() {
-  const { user, initializing } = useAuth()
+  const { user, initializing, bootError, bootRetrying, retryBootstrap } = useAuth()
   const location = useLocation()
+
+  if (bootError) {
+    return <BootErrorScreen message={bootError} onRetry={retryBootstrap} retrying={bootRetrying} />
+  }
 
   if (initializing) {
     return <FullPageSpinner />

@@ -128,7 +128,7 @@ export default function RegisterPage() {
               <label htmlFor="password" className="form-label">
                 Password
               </label>
-              <div className="input-group">
+              <div className="input-group has-validation">
                 <input
                   id="password"
                   name="password"

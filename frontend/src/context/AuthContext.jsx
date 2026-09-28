@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { setUnauthorizedHandler, setToken, getToken, resetSessionExpiredFlag } from '../api/client'
 import * as authApi from '../api/auth'
+import { getErrorMessage } from '../utils/errors'
 
 const AuthContext = createContext(null)
 
@@ -10,31 +11,56 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [token, setTokenState] = useState(getToken())
   const [initializing, setInitializing] = useState(Boolean(getToken()))
+  const [bootError, setBootError] = useState(null)
+  const [bootRetrying, setBootRetrying] = useState(false)
   const navigate = useNavigate()
+
+  const retryRef = useRef(null)
 
   useEffect(() => {
     let cancelled = false
 
     async function bootstrap() {
-      if (!getToken()) {
-        setInitializing(false)
-        return
-      }
       try {
         const response = await authApi.me()
         if (!cancelled) setUser(response.data.data)
-      } catch {
-        setToken(null)
-        if (!cancelled) setTokenState(null)
+      } catch (err) {
+        if (cancelled) return
+        // Token hanya dibersihkan untuk 401 (token benar-benar tidak valid).
+        // Error jaringan / 5xx: token dibiarkan, user bisa mencoba lagi.
+        if (err.response?.status === 401) {
+          setToken(null)
+          setTokenState(null)
+          setUser(null)
+        } else {
+          setBootError(getErrorMessage(err))
+        }
       } finally {
-        if (!cancelled) setInitializing(false)
+        if (!cancelled) {
+          setInitializing(false)
+          setBootRetrying(false)
+        }
       }
     }
 
-    bootstrap()
+    // Tombol "Coba lagi" (event handler): boleh setState sinkron, lalu ulangi me().
+    retryRef.current = () => {
+      setBootError(null)
+      setBootRetrying(true)
+      bootstrap()
+    }
+
+    if (getToken()) {
+      bootstrap()
+    }
+
     return () => {
       cancelled = true
     }
+  }, [])
+
+  const retryBootstrap = useCallback(() => {
+    retryRef.current?.()
   }, [])
 
   const handleUnauthorized = useCallback(() => {
@@ -84,7 +110,9 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, initializing, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, initializing, bootError, bootRetrying, retryBootstrap, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   )
