@@ -6,7 +6,7 @@ import { useFetch } from '../../hooks/useFetch'
 import { toYmd } from '../../utils/format'
 import ReportShell from './ReportShell'
 import ReportTable from './ReportTable'
-import Stepper from './Stepper'
+import Stepper from '../../components/ui/Stepper'
 
 export default function MonthlyReportPage() {
   const navigate = useNavigate()

@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import RegisterPage from './pages/RegisterPage'
+import BudgetsPage from './pages/budgets/BudgetsPage'
 import CategoriesPage from './pages/categories/CategoriesPage'
 
 import TransactionsPage from './pages/transactions/TransactionsPage'
@@ -44,7 +45,7 @@ export default function App() {
             <Route path="reports/monthly" element={<MonthlyReportPage />} />
             <Route path="reports/yearly" element={<YearlyReportPage />} />
             <Route path="reports/calendar" element={<CalendarPage />} />
-            <Route path="budgets" element={<PlaceholderPage title="Budget" phase={7} />} />
+            <Route path="budgets" element={<BudgetsPage />} />
             <Route path="export" element={<PlaceholderPage title="Export" phase={8} />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>

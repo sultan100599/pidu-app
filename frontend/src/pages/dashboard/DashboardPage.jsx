@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import * as reportsApi from '../../api/reports'
 import CategoryDoughnut from '../../components/charts/CategoryDoughnut'
 import IncomeExpenseChart from '../../components/charts/IncomeExpenseChart'
+import BudgetProgress from '../../components/BudgetProgress'
 import CategoryBadge from '../../components/CategoryBadge'
 import PageHeader from '../../components/PageHeader'
 import PeriodPicker, { usePeriodQuery } from '../../components/PeriodPicker'
@@ -11,12 +12,6 @@ import ErrorState from '../../components/ui/ErrorState'
 import { useFetch } from '../../hooks/useFetch'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDate, formatRupiah, formatYearMonth, MONTH_NAMES } from '../../utils/format'
-
-const BUDGET_STATUS = {
-  ok: { bar: 'bg-success', text: 'text-success', label: 'Aman' },
-  warning: { bar: 'bg-warning', text: 'text-warning-emphasis', label: 'Hampir habis' },
-  exceeded: { bar: 'bg-danger', text: 'text-danger', label: 'Terlampaui' },
-}
 
 // Link ke Transaksi dengan periode yang sama (+ filter tambahan).
 function transactionsLink(period, extra = {}) {
@@ -132,37 +127,11 @@ function BudgetList({ budgets }) {
   }
   return (
     <ul className="list-unstyled mb-0">
-      {budgets.map((b) => {
-        const status = BUDGET_STATUS[b.status] ?? BUDGET_STATUS.ok
-        return (
-          <li key={b.id} className="mb-3">
-            <div className="d-flex justify-content-between align-items-center gap-2 small">
-              <span className="d-inline-flex align-items-center gap-2 min-w-0">
-                <i className={`bi ${b.category.icon || 'bi-tag'}`} style={{ color: b.category.color }} aria-hidden="true"></i>
-                <span className="text-truncate">{b.category.name}</span>
-              </span>
-              <span className={`fw-semibold ${status.text}`}>{b.percentage.toLocaleString('id-ID')}%</span>
-            </div>
-            <div
-              className="progress mt-1"
-              style={{ height: 8 }}
-              role="progressbar"
-              aria-label={`Budget ${b.category.name}`}
-              aria-valuenow={Math.round(b.percentage)}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            >
-              <div className={`progress-bar ${status.bar}`} style={{ width: `${Math.min(100, b.percentage)}%` }}></div>
-            </div>
-            <div className="small text-body-secondary mt-1">
-              {formatRupiah(b.used)} dari {formatRupiah(b.amount)} ·{' '}
-              {b.remaining >= 0 ? `sisa ${formatRupiah(b.remaining)}` : (
-                <span className="text-danger">lebih {formatRupiah(-b.remaining)}</span>
-              )}
-            </div>
-          </li>
-        )
-      })}
+      {budgets.map((b) => (
+        <li key={b.id} className="mb-3">
+          <BudgetProgress budget={b} />
+        </li>
+      ))}
     </ul>
   )
 }

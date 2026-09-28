@@ -8,7 +8,7 @@ import { useFetch } from '../../hooks/useFetch'
 import { getErrorMessage } from '../../utils/errors'
 import { formatCompact, formatDate, formatRupiah, MONTH_NAMES, parseYmd, toYmd } from '../../utils/format'
 import DayDetailModal from './DayDetailModal'
-import Stepper from './Stepper'
+import Stepper from '../../components/ui/Stepper'
 
 const WEEKDAYS = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
 
