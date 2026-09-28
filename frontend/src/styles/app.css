@@ -1,0 +1,73 @@
+/* Layout & warna custom — semua warna memakai variabel Bootstrap agar dark mode otomatis. */
+
+html,
+body {
+  background-color: var(--bs-body-bg);
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+/* ---- Sidebar (offcanvas state dikontrol React; offcanvas-lg dari Bootstrap) ---- */
+.sidebar {
+  width: 250px;
+  background-color: var(--bs-tertiary-bg);
+  border-right: 1px solid var(--bs-border-color);
+}
+
+.sidebar .nav-link {
+  color: var(--bs-body-color);
+}
+
+.sidebar .nav-link:hover {
+  background-color: var(--bs-secondary-bg);
+}
+
+.sidebar-group-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* ---- Konten ---- */
+.app-content {
+  min-height: 100vh;
+  min-width: 0;
+}
+
+.app-main {
+  max-width: 1100px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  height: 56px;
+  background-color: var(--bs-body-bg);
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+/* ---- Halaman auth ---- */
+.auth-page {
+  min-height: 100vh;
+}
+
+.auth-card {
+  max-width: 400px;
+}
+
+/* ---- Desktop (>= lg): sidebar tetap di kiri, konten di kanan ----
+   Bootstrap 5.3 membuat .offcanvas-lg transparan & tersembunyi tanpa .show,
+   jadi di desktop kita paksa tampil statis. */
+@media (min-width: 992px) {
+  .sidebar.offcanvas-lg {
+    visibility: visible !important;
+    transform: none !important;
+    background-color: var(--bs-tertiary-bg) !important;
+  }
+
+  .app-content {
+    margin-left: 250px;
+  }
+}
