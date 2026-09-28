@@ -19,7 +19,11 @@ export function ThemeProvider({ children }) {
   }, [theme])
 
   function toggleTheme() {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
+    const next = theme === 'dark' ? 'light' : 'dark'
+    // Pasang atribut SEBELUM render ulang supaya komponen yang membaca variabel
+    // CSS saat render (warna grafik) langsung mendapat nilai tema baru.
+    document.documentElement.setAttribute('data-bs-theme', next)
+    setTheme(next)
   }
 
   return (

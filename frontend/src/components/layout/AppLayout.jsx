@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
@@ -27,7 +27,17 @@ export default function AppLayout() {
       <div className="app-content">
         <Topbar onMenuClick={() => setSidebarOpen(true)} />
         <main className="app-main p-3 p-lg-4">
-          <Outlet />
+          <Suspense
+            fallback={
+              <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Memuat...</span>
+                </div>
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

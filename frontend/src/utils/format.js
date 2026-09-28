@@ -45,3 +45,30 @@ export function toYmd(date) {
   const d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
 }
+
+const compactFormatter = new Intl.NumberFormat('id-ID', { notation: 'compact', maximumFractionDigits: 1 })
+
+// Angka ringkas untuk sumbu grafik / sel kalender: 1.250.000 → "1,3 jt".
+export function formatCompact(n) {
+  return compactFormatter.format(n ?? 0)
+}
+
+export const MONTH_NAMES = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+]
+
+const shortMonthFormatter = new Intl.DateTimeFormat('id-ID', { month: 'short', year: 'numeric' })
+
+// 'Y-m' → "Sep 2026"
+export function formatYearMonth(ym) {
+  const [y, m] = String(ym).split('-').map(Number)
+  return shortMonthFormatter.format(new Date(y, (m || 1) - 1, 1))
+}
+
+const dayMonthFormatter = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' })
+
+// 'Y-m-d' → "28 Sep"
+export function formatDayMonth(ymd) {
+  return dayMonthFormatter.format(parseYmd(ymd))
+}

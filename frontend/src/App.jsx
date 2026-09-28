@@ -1,3 +1,4 @@
+import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import AppLayout from './components/layout/AppLayout'
@@ -8,8 +9,18 @@ import NotFoundPage from './pages/NotFoundPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import RegisterPage from './pages/RegisterPage'
 import CategoriesPage from './pages/categories/CategoriesPage'
+
 import TransactionsPage from './pages/transactions/TransactionsPage'
 import { useTheme } from './context/ThemeContext'
+
+// Halaman bergrafik dimuat terpisah (lazy) supaya Chart.js tidak ikut di bundle awal
+// (login, transaksi, kategori). Suspense ada di AppLayout.
+const DashboardPage = lazy(() => import('./pages/dashboard/DashboardPage'))
+const DailyReportPage = lazy(() => import('./pages/reports/DailyReportPage'))
+const WeeklyReportPage = lazy(() => import('./pages/reports/WeeklyReportPage'))
+const MonthlyReportPage = lazy(() => import('./pages/reports/MonthlyReportPage'))
+const YearlyReportPage = lazy(() => import('./pages/reports/YearlyReportPage'))
+const CalendarPage = lazy(() => import('./pages/reports/CalendarPage'))
 
 export default function App() {
   const { theme } = useTheme()
@@ -25,14 +36,14 @@ export default function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route index element={<PlaceholderPage title="Dashboard" phase={5} />} />
+            <Route index element={<DashboardPage />} />
             <Route path="transactions" element={<TransactionsPage />} />
             <Route path="categories" element={<CategoriesPage />} />
-            <Route path="reports/daily" element={<PlaceholderPage title="Rekap Harian" phase={6} />} />
-            <Route path="reports/weekly" element={<PlaceholderPage title="Rekap Mingguan" phase={6} />} />
-            <Route path="reports/monthly" element={<PlaceholderPage title="Rekap Bulanan" phase={6} />} />
-            <Route path="reports/yearly" element={<PlaceholderPage title="Rekap Tahunan" phase={6} />} />
-            <Route path="reports/calendar" element={<PlaceholderPage title="Kalender" phase={6} />} />
+            <Route path="reports/daily" element={<DailyReportPage />} />
+            <Route path="reports/weekly" element={<WeeklyReportPage />} />
+            <Route path="reports/monthly" element={<MonthlyReportPage />} />
+            <Route path="reports/yearly" element={<YearlyReportPage />} />
+            <Route path="reports/calendar" element={<CalendarPage />} />
             <Route path="budgets" element={<PlaceholderPage title="Budget" phase={7} />} />
             <Route path="export" element={<PlaceholderPage title="Export" phase={8} />} />
             <Route path="*" element={<NotFoundPage />} />
