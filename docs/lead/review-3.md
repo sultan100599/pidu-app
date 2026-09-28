@@ -46,3 +46,13 @@ Tempel output perintah kedua (kosong) ke report.
 ## Selesai
 - `git commit -m "Phase 3 fixes: desktop sidebar layout, mobile width, auth boot error handling"`
 - Tambahkan bagian **"Perbaikan review-3"** di akhir `docs/lead/report-3.md` (apa yang diubah per poin + output verifikasi). Jangan lanjut Phase 4.
+
+---
+## Re-check lead (2026-09-29, Chrome DevTools) — PHASE 3 DITERIMA
+- [x] 1. Desktop 1440px: sidebar fixed di kiri, topbar dan konten di kanan.
+- [x] 2. Mobile 360px: sidebar 280px + backdrop terlihat.
+- [x] 3. Backend mati → layar "Terjadi kesalahan pada server." + "Coba lagi", token tetap tersimpan; setelah backend hidup, "Coba lagi" memulihkan sesi.
+- [x] 5. Console bersih (tidak ada warning/error).
+- [x] 7. Port 8001/8010 kosong setelah Kimi selesai.
+
+**Carry-over ke Phase 4 (kecil):** setelah "Coba lagi" berhasil, user mendarat di `/`, bukan halaman asal (`/reports/weekly`). Penyebab: `retryRef` tidak memanggil `setInitializing(true)`, jadi sesaat `user=null && initializing=false` → ProtectedRoute redirect ke /login → GuestRoute redirect ke `/`. Fix: `setInitializing(true)` di retry.
