@@ -164,6 +164,39 @@ class ReportService
     }
 
     /**
+     * Total per kategori (pemasukan & pengeluaran) dalam periode, urut jenis lalu total desc.
+     * `percentage` = porsi terhadap total jenis yang sama.
+     *
+     * @return list<array{category_id: int, name: string, type: string, total: float, count: int, percentage: float}>
+     */
+    public function categoryTotals(User $user, Period $period, array $filters = []): array
+    {
+        $rows = $this->transactions->query($user, $period, $filters)
+            ->join('categories', 'categories.id', '=', 'transactions.category_id')
+            ->toBase()
+            ->select('transactions.category_id', 'categories.name', 'transactions.type')
+            ->selectRaw('SUM(transactions.amount) AS total, COUNT(*) AS cnt')
+            ->groupBy('transactions.category_id', 'categories.name', 'transactions.type')
+            ->orderByDesc('transactions.type')
+            ->orderByDesc('total')
+            ->get();
+
+        $typeTotals = [];
+        foreach ($rows as $r) {
+            $typeTotals[$r->type] = ($typeTotals[$r->type] ?? 0) + (float) $r->total;
+        }
+
+        return $rows->map(fn ($r) => [
+            'category_id' => (int) $r->category_id,
+            'name' => $r->name,
+            'type' => $r->type,
+            'total' => Money::of($r->total),
+            'count' => (int) $r->cnt,
+            'percentage' => Money::percent($r->total, $typeTotals[$r->type]),
+        ])->all();
+    }
+
+    /**
      * @return list<array{date: string, income: float, expense: float, balance: float, count: int}>
      */
     private function dailyRows(User $user, Period $period, array $filters): array

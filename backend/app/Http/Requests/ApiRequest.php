@@ -26,11 +26,32 @@ abstract class ApiRequest extends FormRequest
             'email' => ':Attribute harus berupa alamat email yang valid.',
             'date_format' => ':Attribute harus berformat :format.',
             'after_or_equal' => ':Attribute harus sama dengan atau setelah :date.',
-            'max.string' => ':Attribute maksimal :max karakter.',
-            'max.numeric' => ':Attribute maksimal :max.',
-            'min.string' => ':Attribute minimal :min karakter.',
-            'between.numeric' => ':Attribute harus antara :min dan :max.',
-            'gt.numeric' => ':Attribute harus lebih dari :value.',
+            // Aturan ukuran: Laravel mencari kunci 'max' (bukan 'max.string') dan memilih
+            // pesan berdasarkan tipe atribut → wajib array berisi keempat tipe.
+            'max' => [
+                'string' => ':Attribute maksimal :max karakter.',
+                'numeric' => ':Attribute maksimal :max.',
+                'array' => ':Attribute maksimal :max item.',
+                'file' => ':Attribute maksimal :max kilobyte.',
+            ],
+            'min' => [
+                'string' => ':Attribute minimal :min karakter.',
+                'numeric' => ':Attribute minimal :min.',
+                'array' => ':Attribute minimal :min item.',
+                'file' => ':Attribute minimal :min kilobyte.',
+            ],
+            'between' => [
+                'string' => ':Attribute harus antara :min dan :max karakter.',
+                'numeric' => ':Attribute harus antara :min dan :max.',
+                'array' => ':Attribute harus berisi :min sampai :max item.',
+                'file' => ':Attribute harus antara :min dan :max kilobyte.',
+            ],
+            'gt' => [
+                'string' => ':Attribute harus lebih dari :value karakter.',
+                'numeric' => ':Attribute harus lebih dari :value.',
+                'array' => ':Attribute harus lebih dari :value item.',
+                'file' => ':Attribute harus lebih dari :value kilobyte.',
+            ],
             'decimal' => ':Attribute maksimal 2 angka di belakang koma.',
             'in' => ':Attribute tidak valid.',
             'enum' => ':Attribute tidak valid.',

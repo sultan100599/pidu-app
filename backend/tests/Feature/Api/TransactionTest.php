@@ -83,6 +83,20 @@ class TransactionTest extends TestCase
             ->assertJsonPath('errors.amount.0', 'Nominal harus lebih dari 0.');
     }
 
+    public function test_size_rule_messages_are_indonesian(): void
+    {
+        $this->postJson('/api/transactions', $this->payload(['description' => str_repeat('a', 256), 'amount' => 1_000_000_000_000]))
+            ->assertStatus(422)
+            ->assertJsonPath('errors.description.0', 'Deskripsi maksimal 255 karakter.')
+            ->assertJsonPath('errors.amount.0', 'Nominal maksimal 999999999999.');
+
+        $this->getJson('/api/transactions?per_page=500')
+            ->assertJsonPath('errors.per_page.0', 'Jumlah per halaman harus antara 1 dan 100.');
+
+        $this->postJson('/api/auth/register', ['name' => 'X', 'email' => 'x@pidu.test', 'password' => 'pendek', 'password_confirmation' => 'pendek'])
+            ->assertJsonPath('errors.password.0', 'Password minimal 8 karakter.');
+    }
+
     public function test_category_type_must_match_transaction_type(): void
     {
         $this->postJson('/api/transactions', $this->payload(['type' => 'income', 'category_id' => $this->food->id]))

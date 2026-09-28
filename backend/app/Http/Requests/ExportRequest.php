@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Enums\PaymentMethod;
+use App\Enums\TransactionType;
+
+/**
+ * Filter export = filter daftar transaksi (search, type, category_id, payment_method,
+ * periode, sort, dir). Tanpa periode → semua tanggal.
+ */
+class ExportRequest extends TransactionIndexRequest
+{
+    /**
+     * Deskripsi filter aktif untuk header PDF, mis. ["Jenis: Pengeluaran", "Cari: \"makan\""].
+     *
+     * @return list<string>
+     */
+    public function filterSummary(): array
+    {
+        $filters = $this->filters();
+        $out = [];
+
+        if (isset($filters['type'])) {
+            $out[] = 'Jenis: '.TransactionType::from($filters['type'])->label();
+        }
+        if (isset($filters['category_id'])) {
+            $out[] = 'Kategori: '.$this->user()->categories()->whereKey($filters['category_id'])->value('name');
+        }
+        if (isset($filters['payment_method'])) {
+            $out[] = 'Metode: '.PaymentMethod::from($filters['payment_method'])->label();
+        }
+        if (isset($filters['search'])) {
+            $out[] = 'Cari: "'.$filters['search'].'"';
+        }
+
+        return $out;
+    }
+}

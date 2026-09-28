@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BudgetController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TransactionController;
 use Illuminate\Support\Facades\Route;
@@ -50,4 +51,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('budgets', [BudgetController::class, 'store']);
     Route::put('budgets/{id}', [BudgetController::class, 'update']);
     Route::delete('budgets/{id}', [BudgetController::class, 'destroy']);
+
+    // Export berat → dibatasi 10x/menit per user.
+    Route::prefix('export')->controller(ExportController::class)->middleware('throttle:10,1')->group(function () {
+        Route::get('excel', 'excel');
+        Route::get('pdf', 'pdf');
+        Route::get('all', 'all');
+    });
 });

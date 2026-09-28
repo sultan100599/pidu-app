@@ -6,6 +6,7 @@ import * as transactionsApi from '../../api/transactions'
 import PageHeader from '../../components/PageHeader'
 import SummaryCards from '../../components/SummaryCards'
 import ConfirmDialog from '../../components/ui/ConfirmDialog'
+import ExportMenu from '../../components/ExportMenu'
 import EmptyState from '../../components/ui/EmptyState'
 import ErrorState from '../../components/ui/ErrorState'
 import Pagination from '../../components/ui/Pagination'
@@ -135,7 +136,9 @@ export default function TransactionsPage() {
 
   // --- fetch ---------------------------------------------------------------
   const customInvalid = isCustomRangeInvalid(query.period, query.start_date, query.end_date)
-  const apiParamsKey = JSON.stringify(toApiParams(query))
+  const apiParams = toApiParams(query)
+  const apiParamsKey = JSON.stringify(apiParams)
+  const { page: _page, per_page: _perPage, ...exportParams } = apiParams
   const [reloadToken, setReloadToken] = useState(0)
   const requestKey = `${apiParamsKey}#${reloadToken}`
   // Hasil disimpan bersama key request-nya; loading = key belum cocok.
@@ -297,10 +300,14 @@ export default function TransactionsPage() {
             : 'Semua tanggal'
         }
         actions={
-          <button type="button" className="btn btn-primary" onClick={openCreate}>
-            <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-            Tambah Transaksi
-          </button>
+          <>
+            {/* Export memakai filter & urutan yang sama dengan daftar (tanpa pagination). */}
+            <ExportMenu params={exportParams} disabled={customInvalid || !data || data.meta.total === 0} />
+            <button type="button" className="btn btn-primary" onClick={openCreate}>
+              <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
+              Tambah Transaksi
+            </button>
+          </>
         }
       />
 
