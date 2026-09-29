@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BackupController;
 use App\Http\Controllers\Api\BudgetController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ExportController;
+use App\Http\Controllers\Api\ImportController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TransactionController;
 use Illuminate\Support\Facades\Route;
@@ -57,5 +59,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('excel', 'excel');
         Route::get('pdf', 'pdf');
         Route::get('all', 'all');
+    });
+
+    Route::prefix('import')->controller(ImportController::class)->middleware('throttle:10,1')->group(function () {
+        Route::get('template', 'template');
+        Route::post('transactions', 'transactions');
+    });
+
+    Route::prefix('backups')->controller(BackupController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store')->middleware('throttle:5,1');
+        Route::get('{name}', 'download')->where('name', 'pidu-backup-[0-9]{8}-[0-9]{6}\.xlsx');
     });
 });

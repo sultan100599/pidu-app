@@ -10,6 +10,7 @@ import RegisterPage from './pages/RegisterPage'
 import BudgetsPage from './pages/budgets/BudgetsPage'
 import CategoriesPage from './pages/categories/CategoriesPage'
 import ExportPage from './pages/export/ExportPage'
+import ImportPage from './pages/import/ImportPage'
 
 import TransactionsPage from './pages/transactions/TransactionsPage'
 import { useTheme } from './context/ThemeContext'
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="reports/yearly" element={<YearlyReportPage />} />
             <Route path="reports/calendar" element={<CalendarPage />} />
             <Route path="budgets" element={<BudgetsPage />} />
+            <Route path="import" element={<ImportPage />} />
             <Route path="export" element={<ExportPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as exportApi from '../../api/export'
 import PageHeader from '../../components/PageHeader'
+import BackupCard from './BackupCard'
 import Stepper from '../../components/ui/Stepper'
 import { TRANSACTION_TYPES } from '../../constants/enums'
 import { getErrorMessage } from '../../utils/errors'
@@ -213,13 +214,16 @@ function AllDataCard() {
 export default function ExportPage() {
   return (
     <>
-      <PageHeader title="Export" subtitle="Unduh data keuangan ke Excel atau PDF." />
+      <PageHeader title="Export & Backup" subtitle="Unduh data keuangan ke Excel atau PDF, dan kelola backup." />
       <div className="row g-3">
         <div className="col-lg-6">
           <TransactionsExportCard />
         </div>
         <div className="col-lg-6">
           <AllDataCard />
+        </div>
+        <div className="col-12">
+          <BackupCard />
         </div>
       </div>
     </>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
+use App\Support\TypeOrder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -26,7 +27,7 @@ class CategoryController extends Controller
             ->withCount('transactions')
             ->when($filters['type'] ?? null, fn ($q, $type) => $q->where('type', $type))
             ->when(isset($filters['active']), fn ($q) => $q->where('is_active', $request->boolean('active')))
-            ->orderBy('type')
+            ->orderByRaw(TypeOrder::expenseFirst())
             ->orderBy('name')
             ->get();
 

@@ -13,6 +13,8 @@ Monorepo: **backend** Laravel 12 (REST API, Sanctum) + **frontend** React 19 (Vi
 - **Laporan:** rekap harian, mingguan (minggu Senin–Minggu), bulanan, tahunan, dan kalender. Klik untuk melihat detail per hari.
 - **Budget:** batas pengeluaran per kategori per bulan dengan status aman (< 80%), hampir habis (≥ 80%), dan terlampaui (≥ 100%), plus "Salin bulan lalu".
 - **Export:** transaksi ke Excel/PDF sesuai filter, dan "Export Semua ke Excel" per tahun (7 sheet: Transaksi, Harian, Mingguan, Bulanan, Tahunan, Kategori, Budget).
+- **Impor:** tambah banyak transaksi dari Excel/CSV (template tersedia). File diperiksa dulu (error per baris, pratinjau), baris yang sudah ada dilewati, kategori baru dibuat otomatis. File hasil Export/Backup bisa langsung diimpor ulang.
+- **Backup otomatis:** setiap hari (default 23:00) selama `npm start` berjalan: xlsx semua transaksi per user + snapshot database SQLite, 14 terbaru disimpan. Bisa juga "Backup sekarang" dan unduh dari halaman Export & Backup.
 - Dark mode, tampilan mobile, dan data tiap user terisolasi (data user lain → 404).
 
 ## Prasyarat
@@ -58,11 +60,12 @@ npm start
 
 | Perintah | Fungsi |
 |---|---|
-| `npm start` | Backend + frontend sekaligus |
+| `npm start` | Backend + frontend + scheduler backup (log scheduler disembunyikan) |
 | `npm run be` / `npm run fe` | Backend saja / frontend saja |
 | `npm test` | Tes backend (PHPUnit) + lint frontend (oxlint) |
 | `npm run build` | Build production frontend ke `frontend/dist` |
 | `npm run db:reset` | Hapus semua data lalu seed ulang data demo |
+| `cd backend && php artisan pidu:backup` | Backup manual (semua user + snapshot database) |
 
 ## Struktur
 
@@ -73,6 +76,7 @@ backend/                      Laravel 12
   app/Services/               logika & query agregat (SUM/COUNT/GROUP BY di database)
   app/Support/                Period (rentang tanggal), Money, DateSql (ekspresi tanggal lintas SQLite/MySQL)
   app/Exports/                sheet Excel
+  app/Services/Import/        impor Excel/CSV
   tests/Feature/Api/          feature test
 frontend/                     React 19 + Vite
   src/api/                    axios client (Bearer token) per resource
@@ -94,11 +98,12 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-lalu `php artisan migrate:fresh --seed` di `backend/`. (Tes otomatis berjalan di SQLite in-memory; jalur MySQL belum diuji dengan server MySQL sungguhan.)
+lalu `php artisan migrate:fresh --seed` di `backend/`. Seluruh test suite (76 tes) juga lolos di MariaDB 10.4 (XAMPP), dan angka laporan data demo identik dengan SQLite. Di MySQL, `pidu:backup` hanya membuat xlsx per user; untuk database gunakan `mysqldump`.
 
 ## Catatan production
 
 - `.env`: `APP_ENV=production`, `APP_DEBUG=false` (error 500 hanya menampilkan "Terjadi kesalahan pada server.", detail tetap tercatat di `storage/logs`).
 - `SANCTUM_EXPIRATION` (menit, default 30 hari). Token kedaluwarsa dibersihkan oleh scheduler (`php artisan schedule:work` atau cron `schedule:run`).
-- Export dibatasi 10 request/menit per user; PDF maksimal 2.000 transaksi (gunakan Excel untuk data lebih besar).
+- Export & impor dibatasi 10 request/menit per user; PDF maksimal 2.000 transaksi; impor maksimal 5.000 baris / 5 MB.
+- Backup ada di `backend/storage/app/backups` (tidak masuk Git; berisi data keuangan). Atur dengan `PIDU_BACKUP_KEEP`, `PIDU_BACKUP_TIME`. Di server, jalankan scheduler lewat cron: `* * * * * php artisan schedule:run`.
 - Frontend production: `npm run build`, lalu sajikan `frontend/dist` sebagai SPA (semua path → `index.html`) dan teruskan `/api` ke backend.

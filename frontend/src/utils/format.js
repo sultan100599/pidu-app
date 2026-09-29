@@ -72,3 +72,16 @@ const dayMonthFormatter = new Intl.DateTimeFormat('id-ID', { day: 'numeric', mon
 export function formatDayMonth(ymd) {
   return dayMonthFormatter.format(parseYmd(ymd))
 }
+
+// 25266 → "24,7 KB"
+export function formatBytes(bytes) {
+  if (bytes < 1024) return `${bytes} B`
+  const units = ['KB', 'MB', 'GB']
+  let value = bytes / 1024
+  let unit = 0
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024
+    unit += 1
+  }
+  return `${value.toLocaleString('id-ID', { maximumFractionDigits: 1 })} ${units[unit]}`
+}

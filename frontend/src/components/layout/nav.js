@@ -14,7 +14,8 @@ export const MENU = [
     ],
   },
   { label: 'Budget', path: '/budgets', icon: 'bi-piggy-bank' },
-  { label: 'Export', path: '/export', icon: 'bi-download' },
+  { label: 'Impor', path: '/import', icon: 'bi-upload' },
+  { label: 'Export & Backup', path: '/export', icon: 'bi-download' },
 ]
 
 function flatten(menu = MENU) {

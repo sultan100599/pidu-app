@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Support\DateSql;
 use App\Support\Money;
 use App\Support\Period;
+use App\Support\TypeOrder;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 
@@ -155,7 +156,7 @@ class ReportService
             'transactions' => TransactionResource::collection(
                 $this->transactions->query($user, $period, $filters)
                     ->with('category')
-                    ->orderBy('type')
+                    ->orderByRaw(TypeOrder::expenseFirst('transactions.type'))
                     ->orderByDesc('amount')
                     ->orderByDesc('id')
                     ->get()
@@ -177,7 +178,7 @@ class ReportService
             ->select('transactions.category_id', 'categories.name', 'transactions.type')
             ->selectRaw('SUM(transactions.amount) AS total, COUNT(*) AS cnt')
             ->groupBy('transactions.category_id', 'categories.name', 'transactions.type')
-            ->orderByDesc('transactions.type')
+            ->orderByRaw(TypeOrder::incomeFirst('transactions.type'))
             ->orderByDesc('total')
             ->get();
 
