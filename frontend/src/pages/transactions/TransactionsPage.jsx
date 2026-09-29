@@ -297,7 +297,13 @@ export default function TransactionsPage() {
           <>
             {/* Export memakai filter & urutan yang sama dengan daftar (tanpa pagination). */}
             <ExportMenu params={exportParams} disabled={customInvalid || !data || data.meta.total === 0} />
-            <button type="button" className="btn btn-primary" onClick={openCreate}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={openCreate}
+              aria-keyshortcuts="n"
+              title="Tambah transaksi (pintasan: N)"
+            >
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
               Tambah Transaksi
             </button>
