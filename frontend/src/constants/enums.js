@@ -1,4 +1,4 @@
-// Enum bersama backend — jangan diubah sembarangan (harus sinkron dengan backend).
+// Nilai enum harus tetap sinkron dengan backend.
 // Urutan = urutan tampil (Pengeluaran lebih sering dipakai).
 export const TRANSACTION_TYPES = {
   expense: 'Pengeluaran',

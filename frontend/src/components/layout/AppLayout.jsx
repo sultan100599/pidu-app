@@ -25,7 +25,7 @@ export default function AppLayout() {
         ></div>
       )}
       <div className="app-content">
-        <Topbar onMenuClick={() => setSidebarOpen(true)} />
+        <Topbar sidebarOpen={sidebarOpen} onMenuClick={() => setSidebarOpen(true)} />
         <main className="app-main p-3 p-lg-4">
           <Suspense
             fallback={

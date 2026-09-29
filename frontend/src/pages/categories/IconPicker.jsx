@@ -1,4 +1,6 @@
-// Ikon bootstrap-icons yang relevan untuk keuangan; mencakup semua ikon default seeder.
+import CategoryIcon from '../../components/CategoryIcon'
+
+// Ikon keuangan mencakup semua ikon default seeder.
 export const CATEGORY_ICONS = [
   'bi-cash-stack', 'bi-gift', 'bi-laptop', 'bi-briefcase', 'bi-graph-up-arrow', 'bi-box-seam',
   'bi-three-dots', 'bi-cup-hot', 'bi-car-front', 'bi-bag', 'bi-receipt', 'bi-lightning-charge',
@@ -24,7 +26,7 @@ export default function IconPicker({ value, onChange, color }) {
             className={`btn btn-sm ${active ? 'btn-primary' : 'btn-outline-secondary'}`}
             onClick={() => onChange(icon)}
           >
-            <i className={`bi ${icon}`} style={active ? undefined : { color }} aria-hidden="true"></i>
+            {active ? <i className={`bi ${icon} icon-tile`} aria-hidden="true"></i> : <CategoryIcon icon={icon} color={color} />}
           </button>
         )
       })}

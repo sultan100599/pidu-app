@@ -13,6 +13,7 @@ import { useFetch } from '../../hooks/useFetch'
 import { getErrorMessage } from '../../utils/errors'
 import { formatRupiah, MONTH_NAMES, toYmd } from '../../utils/format'
 import BudgetFormModal from './BudgetFormModal'
+import CategoryIcon from '../../components/CategoryIcon'
 
 function monthLabel(month, year) {
   return `${MONTH_NAMES[month - 1]} ${year}`
@@ -44,7 +45,7 @@ function Overview({ totals, budgets }) {
   const counts = Object.fromEntries(Object.keys(BUDGET_STATUS).map((k) => [k, budgets.filter((b) => b.status === k).length]))
 
   return (
-    <div className="card mb-3">
+    <div className="card budget-overview mb-3">
       <div className="card-body">
         <BudgetProgress
           budget={overall}
@@ -74,19 +75,21 @@ function BudgetCard({ budget, onEdit, onDelete }) {
 
   return (
     <div className="col">
-      <div className="card h-100">
+      <div className="card budget-card h-100">
         <div className="card-body">
-          <BudgetProgress
-            budget={budget}
-            title={
-              <span className="d-inline-flex align-items-center gap-2 min-w-0 fw-semibold fs-6">
-                <i className={`bi ${category.icon || 'bi-tag'}`} style={{ color: category.color }} aria-hidden="true"></i>
-                <span className="text-truncate">{category.name}</span>
-              </span>
-            }
-            aside={<span className={`badge ${status.badge}`}>{status.label}</span>}
-          />
-          <div className="d-flex align-items-center gap-2 mt-3">
+          <Link to={transactionsLink(budget)} className="budget-detail-link text-reset text-decoration-none" aria-label={`Lihat transaksi budget ${category.name}`}>
+            <BudgetProgress
+              budget={budget}
+              title={
+                <span className="d-inline-flex align-items-center gap-2 min-w-0 fw-semibold fs-6">
+                  <CategoryIcon icon={category.icon} color={category.color} />
+                  <span className="text-truncate">{category.name}</span>
+                </span>
+              }
+              aside={<span className={`badge ${status.badge}`}>{status.label}</span>}
+            />
+          </Link>
+          <div className="budget-actions d-flex align-items-center gap-2 mt-3">
             <span className={`fw-semibold ${status.text}`}>{budget.percentage.toLocaleString('id-ID')}%</span>
             <Link to={transactionsLink(budget)} className="small ms-2">
               Lihat transaksi

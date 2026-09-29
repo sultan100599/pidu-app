@@ -97,7 +97,7 @@ export default function CalendarPage() {
     content = (
       <div className={`opacity-transition ${loading ? 'opacity-50' : ''}`} aria-busy={loading}>
         <SummaryCards summary={data.totals} />
-        <div className="card">
+        <div className="card calendar-panel">
           <div className="card-body p-2 p-sm-3">
             <div className="calendar-grid" role="group" aria-label={`Kalender ${data.label}`}>
               {/* Nama hari hanya visual; tiap tombol tanggal sudah menyebut hari lengkap. */}

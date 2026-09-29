@@ -3,13 +3,15 @@ import { useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import { findMenuItem } from './nav'
+import { useDropdownBounds } from '../../hooks/useDropdownBounds'
 
-export default function Topbar({ onMenuClick }) {
+export default function Topbar({ onMenuClick, sidebarOpen }) {
   const location = useLocation()
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef(null)
+  useDropdownBounds(userMenuRef, userMenuOpen)
 
   const pageTitle = findMenuItem(location.pathname)?.label ?? 'Pidu-App'
   const isDark = theme === 'dark'
@@ -22,7 +24,10 @@ export default function Topbar({ onMenuClick }) {
       }
     }
     function handleKeyDown(event) {
-      if (event.key === 'Escape') setUserMenuOpen(false)
+      if (event.key === 'Escape') {
+        setUserMenuOpen(false)
+        userMenuRef.current?.querySelector('button')?.focus()
+      }
     }
     document.addEventListener('mousedown', handlePointerDown)
     document.addEventListener('keydown', handleKeyDown)
@@ -39,8 +44,11 @@ export default function Topbar({ onMenuClick }) {
         className="btn btn-link text-body p-1 d-lg-none"
         onClick={onMenuClick}
         aria-label="Buka menu"
+        aria-expanded={sidebarOpen}
+        aria-controls="app-sidebar"
       >
         <i className="bi bi-list fs-4" aria-hidden="true"></i>
+        <span className="small ms-1">Menu</span>
       </button>
 
       <h2 className="h6 mb-0 text-truncate">{pageTitle}</h2>

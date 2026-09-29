@@ -7,17 +7,17 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
       {transactions.map((trx) => {
         const title = trx.description || trx.category?.name || 'Transaksi'
         return (
-          <div className="card mb-2" key={trx.id}>
+          <div className="card transaction-card mb-2" key={trx.id}>
             <div className="card-body py-2 px-3">
-              <div className="d-flex justify-content-between align-items-start gap-2">
+              <div className="transaction-main d-flex justify-content-between align-items-start gap-2">
                 <div className="min-w-0">
                   <div className="fw-semibold text-truncate">{title}</div>
                   <div className="small text-body-secondary text-truncate">
-                    {formatDate(trx.transaction_date)} · {trx.category?.name ?? '—'} · {trx.payment_method_label}
+                    {formatDate(trx.transaction_date)} · {trx.category?.name ?? 'Tanpa kategori'} · {trx.payment_method_label}
                   </div>
                 </div>
                 <div
-                  className={`fw-semibold text-nowrap ${trx.type === 'income' ? 'text-success' : 'text-danger'}`}
+                  className={`transaction-amount fw-semibold text-nowrap ${trx.type === 'income' ? 'text-success' : 'text-danger'}`}
                 >
                   {trx.type === 'income' ? '+' : '−'}
                   {formatRupiah(trx.amount)}

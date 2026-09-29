@@ -49,7 +49,7 @@ export default function DayDetailModal({ date, onClose }) {
     const { totals, transactions } = data
     body = (
       <>
-        <div className="row g-2 mb-3 text-center small">
+        <div className="day-totals row g-2 mb-3 text-center small">
           <div className="col-4">
             <div className="text-body-secondary">Pemasukan</div>
             <div className="fw-semibold text-success">{formatRupiah(totals.income)}</div>
@@ -68,7 +68,7 @@ export default function DayDetailModal({ date, onClose }) {
         {transactions.length === 0 ? (
           <p className="text-center text-body-secondary py-3 mb-0">Tidak ada transaksi pada tanggal ini.</p>
         ) : (
-          <ul className="list-group list-group-flush">
+          <ul className="day-transactions list-group list-group-flush">
             {transactions.map((trx) => (
               <li key={trx.id} className="list-group-item px-0 d-flex justify-content-between align-items-start gap-2">
                 <div className="min-w-0">

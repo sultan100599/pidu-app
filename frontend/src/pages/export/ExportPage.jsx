@@ -167,7 +167,7 @@ function AllDataCard() {
   const { busy, run } = useDownload()
 
   return (
-    <div className="card h-100">
+    <div className="card export-all h-100">
       <div className="card-body d-flex flex-column">
         <h2 className="h5">
           <i className="bi bi-collection me-2 text-success" aria-hidden="true"></i>

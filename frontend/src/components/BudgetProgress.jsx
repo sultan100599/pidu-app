@@ -1,4 +1,5 @@
 import { formatRupiah } from '../utils/format'
+import CategoryIcon from './CategoryIcon'
 
 // Status dari backend: exceeded ≥ 100%, warning ≥ 80%, selain itu ok.
 export const BUDGET_STATUS = {
@@ -22,7 +23,7 @@ export default function BudgetProgress({ budget, title, aside, height = 8 }) {
       <div className="d-flex justify-content-between align-items-center gap-2 small">
         {title ?? (
           <span className="d-inline-flex align-items-center gap-2 min-w-0">
-            <i className={`bi ${category.icon || 'bi-tag'}`} style={{ color: category.color }} aria-hidden="true"></i>
+            <CategoryIcon icon={category.icon} color={category.color} />
             <span className="text-truncate">{category.name}</span>
           </span>
         )}
@@ -31,7 +32,7 @@ export default function BudgetProgress({ budget, title, aside, height = 8 }) {
         )}
       </div>
       <div
-        className="progress mt-1"
+        className="progress budget-progress mt-1"
         style={{ height }}
         role="progressbar"
         aria-label={`Pemakaian budget ${category.name}: ${budget.percentage.toLocaleString('id-ID')}%, ${status.label}`}

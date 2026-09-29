@@ -88,9 +88,9 @@ function Preview({ rows, skipDuplicates }) {
                 <td>{TRANSACTION_TYPES[r.type]}</td>
                 <td>{r.category}</td>
                 <td>
-                  {r.description ?? '—'}
+                  {r.description ?? 'Tanpa deskripsi'}
                   {r.duplicate && (
-                    <span className="badge text-bg-secondary ms-2 fw-normal">{skipDuplicates ? 'duplikat — dilewati' : 'duplikat'}</span>
+                    <span className="badge text-bg-secondary ms-2 fw-normal">{skipDuplicates ? 'duplikat, dilewati' : 'duplikat'}</span>
                   )}
                 </td>
                 <td>{PAYMENT_METHODS[r.payment_method]}</td>
@@ -205,10 +205,10 @@ export default function ImportPage() {
         </div>
       )}
 
-      <div className="card mb-3">
+      <div className="card import-upload mb-3">
         <div className="card-body">
           <label htmlFor="import-file" className="form-label fw-semibold">
-            Pilih file (.xlsx, .xls, .csv — maks. 5 MB, 5.000 baris)
+            Pilih file (.xlsx, .xls, .csv, maks. 5 MB, 5.000 baris)
           </label>
           <input
             ref={inputRef}
@@ -240,7 +240,7 @@ export default function ImportPage() {
           <div className="card mb-3">
             <div className="card-body">
               <h2 className="h6 mb-3">
-                Hasil pemeriksaan <span className="text-body-secondary fw-normal">— {file?.name}</span>
+                Hasil pemeriksaan <span className="text-body-secondary fw-normal">: {file?.name}</span>
               </h2>
               <div className="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-2 mb-3">
                 <Stat label="Baris data" value={formatNumber(analysis.total_rows)} />

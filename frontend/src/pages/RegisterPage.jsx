@@ -78,7 +78,7 @@ export default function RegisterPage() {
 
       <div className="card auth-card w-100 shadow-sm">
         <div className="card-body p-4">
-          <div className="text-center mb-4">
+          <div className="auth-heading text-center">
             <i className="bi bi-wallet2 display-5 text-primary" aria-hidden="true"></i>
             <h1 className="h4 mt-2 mb-1">Daftar ke Pidu</h1>
             <p className="text-body-secondary mb-0">Buat akun untuk mulai mencatat</p>

@@ -11,15 +11,16 @@ import { useCategories } from '../../hooks/useCategories'
 import { getErrorMessage } from '../../utils/errors'
 import { formatNumber } from '../../utils/format'
 import CategoryFormModal from './CategoryFormModal'
+import CategoryIcon from '../../components/CategoryIcon'
 
 function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
   const used = category.transactions_count > 0
   const switchId = `cat-active-${category.id}`
 
   return (
-    <li className="list-group-item d-flex align-items-center gap-3 py-2">
+    <li className="category-row list-group-item d-flex align-items-center gap-3 py-2">
       <span className="category-icon rounded-circle d-inline-flex align-items-center justify-content-center">
-        <i className={`bi ${category.icon || 'bi-tag'}`} style={{ color: category.color || undefined }} aria-hidden="true"></i>
+        <CategoryIcon icon={category.icon} color={category.color} />
       </span>
       <div className="min-w-0 flex-grow-1">
         <div className={`fw-semibold text-truncate ${category.is_active ? '' : 'text-body-secondary'}`}>
@@ -51,7 +52,7 @@ function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
         <i className="bi bi-pencil" aria-hidden="true"></i>
       </button>
       {/* span pembungkus supaya title tetap muncul pada tombol disabled */}
-      <span title={used ? `Masih dipakai ${category.transactions_count} transaksi — nonaktifkan saja` : undefined}>
+      <span title={used ? `Masih dipakai ${category.transactions_count} transaksi, nonaktifkan saja` : undefined}>
         <button
           type="button"
           className="btn btn-sm btn-outline-danger"

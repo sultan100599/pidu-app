@@ -12,6 +12,9 @@ import ErrorState from '../../components/ui/ErrorState'
 import { useFetch } from '../../hooks/useFetch'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDate, formatRupiah, formatYearMonth, MONTH_NAMES } from '../../utils/format'
+import { useChartTheme } from '../../components/charts/useChartTheme'
+import { accessibleColor } from '../../utils/accessibleColor'
+import CategoryIcon from '../../components/CategoryIcon'
 
 // Link ke Transaksi dengan periode yang sama (+ filter tambahan).
 function transactionsLink(period, extra = {}) {
@@ -51,6 +54,7 @@ function StatTile({ label, value, hint }) {
 }
 
 function CategoryBreakdown({ items, period }) {
+  const theme = useChartTheme()
   if (items.length === 0) {
     return <p className="text-body-secondary text-center my-4">Belum ada pengeluaran pada periode ini.</p>
   }
@@ -69,7 +73,7 @@ function CategoryBreakdown({ items, period }) {
               >
                 <div className="d-flex justify-content-between align-items-center gap-2 small">
                   <span className="d-inline-flex align-items-center gap-2 min-w-0">
-                    <i className={`bi ${item.icon || 'bi-tag'}`} style={{ color: item.color }} aria-hidden="true"></i>
+                    <CategoryIcon icon={item.icon} color={item.color} />
                     <span className="text-truncate">{item.name}</span>
                   </span>
                   <span className="text-nowrap">
@@ -80,7 +84,7 @@ function CategoryBreakdown({ items, period }) {
                 <div className="progress mt-1" style={{ height: 6 }} role="presentation">
                   <div
                     className="progress-bar"
-                    style={{ width: `${item.percentage}%`, backgroundColor: item.color || undefined }}
+                    style={{ width: `${item.percentage}%`, backgroundColor: accessibleColor(item.color, theme.softSurface, theme.ink) }}
                   ></div>
                 </div>
               </Link>
@@ -97,7 +101,7 @@ function LargestTransactions({ transactions }) {
     return <p className="text-body-secondary text-center my-4">Belum ada pengeluaran.</p>
   }
   return (
-    <ul className="list-group list-group-flush">
+    <ul className="list-group list-group-flush largest-transactions">
       {transactions.map((trx) => (
         <li key={trx.id} className="list-group-item px-0 d-flex justify-content-between align-items-start gap-2">
           <div className="min-w-0">
@@ -163,9 +167,9 @@ export default function DashboardPage() {
 
     content = (
       <>
-        <SummaryCards summary={{ ...summary, count: summary.transaction_count }} />
+        <SummaryCards prominent summary={{ ...summary, count: summary.transaction_count }} />
 
-        <div className="row row-cols-2 g-2 g-md-3 mb-4">
+        <div className="dashboard-stats row row-cols-2 g-2 g-md-3 mb-4">
           <StatTile
             label="Rata-rata pengeluaran / hari"
             value={formatRupiah(summary.avg_daily_expense)}
@@ -173,7 +177,7 @@ export default function DashboardPage() {
           />
           <StatTile
             label="Rasio pengeluaran"
-            value={summary.expense_ratio == null ? '—' : `${summary.expense_ratio.toLocaleString('id-ID')}%`}
+            value={summary.expense_ratio == null ? 'Belum tersedia' : `${summary.expense_ratio.toLocaleString('id-ID')}%`}
             hint={summary.expense_ratio == null ? 'Belum ada pemasukan' : 'dari pemasukan'}
           />
         </div>

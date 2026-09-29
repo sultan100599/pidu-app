@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import * as exportApi from '../api/export'
 import { getErrorMessage } from '../utils/errors'
+import { useDropdownBounds } from '../hooks/useDropdownBounds'
 
 const FORMATS = [
   { key: 'excel', label: 'Excel (.xlsx)', icon: 'bi-file-earmark-spreadsheet', run: exportApi.transactionsExcel },
@@ -13,6 +14,7 @@ export default function ExportMenu({ params, disabled = false }) {
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(null)
   const ref = useRef(null)
+  useDropdownBounds(ref, open)
 
   useEffect(() => {
     if (!open) return undefined
@@ -20,7 +22,10 @@ export default function ExportMenu({ params, disabled = false }) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false)
     }
     const onKey = (e) => {
-      if (e.key === 'Escape') setOpen(false)
+      if (e.key === 'Escape') {
+        setOpen(false)
+        ref.current?.querySelector('button')?.focus()
+      }
     }
     document.addEventListener('mousedown', onPointer)
     document.addEventListener('keydown', onKey)

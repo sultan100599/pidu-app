@@ -1,10 +1,17 @@
 import { formatNumber, formatRupiah } from '../utils/format'
+import { usePointerTilt } from '../hooks/usePointerTilt'
 
-// Kartu ringkasan pemasukan/pengeluaran/saldo/jumlah transaksi.
-// Nominal tidak dipotong (info utama); di layar sempit boleh turun baris.
-// Dipakai ulang di Phase 5 (dashboard).
-export default function SummaryCards({ summary }) {
+// Nominal boleh turun baris agar angka utuh tetap terbaca di HP.
+export default function SummaryCards({ summary, prominent = false }) {
+  const balanceRef = usePointerTilt()
   const cards = [
+    {
+      key: 'balance',
+      label: 'Saldo',
+      icon: 'bi-wallet2',
+      iconClass: summary && summary.balance < 0 ? 'text-danger' : 'text-success',
+      value: summary ? formatRupiah(summary.balance) : null,
+    },
     {
       key: 'income',
       label: 'Pemasukan',
@@ -20,13 +27,6 @@ export default function SummaryCards({ summary }) {
       value: summary ? formatRupiah(summary.expense) : null,
     },
     {
-      key: 'balance',
-      label: 'Saldo',
-      icon: 'bi-wallet2',
-      iconClass: summary && summary.balance < 0 ? 'text-danger' : 'text-success',
-      value: summary ? formatRupiah(summary.balance) : null,
-    },
-    {
       key: 'count',
       label: 'Jumlah transaksi',
       icon: 'bi-receipt',
@@ -37,12 +37,12 @@ export default function SummaryCards({ summary }) {
   ]
 
   return (
-    <div className="row row-cols-2 row-cols-xl-4 g-2 g-md-3 mb-4">
+    <div className={`summary-grid${prominent ? ' summary-grid-prominent' : ''}`}>
       {cards.map((card) => (
-        <div className="col" key={card.key}>
-          <div className="card h-100">
-            <div className="card-body d-flex align-items-center gap-3 py-3 px-2 px-sm-3">
-              <i className={`bi ${card.icon} fs-4 ${card.iconClass} d-none d-sm-inline`} aria-hidden="true"></i>
+        <div className={`min-w-0 summary-slot${card.key === 'balance' ? ' balance-stack' : ''}`} key={card.key} ref={card.key === 'balance' ? balanceRef : undefined}>
+          <div className="card h-100 summary-card" data-summary={card.key}>
+            <div className="card-body">
+              <i className={`bi ${card.icon} icon-tile summary-icon ${card.iconClass}`} aria-hidden="true"></i>
               <div className="min-w-0">
                 <div className="small text-body-secondary">{card.label}</div>
                 {card.value == null ? (

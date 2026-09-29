@@ -8,7 +8,7 @@ function SortableHeader({ label, column, sort, dir, onSort, className = '' }) {
     <th className={className} aria-sort={active ? (dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
       <button
         type="button"
-        className="btn btn-link p-0 border-0 fw-bold text-body text-decoration-none align-baseline"
+        className="table-sort"
         onClick={() => onSort(column)}
       >
         {label} <i className={`bi ${icon}`} aria-hidden="true"></i>
@@ -42,7 +42,7 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
                   {trx.description ? (
                     <span>{trx.description}</span>
                   ) : (
-                    <span className="text-body-secondary">{trx.category?.name ?? '—'}</span>
+                    <span className="text-body-secondary">{trx.category?.name ?? 'Tanpa kategori'}</span>
                   )}
                   {trx.notes && (
                     <div className="small text-body-secondary text-truncate" style={{ maxWidth: 320 }}>

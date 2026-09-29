@@ -1,6 +1,6 @@
 export default function FullPageSpinner() {
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+    <div className="boot-state d-flex justify-content-center align-items-center">
       <div className="spinner-border text-primary" role="status">
         <span className="visually-hidden">Memuat...</span>
       </div>
@@ -10,7 +10,7 @@ export default function FullPageSpinner() {
 
 export function BootErrorScreen({ message, onRetry, retrying }) {
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center vh-100 gap-3 text-center p-3">
+    <div className="boot-state d-flex flex-column justify-content-center align-items-center gap-3 text-center p-3">
       <i className="bi bi-wifi-off display-6 text-danger" aria-hidden="true"></i>
       <p className="mb-0">{message}</p>
       <button type="button" className="btn btn-primary" onClick={onRetry} disabled={retrying}>

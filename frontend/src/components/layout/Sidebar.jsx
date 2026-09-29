@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { MENU } from './nav'
 
@@ -11,7 +11,7 @@ function MenuLink({ item, onNavigate }) {
         onClick={onNavigate}
         className={({ isActive }) => `nav-link d-flex align-items-center gap-2${isActive ? ' active' : ''}`}
       >
-        <i className={`bi ${item.icon}`} aria-hidden="true"></i>
+        <i className={`bi ${item.icon} icon-tile`} aria-hidden="true"></i>
         <span>{item.label}</span>
       </NavLink>
     </li>
@@ -19,17 +19,41 @@ function MenuLink({ item, onNavigate }) {
 }
 
 export default function Sidebar({ open, onClose }) {
+  const panelRef = useRef(null)
+  const onCloseRef = useRef(onClose)
+  useEffect(() => { onCloseRef.current = onClose })
   useEffect(() => {
     if (!open) return undefined
+    const previousFocus = document.activeElement
+    const panel = panelRef.current
+    const controls = () => [...panel.querySelectorAll('button, a[href]')].filter((element) => element.getClientRects().length > 0)
+    controls()[0]?.focus()
     function handleKeyDown(event) {
-      if (event.key === 'Escape') onClose()
+      if (event.key === 'Escape') onCloseRef.current()
+      if (event.key === 'Tab' && window.matchMedia('(max-width: 991.98px)').matches) {
+        const items = controls()
+        const first = items[0]
+        const last = items.at(-1)
+        if (event.shiftKey && (document.activeElement === first || !panel.contains(document.activeElement))) {
+          event.preventDefault()
+          last?.focus()
+        } else if (!event.shiftKey && (document.activeElement === last || !panel.contains(document.activeElement))) {
+          event.preventDefault()
+          first?.focus()
+        }
+      }
     }
     document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [open, onClose])
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      if (previousFocus?.isConnected) previousFocus.focus()
+    }
+  }, [open])
 
   return (
     <aside
+      id="app-sidebar"
+      ref={panelRef}
       className={`sidebar offcanvas-lg offcanvas-start${open ? ' show' : ''}`}
       aria-label="Menu navigasi"
     >
@@ -50,7 +74,7 @@ export default function Sidebar({ open, onClose }) {
           {MENU.map((item) =>
             item.children ? (
               <li key={item.label} className="mt-2">
-                <div className="sidebar-group-label px-2 text-body-secondary text-uppercase small fw-semibold">
+                <div className="sidebar-group-label px-2 text-body-secondary small fw-semibold">
                   {item.label}
                 </div>
                 <ul className="nav nav-pills flex-column gap-1 mt-1">

@@ -7,9 +7,7 @@ import { createPortal } from 'react-dom'
 export default function Modal({ show, onClose, title, children, footer, busy = false }) {
   const titleId = useId()
   const dialogRef = useRef(null)
-  // onClose disimpan di ref supaya effect tidak jalan ulang tiap render
-  // (parent sering mengirim fungsi inline) — kalau jalan ulang, fokus akan
-  // melompat ke input pertama setiap kali user mengetik.
+  // Ref mencegah fokus melompat saat callback parent berubah ketika mengetik.
   const onCloseRef = useRef(onClose)
   const busyRef = useRef(busy)
   useEffect(() => {
@@ -21,10 +19,24 @@ export default function Modal({ show, onClose, title, children, footer, busy = f
     if (!show) return undefined
 
     const previousOverflow = document.body.style.overflow
+    const previousFocus = document.activeElement
     document.body.style.overflow = 'hidden'
 
     function handleKeyDown(event) {
       if (event.key === 'Escape' && !busyRef.current) onCloseRef.current()
+      if (event.key === 'Tab') {
+        const controls = [...dialogRef.current.querySelectorAll('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex="0"]')]
+          .filter((element) => element.getClientRects().length > 0)
+        const first = controls[0]
+        const last = controls.at(-1)
+        if (event.shiftKey && (document.activeElement === first || !dialogRef.current.contains(document.activeElement))) {
+          event.preventDefault()
+          last?.focus()
+        } else if (!event.shiftKey && (document.activeElement === last || !dialogRef.current.contains(document.activeElement))) {
+          event.preventDefault()
+          first?.focus()
+        }
+      }
     }
     document.addEventListener('keydown', handleKeyDown)
 
@@ -42,6 +54,7 @@ export default function Modal({ show, onClose, title, children, footer, busy = f
       document.body.style.overflow = previousOverflow
       document.removeEventListener('keydown', handleKeyDown)
       clearTimeout(timer)
+      if (previousFocus?.isConnected) previousFocus.focus()
     }
   }, [show])
 

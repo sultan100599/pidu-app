@@ -14,7 +14,10 @@ export function useChartTheme() {
       expense: v('--bs-danger'),
       text: v('--bs-secondary-color'),
       grid: v('--bs-border-color-translucent'),
-      surface: v('--bs-body-bg'),
+      surface: v('--pidu-surface'),
+      ink: v('--bs-body-color'),
+      softSurface: v('--pidu-peach'),
+      font: v('--pidu-font'),
     }
     // theme = pemicu hitung ulang setelah data-bs-theme berubah.
   }, [theme])

@@ -17,7 +17,7 @@ function getPages(current, last) {
 function PageButton({ page, active, onClick, label, disabled }) {
   return (
     <li className={`page-item ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}`}>
-      <button type="button" className="page-link" onClick={onClick} aria-label={label} aria-current={active ? 'page' : undefined}>
+      <button type="button" className="page-link" onClick={onClick} disabled={disabled} aria-label={label} aria-current={active ? 'page' : undefined}>
         {page}
       </button>
     </li>

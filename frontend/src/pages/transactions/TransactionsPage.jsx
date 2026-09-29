@@ -385,7 +385,7 @@ export default function TransactionsPage() {
               </li>
               <li>
                 <strong>Deskripsi:</strong>{' '}
-                {deleting.transaction.description || deleting.transaction.category?.name || '—'}
+                {deleting.transaction.description || deleting.transaction.category?.name || 'Tanpa deskripsi'}
               </li>
               <li>
                 <strong>Nominal:</strong>{' '}

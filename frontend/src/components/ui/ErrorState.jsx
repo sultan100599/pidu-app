@@ -1,6 +1,6 @@
 export default function ErrorState({ message, onRetry, retrying = false }) {
   return (
-    <div className="card">
+    <div className="card state-card">
       <div className="card-body text-center py-5">
         <i className="bi bi-exclamation-triangle display-4 text-danger" aria-hidden="true"></i>
         <h2 className="h5 mt-3">Terjadi kesalahan</h2>
