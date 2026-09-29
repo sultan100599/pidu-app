@@ -36,7 +36,7 @@ class DefaultCategoryService
     ];
 
     /**
-     * Buat kategori default untuk user (idempotent — lewati jika sudah ada).
+     * Buat kategori default untuk user; lewati kategori yang sudah ada.
      */
     public function createFor(User $user): void
     {

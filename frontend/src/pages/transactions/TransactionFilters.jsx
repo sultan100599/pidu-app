@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { PAYMENT_METHODS, TRANSACTION_TYPES } from '../../constants/enums'
 import { PERIOD_PRESETS } from '../../utils/period'
 
@@ -22,6 +23,7 @@ export default function TransactionFilters({
   activeCount,
   onReset,
 }) {
+  const t = useT()
   const [open, setOpen] = useState(false)
 
   const options = type ? categories.filter((c) => c.type === type) : categories
@@ -39,12 +41,12 @@ export default function TransactionFilters({
             aria-expanded={open}
           >
             <i className="bi bi-funnel me-1" aria-hidden="true"></i>
-            Filter
+            {t('Filter')}
             {activeCount > 0 && <span className="badge text-bg-primary ms-2">{activeCount}</span>}
           </button>
           {activeCount > 0 && (
             <button type="button" className="btn btn-link btn-sm text-danger" onClick={onReset}>
-              Reset filter
+              {t('Reset filter')}
             </button>
           )}
         </div>
@@ -53,7 +55,7 @@ export default function TransactionFilters({
           <div className="row g-2 align-items-end">
             <div className="col-12 col-lg-4">
               <label htmlFor="filter-search" className="form-label small mb-1">
-                Cari
+                {t('Cari')}
               </label>
               <div className="input-group">
                 <span className="input-group-text" aria-hidden="true">
@@ -63,7 +65,7 @@ export default function TransactionFilters({
                   type="search"
                   className="form-control"
                   id="filter-search"
-                  placeholder="Deskripsi atau catatan"
+                  placeholder={t('Deskripsi atau catatan')}
                   value={search}
                   onChange={(e) => onSearchChange(e.target.value)}
                 />
@@ -71,20 +73,20 @@ export default function TransactionFilters({
             </div>
             <div className="col-6 col-md-3 col-lg-2">
               <label htmlFor="filter-type" className="form-label small mb-1">
-                Jenis
+                {t('Jenis')}
               </label>
               <select id="filter-type" className="form-select" value={type} onChange={(e) => onTypeChange(e.target.value)}>
-                <option value="">Semua</option>
+                <option value="">{t('Semua')}</option>
                 {Object.entries(TRANSACTION_TYPES).map(([value, label]) => (
                   <option key={value} value={value}>
-                    {label}
+                    {t(label)}
                   </option>
                 ))}
               </select>
             </div>
             <div className="col-6 col-md-3 col-lg-2">
               <label htmlFor="filter-category" className="form-label small mb-1">
-                Kategori
+                {t('Kategori')}
               </label>
               <select
                 id="filter-category"
@@ -92,9 +94,9 @@ export default function TransactionFilters({
                 value={categoryId}
                 onChange={(e) => onCategoryChange(e.target.value)}
               >
-                <option value="">Semua kategori</option>
+                <option value="">{t('Semua kategori')}</option>
                 {expenseOptions.length > 0 && (
-                  <optgroup label="Pengeluaran">
+                  <optgroup label={t('Pengeluaran')}>
                     {expenseOptions.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -103,7 +105,7 @@ export default function TransactionFilters({
                   </optgroup>
                 )}
                 {incomeOptions.length > 0 && (
-                  <optgroup label="Pemasukan">
+                  <optgroup label={t('Pemasukan')}>
                     {incomeOptions.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -115,7 +117,7 @@ export default function TransactionFilters({
             </div>
             <div className="col-6 col-md-3 col-lg-2">
               <label htmlFor="filter-payment" className="form-label small mb-1">
-                Metode
+                {t('Metode')}
               </label>
               <select
                 id="filter-payment"
@@ -123,22 +125,22 @@ export default function TransactionFilters({
                 value={paymentMethod}
                 onChange={(e) => onPaymentMethodChange(e.target.value)}
               >
-                <option value="">Semua metode</option>
+                <option value="">{t('Semua metode')}</option>
                 {Object.entries(PAYMENT_METHODS).map(([value, label]) => (
                   <option key={value} value={value}>
-                    {label}
+                    {t(label)}
                   </option>
                 ))}
               </select>
             </div>
             <div className="col-6 col-md-3 col-lg-2">
               <label htmlFor="filter-period" className="form-label small mb-1">
-                Periode
+                {t('Periode')}
               </label>
               <select id="filter-period" className="form-select" value={period} onChange={(e) => onPeriodChange(e.target.value)}>
                 {PERIOD_PRESETS.map((preset) => (
                   <option key={preset.value} value={preset.value}>
-                    {preset.label}
+                    {t(preset.label)}
                   </option>
                 ))}
               </select>
@@ -149,7 +151,7 @@ export default function TransactionFilters({
             <div className="row g-2 align-items-end mt-1">
               <div className="col-6 col-md-3">
                 <label htmlFor="filter-start" className="form-label small mb-1">
-                  Dari tanggal
+                  {t('Dari tanggal')}
                 </label>
                 <input
                   type="date"
@@ -161,7 +163,7 @@ export default function TransactionFilters({
               </div>
               <div className="col-6 col-md-3">
                 <label htmlFor="filter-end" className="form-label small mb-1">
-                  Sampai tanggal
+                  {t('Sampai tanggal')}
                 </label>
                 <input
                   type="date"
@@ -174,7 +176,7 @@ export default function TransactionFilters({
               {customError && (
                 <div className="col-12">
                   <p className="text-danger small mb-0" role="alert">
-                    Tanggal akhir tidak boleh lebih awal dari tanggal mulai.
+                    {t('Tanggal akhir tidak boleh lebih awal dari tanggal mulai.')}
                   </p>
                 </div>
               )}
@@ -185,7 +187,7 @@ export default function TransactionFilters({
             {activeCount > 0 && (
               <button type="button" className="btn btn-link btn-sm text-danger px-0" onClick={onReset}>
                 <i className="bi bi-x-lg me-1" aria-hidden="true"></i>
-                Reset filter
+                {t('Reset filter')}
               </button>
             )}
           </div>

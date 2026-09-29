@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useT } from '../../i18n/LocaleProvider'
 import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
 import PeriodPicker, { usePeriodQuery } from '../../components/PeriodPicker'
@@ -14,6 +15,7 @@ function weekRange(row) {
 }
 
 export default function WeeklyReportPage() {
+  const t = useT()
   const navigate = useNavigate()
   const periodQuery = usePeriodQuery('this_month')
   const { range } = periodQuery
@@ -25,7 +27,7 @@ export default function WeeklyReportPage() {
     <>
       <PageHeader
         title="Rekap Mingguan"
-        subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)} · minggu Senin–Minggu` : ' '}
+        subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)} · ${t('minggu Senin–Minggu')}` : ' '}
         actions={<PeriodPicker query={periodQuery} idPrefix="weekly-period" />}
       />
       <ReportShell
@@ -33,21 +35,21 @@ export default function WeeklyReportPage() {
         totals={data?.totals}
         chart={
           data && {
-            labels: rows.map((r) => r.label),
+            labels: rows.map((r) => t(r.label)),
             income: rows.map((r) => r.income),
             expense: rows.map((r) => r.expense),
-            tooltipTitles: rows.map((r) => `${r.label} (${weekRange(r)})`),
+            tooltipTitles: rows.map((r) => `${t(r.label)} (${weekRange(r)})`),
           }
         }
       >
-        <p className="small text-body-secondary mb-2">Klik baris untuk melihat rekap harian minggu tersebut.</p>
+        <p className="small text-body-secondary mb-2">{t('Klik baris untuk melihat rekap harian minggu tersebut.')}</p>
         <ReportTable
           labelHeader="Minggu"
           rows={rows}
           rowKey={(r) => r.start_date}
           renderLabel={(r) => (
             <>
-              <div>{r.label}</div>
+              <div>{t(r.label)}</div>
               <div className="small text-body-secondary">{weekRange(r)}</div>
             </>
           )}
@@ -55,7 +57,7 @@ export default function WeeklyReportPage() {
           onRowClick={(r) =>
             navigate(`/reports/daily?period=custom&start_date=${r.start_date}&end_date=${r.end_date}`)
           }
-          rowActionLabel={(r) => `Rekap harian ${r.label}`}
+          rowActionLabel={(r) => t('Rekap harian {period}', { period: t(r.label) })}
         />
       </ReportShell>
     </>

@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
@@ -7,6 +8,7 @@ import BottomNav from './BottomNav'
 import PageSkeleton from '../ui/PageSkeleton'
 
 export default function AppLayout() {
+  const t = useT()
   const { pathname } = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const closeSidebar = () => setSidebarOpen(false)
@@ -30,7 +32,7 @@ export default function AppLayout() {
       )}
       <div className="app-content">
         <Topbar sidebarOpen={sidebarOpen} onMenuClick={() => setSidebarOpen(true)} />
-        <main className="app-main p-3 p-lg-4">
+        <main className="app-main p-3 p-lg-4" style={{ '--pidu-refresh-label': JSON.stringify(t('Memperbarui data...')) }}>
           <Suspense
             fallback={
               <PageSkeleton variant={pathname === '/' ? 'dashboard' : pathname.includes('calendar') ? 'calendar' : 'report'} />

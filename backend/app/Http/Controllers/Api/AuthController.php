@@ -21,7 +21,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->validated('email'))->first();
 
         if (! $user || ! Hash::check($request->validated('password'), $user->password)) {
-            throw ValidationException::withMessages(['email' => 'Email atau password salah.']);
+            throw ValidationException::withMessages(['email' => __('messages.login_failed')]);
         }
 
         return $this->tokenResponse($user);
@@ -43,7 +43,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Berhasil logout.']);
+        return response()->json(['message' => __('messages.logout')]);
     }
 
     public function me(Request $request): UserResource

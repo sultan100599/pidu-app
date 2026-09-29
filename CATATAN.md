@@ -11,8 +11,8 @@ Terakhir diperbarui: 29 September 2026.
 
 Pidu-App adalah aplikasi pencatat keuangan pribadi: catat pemasukan dan pengeluaran, lihat rekap harian sampai tahunan, atur budget per kategori, lalu export, impor, dan backup data.
 
-- **Status:** semua tahap (0–12) selesai dan di-commit di branch `main` (lihat `git log`).
-- **Tes:** 76 tes backend lolos di SQLite dan MariaDB; lint & build frontend bersih; `npm audit` dan `composer audit` tanpa celah.
+- **Status:** semua tahap (0–13) selesai dan di-commit di branch `main` (lihat `git log`). Phase 14 (dashboard washitsu) sedang dikerjakan.
+- **Tes:** 89 tes backend lolos di SQLite (76 tes sebelum Phase 13 juga lolos di MariaDB); lint & build frontend bersih; `npm audit` dan `composer audit` tanpa celah.
 - **Menjalankan:** `npm start` di `C:\Pidu-App`, lalu buka http://localhost:8010.
 - **Akun demo:** `demo@pidu.test` / `password` (data Juni–September 2026 + data ringan 2024–2025). Akun kedua `other@pidu.test` / `password` untuk uji isolasi data.
 
@@ -97,6 +97,14 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 ### Phase 12: Polish UX & visual (29 Sep, Codex + Claude)
 - Tombol Catat global + shortcut `N`, chip kategori favorit & metode terakhir diingat, "Batalkan" setelah hapus, navigasi bawah di HP, skeleton loading, heatmap kalender, sapaan + ringkasan hari ini, perbandingan dengan bulan/periode sebelumnya, angka Saldo menghitung naik, font judul Fraunces.
 - **Diperbaiki Claude setelah review:** chip kategori kosong di browser baru (kini dari riwayat transaksi) dan label pembanding yang terlalu panjang (kini "dari Agustus 2026").
+
+### Phase 13: Tagline & tiga bahasa (29 Sep, Codex + review Claude)
+- Tagline **Piduiteun** di bawah "Pidu" pada menu (asal nama Pidu, bahasa Sunda; tidak diterjemahkan).
+- **Satu tombol bahasa** di topbar dan halaman Masuk/Daftar: menampilkan bahasa aktif dan tiap klik berganti IN → EN → SU. Pilihan disimpan di browser (`pidu_locale`), tanpa reload.
+- Seluruh aplikasi diterjemahkan: teks frontend (`t('teks Indonesia')`, kamus `frontend/src/i18n/`, 487 kunci), pesan & validasi server (`backend/lang/{id,en,su}`, middleware membaca header `Accept-Language`). Bahasa Sunda memakai ragam lemes.
+- Tetap bahasa Indonesia: isi file Excel/PDF, data milik user (nama kategori, catatan), format Rupiah & singkatan angka grafik ("jt").
+- Cek kunci: `node frontend/scripts/check-locales.mjs`. Tes backend 89 lulus. Terjemahan Sunda sebaiknya dibaca penutur asli.
+- Codex sempat terhenti (memori laptop penuh) lalu dilanjutkan dengan `codex exec resume <id>`.
 
 ## 5. Anti-slop (aturan UI untuk AI agent)
 

@@ -25,8 +25,8 @@ class StoreTransactionRequest extends ApiRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'amount.gt' => 'Nominal harus lebih dari 0.',
-            'category_id.exists' => 'Kategori tidak ditemukan, tidak aktif, atau tidak sesuai jenis transaksi.',
+            'amount.gt' => __('validation.custom_messages.amount_positive'),
+            'category_id.exists' => __('validation.custom_messages.transaction_category'),
         ]);
     }
 

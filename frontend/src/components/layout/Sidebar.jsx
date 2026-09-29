@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { MENU } from './nav'
+import { useT } from '../../i18n/LocaleProvider'
 
 function MenuLink({ item, onNavigate }) {
+  const t = useT()
   return (
     <li className="nav-item">
       <NavLink
@@ -12,13 +14,14 @@ function MenuLink({ item, onNavigate }) {
         className={({ isActive }) => `nav-link d-flex align-items-center gap-2${isActive ? ' active' : ''}`}
       >
         <i className={`bi ${item.icon} icon-tile`} aria-hidden="true"></i>
-        <span>{item.label}</span>
+        <span>{t(item.label)}</span>
       </NavLink>
     </li>
   )
 }
 
 export default function Sidebar({ open, onClose }) {
+  const t = useT()
   const panelRef = useRef(null)
   const onCloseRef = useRef(onClose)
   useEffect(() => { onCloseRef.current = onClose })
@@ -55,16 +58,16 @@ export default function Sidebar({ open, onClose }) {
       id="app-sidebar"
       ref={panelRef}
       className={`sidebar offcanvas-lg offcanvas-start${open ? ' show' : ''}`}
-      aria-label="Menu navigasi"
+      aria-label={t('Menu navigasi')}
     >
       <div className="sidebar-brand d-flex align-items-center gap-2 px-3 py-3">
         <i className="bi bi-wallet2 fs-4 text-primary" aria-hidden="true"></i>
-        <span className="fw-bold fs-5">Pidu</span>
+        <span className="sidebar-brand-copy"><span className="fw-bold fs-5">Pidu</span><span className="sidebar-tagline" lang="su">Piduiteun</span></span>
         <button
           type="button"
           className="btn btn-sm btn-link text-body ms-auto d-lg-none"
           onClick={onClose}
-          aria-label="Tutup menu"
+          aria-label={t('Tutup menu')}
         >
           <i className="bi bi-x-lg" aria-hidden="true"></i>
         </button>
@@ -75,7 +78,7 @@ export default function Sidebar({ open, onClose }) {
             item.children ? (
               <li key={item.label} className="mt-2">
                 <div className="sidebar-group-label px-2 text-body-secondary small fw-semibold">
-                  {item.label}
+                  {t(item.label)}
                 </div>
                 <ul className="nav nav-pills flex-column gap-1 mt-1">
                   {item.children.map((child) => (

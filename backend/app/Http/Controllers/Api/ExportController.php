@@ -34,11 +34,10 @@ class ExportController extends Controller
         $count = $this->service->countTransactions($user, $period, $filters);
         if ($count > ExportService::PDF_MAX_ROWS) {
             throw ValidationException::withMessages([
-                'export' => sprintf(
-                    'PDF dibatasi %s transaksi (hasil filter: %s). Persempit filter atau gunakan export Excel.',
-                    number_format(ExportService::PDF_MAX_ROWS, 0, ',', '.'),
-                    number_format($count, 0, ',', '.'),
-                ),
+                'export' => __('messages.pdf_limit', [
+                    'max' => number_format(ExportService::PDF_MAX_ROWS, 0, ',', '.'),
+                    'count' => number_format($count, 0, ',', '.'),
+                ]),
             ]);
         }
 

@@ -47,7 +47,7 @@ class ReportController extends Controller
     public function day(PeriodRequest $request, string $date): JsonResponse
     {
         Validator::make(['date' => $date], ['date' => ['date_format:Y-m-d']], [
-            'date_format' => 'Tanggal harus berformat Y-m-d.',
+            'date_format' => __('validation.date_format', ['attribute' => __('validation.attributes.date'), 'format' => 'Y-m-d']),
         ])->validate();
 
         return response()->json($this->service->day($request->user(), $date, $request->filters()));

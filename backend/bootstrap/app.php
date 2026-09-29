@@ -17,6 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Global agar endpoint API yang tidak dikenal juga menerima locale.
+        $middleware->prepend(\App\Http\Middleware\SetLocaleFromRequest::class);
         // Request API yang belum auth → 401 JSON, bukan redirect ke route login.
         $middleware->redirectGuestsTo(
             fn (Request $request) => $request->is('api/*') ? null : route('login')
@@ -29,8 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
             if ($request->is('api/*')) {
                 $message = $e->getPrevious() instanceof ModelNotFoundException
-                    ? 'Data tidak ditemukan.'
-                    : 'Endpoint tidak ditemukan.';
+                    ? __('messages.not_found')
+                    : __('messages.endpoint_not_found');
 
                 return response()->json(['message' => $message], 404);
             }
@@ -39,14 +41,23 @@ return Application::configure(basePath: dirname(__DIR__))
         // Error DB: tetap di-log (report default), response generik tanpa detail SQL.
         $exceptions->render(function (QueryException $e, Request $request) {
             if ($request->is('api/*') && ! config('app.debug')) {
-                return response()->json(['message' => 'Terjadi kesalahan pada server.'], 500);
+                return response()->json(['message' => __('messages.server_error')], 500);
             }
         });
 
         // Error 500 lain di production: pesan generik tanpa trace.
         $exceptions->respond(function (Response $response, Throwable $e, Request $request) {
             if ($request->is('api/*') && $response->getStatusCode() >= 500 && ! config('app.debug')) {
-                return response()->json(['message' => 'Terjadi kesalahan pada server.'], $response->getStatusCode());
+                return response()->json(['message' => __('messages.server_error')], $response->getStatusCode());
+            }
+
+            if ($request->is('api/*') && in_array($response->getStatusCode(), [401, 403, 429], true)) {
+                $key = [401 => 'unauthenticated', 403 => 'forbidden', 429 => 'throttled'][$response->getStatusCode()];
+                $response->setContent(json_encode(['message' => __("messages.$key")]));
+            }
+
+            if ($request->is('api/*') && $e instanceof \Illuminate\Validation\ValidationException) {
+                return response()->json(['message' => collect($e->errors())->flatten()->first() ?? __('messages.validation_failed'), 'errors' => $e->errors()], 422);
             }
 
             return $response;

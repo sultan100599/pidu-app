@@ -1,8 +1,10 @@
 import { useLayoutEffect, useRef } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useTransactions } from '../../context/TransactionContext'
+import { useT } from '../../i18n/LocaleProvider'
 
 export default function BottomNav() {
+  const t = useT()
   const { openCreate } = useTransactions()
   const navRef = useRef(null)
   useLayoutEffect(() => {
@@ -18,15 +20,15 @@ export default function BottomNav() {
   }, [])
   const item = (to, icon, label) => (
     <NavLink to={to} end className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}>
-      <i className={`bi ${icon}`} aria-hidden="true" /><span>{label}</span>
+      <i className={`bi ${icon}`} aria-hidden="true" /><span>{t(label)}</span>
     </NavLink>
   )
   return (
-    <nav className="bottom-nav d-lg-none" aria-label="Navigasi utama" ref={navRef}>
+    <nav className="bottom-nav d-lg-none" aria-label={t('Navigasi utama')} ref={navRef}>
       {item('/', 'bi-house', 'Dashboard')}
       {item('/transactions', 'bi-receipt', 'Transaksi')}
       <button type="button" className="bottom-nav-item bottom-nav-create" onClick={openCreate}>
-        <i className="bi bi-plus-lg icon-tile" aria-hidden="true" /><span>Catat</span>
+        <i className="bi bi-plus-lg icon-tile" aria-hidden="true" /><span>{t('Catat')}</span>
       </button>
       {item('/reports/daily', 'bi-bar-chart', 'Laporan')}
       {item('/budgets', 'bi-piggy-bank', 'Budget')}

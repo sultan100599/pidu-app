@@ -1,11 +1,13 @@
 import { formatDate, formatRupiah } from '../../utils/format'
+import { useT } from '../../i18n/LocaleProvider'
 
 // Kartu per transaksi untuk layar kecil (< md).
 export default function TransactionList({ transactions, onEdit, onDelete }) {
+  const t = useT()
   return (
     <div>
       {transactions.map((trx) => {
-        const title = trx.description || trx.category?.name || 'Transaksi'
+        const title = trx.description || trx.category?.name || t('Transaksi')
         return (
           <div className="card transaction-card mb-2" key={trx.id}>
             <div className="card-body py-2 px-3">
@@ -13,7 +15,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
                 <div className="min-w-0">
                   <div className="fw-semibold text-truncate">{title}</div>
                   <div className="small text-body-secondary text-truncate">
-                    {formatDate(trx.transaction_date)} · {trx.category?.name ?? 'Tanpa kategori'} · {trx.payment_method_label}
+                    {formatDate(trx.transaction_date)} · {trx.category?.name ?? t('Tanpa kategori')} · {t(trx.payment_method_label)}
                   </div>
                 </div>
                 <div
@@ -28,7 +30,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
                 <button
                   type="button"
                   className="btn btn-sm btn-outline-primary"
-                  aria-label={`Edit transaksi ${title}`}
+                  aria-label={t('Edit transaksi {name}', { name: title })}
                   onClick={() => onEdit(trx)}
                 >
                   <i className="bi bi-pencil" aria-hidden="true"></i>
@@ -36,7 +38,7 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
                 <button
                   type="button"
                   className="btn btn-sm btn-outline-danger"
-                  aria-label={`Hapus transaksi ${title}`}
+                  aria-label={t('Hapus transaksi {name}', { name: title })}
                   onClick={() => onDelete(trx)}
                 >
                   <i className="bi bi-trash" aria-hidden="true"></i>

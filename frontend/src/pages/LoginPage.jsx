@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
+import { useLocale } from '../i18n/LocaleProvider'
+import LanguagePicker from '../components/LanguagePicker'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
@@ -7,6 +10,8 @@ import { getErrorMessage, getFieldErrors } from '../utils/errors'
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function LoginPage() {
+  const { t, locale } = useLocale()
+  useEffect(() => { document.title = `${t('Masuk')} · Pidu-App` }, [locale, t])
   const { login } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
@@ -64,12 +69,13 @@ export default function LoginPage() {
 
   return (
     <main className="auth-page d-flex align-items-center justify-content-center p-3">
-      <div className="position-absolute top-0 end-0 p-3">
+      <div className="auth-tools position-absolute top-0 end-0 p-3">
+        <LanguagePicker />
         <button
           type="button"
           className="btn btn-link text-body"
           onClick={toggleTheme}
-          aria-label={theme === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap'}
+          aria-label={t(theme === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap')}
         >
           <i className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon-stars'} fs-5`} aria-hidden="true"></i>
         </button>
@@ -80,19 +86,19 @@ export default function LoginPage() {
           <div className="auth-heading text-center">
             <i className="bi bi-wallet2 display-5 text-primary" aria-hidden="true"></i>
             <h1 className="h4 mt-2 mb-1">Pidu</h1>
-            <p className="text-body-secondary mb-0">Catat pemasukan & pengeluaranmu</p>
+            <p className="text-body-secondary mb-0">{t('Catat pemasukan & pengeluaranmu')}</p>
           </div>
 
           {formError && (
             <div className="alert alert-danger py-2" role="alert">
-              {formError}
+              {t(formError)}
             </div>
           )}
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
-                Email
+                {t('Email')}
               </label>
               <input
                 id="email"
@@ -104,12 +110,12 @@ export default function LoginPage() {
                 autoComplete="email"
                 autoFocus
               />
-              {fieldErrors.email && <div className="invalid-feedback">{fieldErrors.email}</div>}
+              {fieldErrors.email && <div className="invalid-feedback">{t(fieldErrors.email)}</div>}
             </div>
 
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
-                Password
+                {t('Password')}
               </label>
               <div className="input-group has-validation">
                 <input
@@ -125,37 +131,37 @@ export default function LoginPage() {
                   type="button"
                   className="btn btn-outline-secondary"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                  aria-label={t(showPassword ? 'Sembunyikan password' : 'Tampilkan password')}
                 >
                   <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true"></i>
                 </button>
                 {fieldErrors.password && (
-                  <div className="invalid-feedback">{fieldErrors.password}</div>
+                  <div className="invalid-feedback">{t(fieldErrors.password)}</div>
                 )}
               </div>
             </div>
 
             <button type="submit" className="btn btn-primary w-100" disabled={submitting}>
               {submitting && <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>}
-              Masuk
+              {t('Masuk')}
             </button>
           </form>
 
           <p className="text-center mt-3 mb-0">
-            Belum punya akun?{' '}
+            {t('Belum punya akun?')}{' '}
             <Link to="/register" className="text-decoration-none">
-              Daftar
+              {t('Daftar')}
             </Link>
           </p>
 
           {import.meta.env.DEV && (
             <div className="small mt-3 p-2 rounded border bg-body d-flex align-items-center justify-content-between gap-2">
               <div>
-                Akun demo: <span className="font-monospace">demo@pidu.test</span> /{' '}
+                {t('Akun demo:')} <span className="font-monospace">demo@pidu.test</span> /{' '}
                 <span className="font-monospace">password</span>
               </div>
               <button type="button" className="btn btn-sm btn-outline-primary" onClick={fillDemoAccount}>
-                Isi akun demo
+                {t('Isi akun demo')}
               </button>
             </div>
           )}

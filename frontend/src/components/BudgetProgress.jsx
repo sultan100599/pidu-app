@@ -1,5 +1,6 @@
 import { formatRupiah } from '../utils/format'
 import CategoryIcon from './CategoryIcon'
+import { useT } from '../i18n/LocaleProvider'
 
 // Status dari backend: exceeded ≥ 100%, warning ≥ 80%, selain itu ok.
 export const BUDGET_STATUS = {
@@ -15,6 +16,7 @@ export function budgetStatus(status) {
 // Progress satu budget: nama kategori + persen, bar berwarna status, lalu pemakaian.
 // `aside` (opsional) menggantikan persen di kanan atas (mis. badge status).
 export default function BudgetProgress({ budget, title, aside, height = 8 }) {
+  const t = useT()
   const status = budgetStatus(budget.status)
   const { category } = budget
 
@@ -35,7 +37,7 @@ export default function BudgetProgress({ budget, title, aside, height = 8 }) {
         className="progress budget-progress mt-1"
         style={{ height }}
         role="progressbar"
-        aria-label={`Pemakaian budget ${category.name}: ${budget.percentage.toLocaleString('id-ID')}%, ${status.label}`}
+        aria-label={t('Pemakaian budget {name}: {percent}%, {status}', { name: category.name, percent: budget.percentage.toLocaleString('id-ID'), status: t(status.label) })}
         aria-valuenow={Math.round(budget.percentage)}
         aria-valuemin={0}
         aria-valuemax={100}
@@ -43,11 +45,11 @@ export default function BudgetProgress({ budget, title, aside, height = 8 }) {
         <div className={`progress-bar ${status.bar}`} style={{ width: `${Math.min(100, budget.percentage)}%` }}></div>
       </div>
       <div className="small text-body-secondary mt-1">
-        {formatRupiah(budget.used)} dari {formatRupiah(budget.amount)} ·{' '}
+        {t('{used} dari {amount}', { used: formatRupiah(budget.used), amount: formatRupiah(budget.amount) })} ·{' '}
         {budget.remaining >= 0 ? (
-          `sisa ${formatRupiah(budget.remaining)}`
+          t('sisa {amount}', { amount: formatRupiah(budget.remaining) })
         ) : (
-          <span className="text-danger">lebih {formatRupiah(-budget.remaining)}</span>
+          <span className="text-danger">{t('lebih {amount}', { amount: formatRupiah(-budget.remaining) })}</span>
         )}
       </div>
     </div>

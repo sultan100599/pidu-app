@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
 import PeriodPicker, { usePeriodQuery } from '../../components/PeriodPicker'
@@ -9,6 +10,7 @@ import ReportShell from './ReportShell'
 import ReportTable from './ReportTable'
 
 export default function DailyReportPage() {
+  const t = useT()
   const periodQuery = usePeriodQuery('this_month')
   const { range } = periodQuery
   const fetchState = useFetch(range ? JSON.stringify(range) : null, (signal) => reportsApi.daily(range, { signal }))
@@ -39,7 +41,7 @@ export default function DailyReportPage() {
         }
       >
         <div className="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-2">
-          <span className="small text-body-secondary">Klik baris untuk melihat detail transaksi.</span>
+          <span className="small text-body-secondary">{t('Klik baris untuk melihat detail transaksi.')}</span>
           <div className="form-check form-switch mb-0">
             <input
               className="form-check-input"
@@ -50,7 +52,7 @@ export default function DailyReportPage() {
               onChange={(e) => setHideEmpty(e.target.checked)}
             />
             <label className="form-check-label small" htmlFor="hide-empty-days">
-              Sembunyikan hari kosong
+              {t('Sembunyikan hari kosong')}
             </label>
           </div>
         </div>
@@ -61,7 +63,7 @@ export default function DailyReportPage() {
           renderLabel={(r) => formatDate(r.date, 'long')}
           totals={data?.totals}
           onRowClick={(r) => setDetailDate(r.date)}
-          rowActionLabel={(r) => `Detail ${formatDate(r.date, 'long')}`}
+          rowActionLabel={(r) => t('Detail {date}', { date: formatDate(r.date, 'long') })}
         />
       </ReportShell>
       <DayDetailModal date={detailDate} onClose={() => setDetailDate(null)} />

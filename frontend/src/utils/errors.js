@@ -1,3 +1,5 @@
+import { t } from '../i18n/locale'
+
 const FALLBACK_MESSAGES = {
   429: 'Terlalu banyak percobaan, coba lagi sebentar.',
 }
@@ -6,11 +8,11 @@ export function getErrorMessage(err) {
   const response = err?.response
   if (response) {
     const message = response.data?.message
-    if (message) return message
-    if (response.status === 429) return FALLBACK_MESSAGES[429]
-    if (response.status >= 500) return 'Terjadi kesalahan pada server.'
+    if (message) return t(message)
+    if (response.status === 429) return t(FALLBACK_MESSAGES[429])
+    if (response.status >= 500) return t('Terjadi kesalahan pada server.')
   }
-  return 'Tidak dapat terhubung ke server.'
+  return t('Tidak dapat terhubung ke server.')
 }
 
 export function getFieldErrors(err) {

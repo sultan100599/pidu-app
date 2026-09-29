@@ -37,7 +37,7 @@ class UpdateBudgetRequest extends StoreBudgetRequest
                     (int) $this->input('year', $budget->year),
                     $budget->id,
                 )) {
-                    $validator->errors()->add('month', self::DUPLICATE_MESSAGE);
+                    $validator->errors()->add('month', __(self::DUPLICATE_MESSAGE));
                 }
             },
         ];

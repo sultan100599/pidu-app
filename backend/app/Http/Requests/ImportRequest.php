@@ -16,14 +16,14 @@ class ImportRequest extends ApiRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'file.extensions' => 'File harus berformat .xlsx, .xls, atau .csv.',
-            'file.max' => 'Ukuran file maksimal 5 MB.',
+            'file.extensions' => __('validation.extensions'),
+            'file.max' => __('validation.custom_messages.file_size'),
         ]);
     }
 
     public function attributes(): array
     {
-        return array_merge(parent::attributes(), ['file' => 'file']);
+        return array_merge(parent::attributes(), ['file' => __('validation.attributes.file')]);
     }
 
     public function dryRun(): bool

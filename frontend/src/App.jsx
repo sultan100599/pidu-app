@@ -1,6 +1,8 @@
 import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import { useT } from './i18n/LocaleProvider'
+import { ToastCloseButton } from './i18n/toast'
 import AppLayout from './components/layout/AppLayout'
 import GuestRoute from './components/GuestRoute'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -25,11 +27,12 @@ const YearlyReportPage = lazy(() => import('./pages/reports/YearlyReportPage'))
 const CalendarPage = lazy(() => import('./pages/reports/CalendarPage'))
 
 export default function App() {
+  const t = useT()
   const { theme } = useTheme()
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} theme={theme} />
+      <ToastContainer position="top-right" autoClose={3000} theme={theme} ariaLabel={t('Notifikasi') + ' (Alt+T)'} closeButton={ToastCloseButton} />
       <Routes>
         <Route element={<GuestRoute />}>
           <Route path="/login" element={<LoginPage />} />

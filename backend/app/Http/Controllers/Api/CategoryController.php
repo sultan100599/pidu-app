@@ -39,7 +39,7 @@ class CategoryController extends Controller
         $category = $request->user()->categories()->create($request->validated() + ['is_active' => true]);
 
         return response()->json([
-            'message' => 'Kategori berhasil ditambahkan.',
+            'message' => __('messages.category_created'),
             'data' => new CategoryResource($category->loadCount('transactions')),
         ], 201);
     }
@@ -50,7 +50,7 @@ class CategoryController extends Controller
         $category->update($request->validated());
 
         return response()->json([
-            'message' => 'Kategori berhasil diperbarui.',
+            'message' => __('messages.category_updated'),
             'data' => new CategoryResource($category->loadCount('transactions')),
         ]);
     }
@@ -61,7 +61,7 @@ class CategoryController extends Controller
         $category->update(['is_active' => ! $category->is_active]);
 
         return response()->json([
-            'message' => $category->is_active ? 'Kategori diaktifkan.' : 'Kategori dinonaktifkan.',
+            'message' => $category->is_active ? __('messages.category_enabled') : __('messages.category_disabled'),
             'data' => new CategoryResource($category->loadCount('transactions')),
         ]);
     }
@@ -72,12 +72,12 @@ class CategoryController extends Controller
 
         if ($category->transactions_count > 0) {
             throw ValidationException::withMessages([
-                'category' => "Kategori masih dipakai {$category->transactions_count} transaksi. Nonaktifkan saja.",
+                'category' => __('messages.category_used', ['count' => $category->transactions_count]),
             ]);
         }
 
         $category->delete();
 
-        return response()->json(['message' => 'Kategori berhasil dihapus.']);
+        return response()->json(['message' => __('messages.category_deleted')]);
     }
 }

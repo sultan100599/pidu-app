@@ -27,7 +27,7 @@ class BackupController extends Controller
     public function store(Request $request): JsonResponse
     {
         return response()->json([
-            'message' => 'Backup berhasil dibuat.',
+            'message' => __('messages.backup_created'),
             'data' => $this->service->backupUser($request->user()),
         ], 201);
     }

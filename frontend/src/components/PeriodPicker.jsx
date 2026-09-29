@@ -1,4 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
+import { useT } from '../i18n/LocaleProvider'
 import { getPeriodRange, isCustomRangeInvalid, PERIOD_PRESETS } from '../utils/period'
 
 const PRESETS = PERIOD_PRESETS.filter((p) => p.value !== 'all')
@@ -29,6 +30,7 @@ export function usePeriodQuery(defaultPreset = 'this_month') {
 
 // Pemilih periode (preset + kustom), state di URL lewat usePeriodQuery.
 export default function PeriodPicker({ query, idPrefix = 'period' }) {
+  const t = useT()
   const { period, start, end, invalid, update, defaultPreset } = query
 
   function changePreset(value) {
@@ -44,7 +46,7 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
     <div className="d-flex flex-wrap align-items-end gap-2">
       <div>
         <label htmlFor={`${idPrefix}-preset`} className="form-label small mb-1">
-          Periode
+          {t('Periode')}
         </label>
         <select
           id={`${idPrefix}-preset`}
@@ -54,7 +56,7 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
         >
           {PRESETS.map((p) => (
             <option key={p.value} value={p.value}>
-              {p.label}
+              {t(p.label)}
             </option>
           ))}
         </select>
@@ -63,7 +65,7 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
         <>
           <div>
             <label htmlFor={`${idPrefix}-start`} className="form-label small mb-1">
-              Dari
+              {t('Dari')}
             </label>
             <input
               type="date"
@@ -75,7 +77,7 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
           </div>
           <div>
             <label htmlFor={`${idPrefix}-end`} className="form-label small mb-1">
-              Sampai
+              {t('Sampai')}
             </label>
             <input
               type="date"
@@ -87,7 +89,7 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
           </div>
           {invalid && (
             <p className="text-danger small mb-0 w-100" role="alert">
-              Tanggal akhir tidak boleh lebih awal dari tanggal mulai.
+              {t('Tanggal akhir tidak boleh lebih awal dari tanggal mulai.')}
             </p>
           )}
         </>

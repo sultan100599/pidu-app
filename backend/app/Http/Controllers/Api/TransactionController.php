@@ -35,7 +35,7 @@ class TransactionController extends Controller
         $transaction = $this->service->create($request->user(), $request->payload());
 
         return response()->json([
-            'message' => 'Transaksi berhasil ditambahkan.',
+            'message' => __('messages.transaction_created'),
             'data' => new TransactionResource($transaction),
         ], 201);
     }
@@ -50,7 +50,7 @@ class TransactionController extends Controller
         $transaction = $this->service->update($request->transaction(), $request->payload());
 
         return response()->json([
-            'message' => 'Transaksi berhasil diperbarui.',
+            'message' => __('messages.transaction_updated'),
             'data' => new TransactionResource($transaction),
         ]);
     }
@@ -59,6 +59,6 @@ class TransactionController extends Controller
     {
         $this->service->delete($request->user()->transactions()->findOrFail($id));
 
-        return response()->json(['message' => 'Transaksi berhasil dihapus.']);
+        return response()->json(['message' => __('messages.transaction_deleted')]);
     }
 }

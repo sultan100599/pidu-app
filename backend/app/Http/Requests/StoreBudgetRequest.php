@@ -7,7 +7,7 @@ use Illuminate\Validation\Validator;
 
 class StoreBudgetRequest extends ApiRequest
 {
-    public const DUPLICATE_MESSAGE = 'Budget kategori ini untuk bulan tersebut sudah ada.';
+    public const DUPLICATE_MESSAGE = 'validation.custom_messages.budget_duplicate';
 
     public function rules(): array
     {
@@ -27,8 +27,8 @@ class StoreBudgetRequest extends ApiRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'amount.gt' => 'Nominal harus lebih dari 0.',
-            'category_id.exists' => 'Kategori tidak ditemukan atau bukan kategori pengeluaran.',
+            'amount.gt' => __('validation.custom_messages.amount_positive'),
+            'category_id.exists' => __('validation.custom_messages.budget_category'),
         ]);
     }
 
@@ -44,7 +44,7 @@ class StoreBudgetRequest extends ApiRequest
                     (int) $this->input('month'),
                     (int) $this->input('year'),
                 )) {
-                    $validator->errors()->add('category_id', self::DUPLICATE_MESSAGE);
+                    $validator->errors()->add('category_id', __(self::DUPLICATE_MESSAGE));
                 }
             },
         ];

@@ -1,4 +1,5 @@
-import { formatDate, formatDayMonth, MONTH_NAMES } from './format'
+import { formatDate, formatDayMonth, MONTH_NAMES } from './format.js'
+import { t } from '../i18n/locale.js'
 
 const pad = (n) => String(n).padStart(2, '0')
 const ymd = (y, m, d) => `${y}-${pad(m)}-${pad(d)}`
@@ -48,10 +49,10 @@ export function comparison(current, previous, kind) {
 }
 
 export function greeting(hour) {
-  if (hour >= 5 && hour < 11) return 'Selamat pagi'
-  if (hour >= 11 && hour < 15) return 'Selamat siang'
-  if (hour >= 15 && hour < 18) return 'Selamat sore'
-  return 'Selamat malam'
+  if (hour >= 5 && hour < 11) return t('Selamat pagi')
+  if (hour >= 11 && hour < 15) return t('Selamat siang')
+  if (hour >= 15 && hour < 18) return t('Selamat sore')
+  return t('Selamat malam')
 }
 
 export function heatLevel(expense, maximum) {

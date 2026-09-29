@@ -53,11 +53,11 @@ class TransactionsSheet implements FromQuery, ShouldAutoSize, WithColumnFormatti
     {
         return [
             ExcelDate::dateTimeToExcel($trx->transaction_date),
-            $trx->type->label(),
+            $trx->type->label('id'),
             $trx->category?->name,
             $trx->description,
             $trx->notes,
-            $trx->payment_method->label(),
+            $trx->payment_method->label('id'),
             // Pengeluaran negatif supaya kolom bisa langsung dijumlah = saldo.
             ($trx->type->value === 'expense' ? -1 : 1) * (float) $trx->amount,
         ];

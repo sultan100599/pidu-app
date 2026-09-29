@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../../i18n/toast'
 import * as importApi from '../../api/import'
 import PageHeader from '../../components/PageHeader'
 import ConfirmDialog from '../../components/ui/ConfirmDialog'
@@ -11,10 +12,11 @@ import { formatDate, formatNumber, formatRupiah } from '../../utils/format'
 const ACCEPT = '.xlsx,.xls,.csv'
 
 function Stat({ label, value, tone = '' }) {
+  const t = useT()
   return (
     <div className="col">
       <div className="border rounded p-2 h-100">
-        <div className="small text-body-secondary">{label}</div>
+        <div className="small text-body-secondary">{t(label)}</div>
         <div className={`fw-semibold ${tone}`}>{value}</div>
       </div>
     </div>
@@ -22,20 +24,21 @@ function Stat({ label, value, tone = '' }) {
 }
 
 function ErrorList({ errors, truncated }) {
+  const t = useT()
   return (
     <div className="card border-danger mb-3">
       <div className="card-header bg-transparent text-danger fw-semibold">
         <i className="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
-        Baris bermasalah
+        {t('Baris bermasalah')}
       </div>
       <div className="table-responsive">
         <table className="table table-sm mb-0 align-top">
           <thead>
             <tr>
               <th scope="col" style={{ width: 80 }}>
-                Baris
+                {t('Baris')}
               </th>
-              <th scope="col">Masalah</th>
+              <th scope="col">{t('Masalah')}</th>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +48,7 @@ function ErrorList({ errors, truncated }) {
                 <td>
                   <ul className="mb-0 ps-3">
                     {e.messages.map((m) => (
-                      <li key={m}>{m}</li>
+                      <li key={m}>{t(m)}</li>
                     ))}
                   </ul>
                 </td>
@@ -55,28 +58,29 @@ function ErrorList({ errors, truncated }) {
         </table>
       </div>
       {truncated && (
-        <div className="card-footer small text-body-secondary">Hanya 100 baris bermasalah pertama yang ditampilkan.</div>
+        <div className="card-footer small text-body-secondary">{t('Hanya 100 baris bermasalah pertama yang ditampilkan.')}</div>
       )}
     </div>
   )
 }
 
 function Preview({ rows, skipDuplicates }) {
+  const t = useT()
   return (
     <div className="card mb-3">
-      <div className="card-header bg-transparent fw-semibold">Pratinjau (10 baris pertama)</div>
+      <div className="card-header bg-transparent fw-semibold">{t('Pratinjau (10 baris pertama)')}</div>
       <div className="table-responsive">
         <table className="table table-sm mb-0 align-middle">
           <thead>
             <tr>
-              <th scope="col">Baris</th>
-              <th scope="col">Tanggal</th>
-              <th scope="col">Jenis</th>
-              <th scope="col">Kategori</th>
-              <th scope="col">Deskripsi</th>
-              <th scope="col">Metode</th>
+              <th scope="col">{t('Baris')}</th>
+              <th scope="col">{t('Tanggal')}</th>
+              <th scope="col">{t('Jenis')}</th>
+              <th scope="col">{t('Kategori')}</th>
+              <th scope="col">{t('Deskripsi')}</th>
+              <th scope="col">{t('Metode')}</th>
               <th scope="col" className="text-end">
-                Nominal
+                {t('Nominal')}
               </th>
             </tr>
           </thead>
@@ -85,15 +89,15 @@ function Preview({ rows, skipDuplicates }) {
               <tr key={r.row} className={r.duplicate && skipDuplicates ? 'text-body-secondary' : ''}>
                 <td>{r.row}</td>
                 <td className="text-nowrap">{formatDate(r.transaction_date)}</td>
-                <td>{TRANSACTION_TYPES[r.type]}</td>
+                <td>{t(TRANSACTION_TYPES[r.type])}</td>
                 <td>{r.category}</td>
                 <td>
-                  {r.description ?? 'Tanpa deskripsi'}
+                  {r.description ?? t('Tanpa deskripsi')}
                   {r.duplicate && (
-                    <span className="badge text-bg-secondary ms-2 fw-normal">{skipDuplicates ? 'duplikat, dilewati' : 'duplikat'}</span>
+                    <span className="badge text-bg-secondary ms-2 fw-normal">{t(skipDuplicates ? 'duplikat, dilewati' : 'duplikat')}</span>
                   )}
                 </td>
-                <td>{PAYMENT_METHODS[r.payment_method]}</td>
+                <td>{t(PAYMENT_METHODS[r.payment_method])}</td>
                 <td
                   className={`text-end text-nowrap ${
                     r.duplicate && skipDuplicates ? '' : r.type === 'income' ? 'text-success' : 'text-danger'
@@ -111,6 +115,7 @@ function Preview({ rows, skipDuplicates }) {
 }
 
 export default function ImportPage() {
+  const t = useT()
   const inputRef = useRef(null)
   const [file, setFile] = useState(null)
   const [analysis, setAnalysis] = useState(null)
@@ -188,7 +193,7 @@ export default function ImportPage() {
             ) : (
               <i className="bi bi-file-earmark-arrow-down me-2" aria-hidden="true"></i>
             )}
-            Unduh template
+            {t('Unduh template')}
           </button>
         }
       />
@@ -197,10 +202,10 @@ export default function ImportPage() {
         <div className="alert alert-success d-flex flex-wrap justify-content-between align-items-center gap-2" role="status">
           <span>
             <i className="bi bi-check-circle me-2" aria-hidden="true"></i>
-            {done}
+            {t(done)}
           </span>
           <Link to="/transactions" className="btn btn-sm btn-success">
-            Lihat transaksi
+            {t('Lihat transaksi')}
           </Link>
         </div>
       )}
@@ -208,7 +213,7 @@ export default function ImportPage() {
       <div className="card import-upload mb-3">
         <div className="card-body">
           <label htmlFor="import-file" className="form-label fw-semibold">
-            Pilih file (.xlsx, .xls, .csv, maks. 5 MB, 5.000 baris)
+            {t('Pilih file (.xlsx, .xls, .csv, maks. 5 MB, 5.000 baris)')}
           </label>
           <input
             ref={inputRef}
@@ -220,16 +225,15 @@ export default function ImportPage() {
             disabled={busy === 'analyze' || busy === 'commit'}
             aria-describedby="import-help"
           />
-          {fileError && <div className="invalid-feedback">{fileError}</div>}
+          {fileError && <div className="invalid-feedback">{t(fileError)}</div>}
           <div id="import-help" className="form-text">
-            Kolom: <strong>Tanggal</strong>, Jenis, <strong>Kategori</strong>, Deskripsi, Catatan, Metode, <strong>Nominal</strong>{' '}
-            (tebal = wajib). File hasil Export atau Backup Pidu-App bisa langsung diimpor. File hanya diperiksa dulu; tidak
-            ada yang disimpan sebelum Anda menekan <em>Impor</em>.
+            {t('Kolom wajib: Tanggal, Kategori, Nominal. Kolom opsional: Jenis, Deskripsi, Catatan, Metode.')}
+            {' '}{t('File hasil Export atau Backup Pidu-App bisa langsung diimpor. File hanya diperiksa dulu; tidak ada yang disimpan sebelum Anda menekan Impor.')}
           </div>
           {busy === 'analyze' && (
             <div className="d-flex align-items-center gap-2 mt-3 text-body-secondary" role="status">
               <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
-              Memeriksa file…
+              {t('Memeriksa file…')}
             </div>
           )}
         </div>
@@ -240,7 +244,7 @@ export default function ImportPage() {
           <div className="card mb-3">
             <div className="card-body">
               <h2 className="h6 mb-3">
-                Hasil pemeriksaan <span className="text-body-secondary fw-normal">: {file?.name}</span>
+                {t('Hasil pemeriksaan')} <span className="text-body-secondary fw-normal">: {file?.name}</span>
               </h2>
               <div className="row row-cols-2 row-cols-md-3 row-cols-xl-6 g-2 mb-3">
                 <Stat label="Baris data" value={formatNumber(analysis.total_rows)} />
@@ -254,8 +258,8 @@ export default function ImportPage() {
               {analysis.new_categories.length > 0 && (
                 <p className="small mb-2">
                   <i className="bi bi-tags me-1" aria-hidden="true"></i>
-                  Kategori baru yang akan dibuat:{' '}
-                  {analysis.new_categories.map((c) => `${c.name} (${TRANSACTION_TYPES[c.type]})`).join(', ')}
+                  {t('Kategori baru yang akan dibuat:')}{' '}
+                  {analysis.new_categories.map((c) => `${c.name} (${t(TRANSACTION_TYPES[c.type])})`).join(', ')}
                 </p>
               )}
 
@@ -269,15 +273,14 @@ export default function ImportPage() {
                     onChange={(e) => setSkipDuplicates(e.target.checked)}
                   />
                   <label className="form-check-label small" htmlFor="skip-duplicates">
-                    Lewati {formatNumber(analysis.duplicates)} baris yang sudah ada (tanggal, jenis, kategori, nominal, dan
-                    deskripsi sama)
+                    {t('Lewati {count} baris yang sudah ada (tanggal, jenis, kategori, nominal, dan deskripsi sama)', { count: formatNumber(analysis.duplicates) })}
                   </label>
                 </div>
               )}
 
               {analysis.invalid > 0 ? (
                 <div className="alert alert-danger mb-0" role="alert">
-                  Ada {formatNumber(analysis.invalid)} baris bermasalah. Perbaiki di file, lalu pilih file lagi.
+                  {t('Ada {count} baris bermasalah. Perbaiki di file, lalu pilih file lagi.', { count: formatNumber(analysis.invalid) })}
                 </div>
               ) : (
                 <div className="d-flex flex-wrap gap-2 mt-2">
@@ -288,10 +291,10 @@ export default function ImportPage() {
                     onClick={() => setConfirming(true)}
                   >
                     <i className="bi bi-upload me-2" aria-hidden="true"></i>
-                    {importCount > 0 ? `Impor ${formatNumber(importCount)} transaksi` : 'Tidak ada yang perlu diimpor'}
+                    {importCount > 0 ? t('Impor {count} transaksi', { count: formatNumber(importCount) }) : t('Tidak ada yang perlu diimpor')}
                   </button>
                   <button type="button" className="btn btn-outline-secondary" onClick={reset} disabled={busy != null}>
-                    Batal
+                    {t('Batal')}
                   </button>
                 </div>
               )}
@@ -313,14 +316,13 @@ export default function ImportPage() {
         onConfirm={commit}
       >
         <p className="mb-2">
-          <strong>{formatNumber(importCount)}</strong> transaksi dari <strong>{file?.name}</strong> akan ditambahkan.
+          {t('{count} transaksi dari {file} akan ditambahkan.', { count: formatNumber(importCount), file: file?.name })}
         </p>
         {analysis?.new_categories.length > 0 && (
-          <p className="mb-2 small">{analysis.new_categories.length} kategori baru akan dibuat.</p>
+          <p className="mb-2 small">{t('{count} kategori baru akan dibuat.', { count: analysis.new_categories.length })}</p>
         )}
         <p className="mb-0 small text-body-secondary">
-          Semua baris disimpan sekaligus (jika gagal, tidak ada yang tersimpan). Transaksi yang sudah diimpor bisa dihapus
-          dari halaman Transaksi.
+          {t('Semua baris disimpan sekaligus (jika gagal, tidak ada yang tersimpan). Transaksi yang sudah diimpor bisa dihapus dari halaman Transaksi.')}
         </p>
       </ConfirmDialog>
     </>

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useT } from '../../i18n/LocaleProvider'
 import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
 import { useFetch } from '../../hooks/useFetch'
@@ -6,6 +7,7 @@ import ReportShell from './ReportShell'
 import ReportTable from './ReportTable'
 
 export default function YearlyReportPage() {
+  const t = useT()
   const navigate = useNavigate()
   const fetchState = useFetch('yearly', (signal) => reportsApi.yearly({}, { signal }))
   const { data } = fetchState
@@ -28,7 +30,7 @@ export default function YearlyReportPage() {
           }
         }
       >
-        <p className="small text-body-secondary mb-2">Klik baris untuk melihat rekap bulanan tahun tersebut.</p>
+        <p className="small text-body-secondary mb-2">{t('Klik baris untuk melihat rekap bulanan tahun tersebut.')}</p>
         <ReportTable
           labelHeader="Tahun"
           rows={rows}
@@ -36,7 +38,7 @@ export default function YearlyReportPage() {
           renderLabel={(r) => r.year}
           totals={data?.totals}
           onRowClick={(r) => navigate(`/reports/monthly?year=${r.year}`)}
-          rowActionLabel={(r) => `Rekap bulanan ${r.year}`}
+          rowActionLabel={(r) => t('Rekap bulanan {year}', { year: r.year })}
         />
       </ReportShell>
     </>

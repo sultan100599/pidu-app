@@ -78,8 +78,8 @@ class ExportService
         $period = Period::year($year);
 
         $daily = $this->reports->daily($user, $period, []);
-        $weekly = $this->reports->weekly($user, $period, []);
-        $monthly = $this->reports->monthly($user, $year, []);
+        $weekly = \App\Support\Locale::in('id', fn () => $this->reports->weekly($user, $period, []));
+        $monthly = \App\Support\Locale::in('id', fn () => $this->reports->monthly($user, $year, []));
         $yearly = $this->reports->yearly($user, []);
         $categories = $this->reports->categoryTotals($user, $period);
         $budgets = $this->budgetRows($user, $year);

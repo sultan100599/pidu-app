@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../../i18n/toast'
 import * as transactionsApi from '../../api/transactions'
 import AmountInput from '../../components/ui/AmountInput'
 import Modal from '../../components/ui/Modal'
@@ -44,6 +45,7 @@ function validate(form) {
 
 // Layout memasang ulang form setiap kali dialog dibuka.
 export default function TransactionFormModal({ show, transaction, categories, categoriesLoading, categoriesError, onRetryCategories, onClose, onSaved }) {
+  const t = useT()
   const { user } = useAuth()
   const [preferences, setPreferences] = useState(() => readPreferences(user?.id))
   const isEdit = Boolean(transaction)
@@ -156,7 +158,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
   const footer = (
     <>
       <button type="button" className="btn btn-outline-secondary" onClick={close} disabled={submitting}>
-        Batal
+        {t('Batal')}
       </button>
       {!isEdit && (
         <button
@@ -165,12 +167,12 @@ export default function TransactionFormModal({ show, transaction, categories, ca
           onClick={() => submit(true)}
           disabled={submitting}
         >
-          Simpan & tambah lagi
+          {t('Simpan & tambah lagi')}
         </button>
       )}
       <button type="submit" form="transaction-form" className="btn btn-primary" disabled={submitting}>
         {submitting && <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>}
-        Simpan
+        {t('Simpan')}
       </button>
     </>
   )
@@ -186,11 +188,11 @@ export default function TransactionFormModal({ show, transaction, categories, ca
     >
       {formError && (
         <div className="alert alert-danger py-2" role="alert">
-          {formError}
+          {t(formError)}
         </div>
       )}
       {categoriesError && <div className="alert alert-danger" role="alert">
-        {getErrorMessage(categoriesError)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={onRetryCategories}>Muat kategori lagi</button>
+        {getErrorMessage(categoriesError)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={onRetryCategories}>{t('Muat kategori lagi')}</button>
       </div>}
 
       <form
@@ -203,7 +205,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
       >
         <div className="mb-3">
           <span className="form-label d-block" id="trx-type-label">
-            Jenis
+            {t('Jenis')}
           </span>
           <div className="btn-group w-100" role="group" aria-labelledby="trx-type-label">
             <button
@@ -213,7 +215,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
               onClick={() => changeType('expense')}
             >
               <i className="bi bi-arrow-up-circle me-1" aria-hidden="true"></i>
-              Pengeluaran
+              {t('Pengeluaran')}
             </button>
             <button
               type="button"
@@ -222,16 +224,16 @@ export default function TransactionFormModal({ show, transaction, categories, ca
               onClick={() => changeType('income')}
             >
               <i className="bi bi-arrow-down-circle me-1" aria-hidden="true"></i>
-              Pemasukan
+              {t('Pemasukan')}
             </button>
           </div>
-          {errors.type && <div className="text-danger small mt-1">{errors.type}</div>}
+          {errors.type && <div className="text-danger small mt-1">{t(errors.type)}</div>}
         </div>
 
         <div className="row g-3 mb-3">
           <div className="col-sm-6">
             <label htmlFor="trx-date" className="form-label">
-              Tanggal
+              {t('Tanggal')}
             </label>
             <input
               type="date"
@@ -240,11 +242,11 @@ export default function TransactionFormModal({ show, transaction, categories, ca
               value={form.transaction_date}
               onChange={(e) => setField('transaction_date', e.target.value)}
             />
-            {errors.transaction_date && <div className="invalid-feedback">{errors.transaction_date}</div>}
+            {errors.transaction_date && <div className="invalid-feedback">{t(errors.transaction_date)}</div>}
           </div>
           <div className="col-sm-6">
             <label htmlFor="trx-amount" className="form-label">
-              Nominal
+              {t('Nominal')}
             </label>
             <AmountInput
               id="trx-amount"
@@ -252,15 +254,15 @@ export default function TransactionFormModal({ show, transaction, categories, ca
               onChange={(value) => setField('amount', value)}
               invalid={Boolean(errors.amount)}
             />
-            {errors.amount && <div className="invalid-feedback d-block">{errors.amount}</div>}
+            {errors.amount && <div className="invalid-feedback d-block">{t(errors.amount)}</div>}
           </div>
         </div>
 
         <div className="mb-3">
           <label htmlFor="trx-category" className="form-label">
-            Kategori
+            {t('Kategori')}
           </label>
-          {quickCategories.length > 0 && <div className="quick-categories mb-2" role="group" aria-label="Kategori yang sering dipakai">
+          {quickCategories.length > 0 && <div className="quick-categories mb-2" role="group" aria-label={t('Kategori yang sering dipakai')}>
             {quickCategories.map((category) => <button key={category.id} type="button"
               className="category-chip" aria-pressed={form.category_id === String(category.id)}
               onClick={() => setField('category_id', String(category.id))}>
@@ -275,25 +277,25 @@ export default function TransactionFormModal({ show, transaction, categories, ca
             value={form.category_id}
             onChange={(e) => setField('category_id', e.target.value)}
           >
-            <option value="">Pilih kategori</option>
+            <option value="">{t('Pilih kategori')}</option>
             {options.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
-                {c.is_active ? '' : ' (nonaktif)'}
+                {c.is_active ? '' : ' ' + t('(nonaktif)')}
               </option>
             ))}
           </select>
-          {errors.category_id && <div className="invalid-feedback">{errors.category_id}</div>}
+          {errors.category_id && <div className="invalid-feedback">{t(errors.category_id)}</div>}
           {!categoriesLoading && !categoriesError && options.length === 0 && (
             <div className="form-text">
-              Belum ada kategori aktif untuk jenis ini. <Link to="/categories" onClick={close}>Kelola kategori</Link>
+              {t('Belum ada kategori aktif untuk jenis ini.')} <Link to="/categories" onClick={close}>{t('Kelola kategori')}</Link>
             </div>
           )}
         </div>
 
         <div className="mb-3">
           <label htmlFor="trx-payment" className="form-label">
-            Metode pembayaran
+            {t('Metode pembayaran')}
           </label>
           <select
             id="trx-payment"
@@ -303,16 +305,16 @@ export default function TransactionFormModal({ show, transaction, categories, ca
           >
             {Object.entries(PAYMENT_METHODS).map(([value, label]) => (
               <option key={value} value={value}>
-                {label}
+                {t(label)}
               </option>
             ))}
           </select>
-          {errors.payment_method && <div className="invalid-feedback">{errors.payment_method}</div>}
+          {errors.payment_method && <div className="invalid-feedback">{t(errors.payment_method)}</div>}
         </div>
 
         <div className="mb-3">
           <label htmlFor="trx-description" className="form-label">
-            Deskripsi <span className="text-body-secondary small">(opsional)</span>
+            {t('Deskripsi')} <span className="text-body-secondary small">{t('(opsional)')}</span>
           </label>
           <input
             type="text"
@@ -321,14 +323,14 @@ export default function TransactionFormModal({ show, transaction, categories, ca
             className={`form-control ${errors.description ? 'is-invalid' : ''}`}
             value={form.description}
             onChange={(e) => setField('description', e.target.value)}
-            placeholder="mis. Makan siang"
+            placeholder={t('mis. Makan siang')}
           />
-          {errors.description && <div className="invalid-feedback">{errors.description}</div>}
+          {errors.description && <div className="invalid-feedback">{t(errors.description)}</div>}
         </div>
 
         <div>
           <label htmlFor="trx-notes" className="form-label">
-            Catatan <span className="text-body-secondary small">(opsional)</span>
+            {t('Catatan')} <span className="text-body-secondary small">{t('(opsional)')}</span>
           </label>
           <textarea
             id="trx-notes"
@@ -338,7 +340,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
             value={form.notes}
             onChange={(e) => setField('notes', e.target.value)}
           ></textarea>
-          {errors.notes && <div className="invalid-feedback">{errors.notes}</div>}
+          {errors.notes && <div className="invalid-feedback">{t(errors.notes)}</div>}
         </div>
       </form>
     </Modal>

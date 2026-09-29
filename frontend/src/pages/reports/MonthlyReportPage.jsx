@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
+import { MONTH_NAMES } from '../../utils/format'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
@@ -9,6 +11,7 @@ import ReportTable from './ReportTable'
 import Stepper from '../../components/ui/Stepper'
 
 export default function MonthlyReportPage() {
+  const t = useT()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   // Tanggal "sekarang" dibekukan saat mount supaya render tetap murni.
@@ -30,7 +33,7 @@ export default function MonthlyReportPage() {
     <>
       <PageHeader
         title="Rekap Bulanan"
-        subtitle={`Januari – Desember ${year}`}
+        subtitle={`${MONTH_NAMES[0]} – ${MONTH_NAMES[11]} ${year}`}
         actions={
           <Stepper
             label={year}
@@ -45,25 +48,25 @@ export default function MonthlyReportPage() {
       <ReportShell
         fetchState={fetchState}
         totals={data?.totals}
-        emptyTitle={`Belum ada transaksi di tahun ${year}`}
+        emptyTitle={t('Belum ada transaksi di tahun {year}', { year })}
         chart={
           data && {
-            labels: rows.map((r) => r.label.slice(0, 3)),
+            labels: rows.map((r) => MONTH_NAMES[r.month - 1].slice(0, 3)),
             income: rows.map((r) => r.income),
             expense: rows.map((r) => r.expense),
-            tooltipTitles: rows.map((r) => `${r.label} ${year}`),
+            tooltipTitles: rows.map((r) => `${MONTH_NAMES[r.month - 1]} ${year}`),
           }
         }
       >
-        <p className="small text-body-secondary mb-2">Klik baris untuk melihat rekap harian bulan tersebut.</p>
+        <p className="small text-body-secondary mb-2">{t('Klik baris untuk melihat rekap harian bulan tersebut.')}</p>
         <ReportTable
           labelHeader="Bulan"
           rows={rows}
           rowKey={(r) => r.month}
-          renderLabel={(r) => r.label}
+          renderLabel={(r) => MONTH_NAMES[r.month - 1]}
           totals={data?.totals}
           onRowClick={openMonth}
-          rowActionLabel={(r) => `Rekap harian ${r.label} ${year}`}
+          rowActionLabel={(r) => t('Rekap harian {period}', { period: `${MONTH_NAMES[r.month - 1]} ${year}` })}
         />
       </ReportShell>
     </>

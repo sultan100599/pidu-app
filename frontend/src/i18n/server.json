@@ -1,0 +1,777 @@
+[
+    [
+        "Email atau password salah.",
+        "Incorrect email or password.",
+        "Email atanapi kecap akses lepat."
+    ],
+    [
+        "Berhasil logout.",
+        "Signed out.",
+        "Parantos kaluar."
+    ],
+    [
+        "Backup berhasil dibuat.",
+        "Backup created.",
+        "Cadangan parantos didamel."
+    ],
+    [
+        "Transaksi berhasil ditambahkan.",
+        "Transaction saved.",
+        "Transaksi parantos disimpen."
+    ],
+    [
+        "Transaksi berhasil diperbarui.",
+        "Transaction updated.",
+        "Transaksi parantos diropéa."
+    ],
+    [
+        "Transaksi berhasil dihapus.",
+        "Transaction deleted.",
+        "Transaksi parantos dipupus."
+    ],
+    [
+        "Budget berhasil ditambahkan.",
+        "Budget added.",
+        "Anggaran parantos ditambihan."
+    ],
+    [
+        "Budget berhasil diperbarui.",
+        "Budget updated.",
+        "Anggaran parantos diropéa."
+    ],
+    [
+        "Budget berhasil dihapus.",
+        "Budget deleted.",
+        "Anggaran parantos dipupus."
+    ],
+    [
+        "Kategori berhasil ditambahkan.",
+        "Category added.",
+        "Kategori parantos ditambihan."
+    ],
+    [
+        "Kategori berhasil diperbarui.",
+        "Category updated.",
+        "Kategori parantos diropéa."
+    ],
+    [
+        "Kategori berhasil dihapus.",
+        "Category deleted.",
+        "Kategori parantos dipupus."
+    ],
+    [
+        "Kategori diaktifkan.",
+        "Category enabled.",
+        "Kategori parantos diaktipkeun."
+    ],
+    [
+        "Kategori dinonaktifkan.",
+        "Category disabled.",
+        "Kategori parantos dinonaktipkeun."
+    ],
+    [
+        "Kategori masih dipakai {count} transaksi. Nonaktifkan saja.",
+        "This category is used by {count} transactions. Disable it instead.",
+        "Kategori ieu masih dianggo ku {count} transaksi. Mangga nonaktipkeun."
+    ],
+    [
+        "Data tidak ditemukan.",
+        "Data not found.",
+        "Data teu kapendak."
+    ],
+    [
+        "Endpoint tidak ditemukan.",
+        "Endpoint not found.",
+        "Endpoint teu kapendak."
+    ],
+    [
+        "Terjadi kesalahan pada server.",
+        "A server error occurred.",
+        "Aya kalepatan dina server."
+    ],
+    [
+        "Silakan login terlebih dahulu.",
+        "Please sign in first.",
+        "Mangga lebet heula."
+    ],
+    [
+        "Akses tidak diizinkan.",
+        "Access denied.",
+        "Aksés teu diidinan."
+    ],
+    [
+        "Terlalu banyak percobaan, coba lagi sebentar.",
+        "Too many attempts. Please try again shortly.",
+        "Seueur teuing percobaan. Mangga cobian deui sakedap deui."
+    ],
+    [
+        "Data yang diberikan tidak valid.",
+        "The submitted data is invalid.",
+        "Data anu dilebetkeun teu leres."
+    ],
+    [
+        "Masih ada {count} baris bermasalah. Perbaiki file lalu coba lagi.",
+        "There are {count} invalid rows. Fix the file and try again.",
+        "Masih aya {count} baris anu lepat. Mangga lereskeun berkas teras cobian deui."
+    ],
+    [
+        "Masih ada {count} baris bermasalah.",
+        "There are {count} invalid rows.",
+        "Masih aya {count} baris anu lepat."
+    ],
+    [
+        "{count} transaksi berhasil diimpor.",
+        "{count} transactions imported.",
+        "{count} transaksi parantos diimpor."
+    ],
+    [
+        "{count} duplikat dilewati.",
+        "{count} duplicates skipped.",
+        "{count} duplikat diliwatan."
+    ],
+    [
+        "{count} kategori baru dibuat.",
+        "{count} new categories created.",
+        "{count} kategori énggal parantos didamel."
+    ],
+    [
+        "Maksimal {count} baris per impor. Pecah file menjadi beberapa bagian.",
+        "Import up to {count} rows at a time. Split the file into smaller files.",
+        "Maksimal {count} baris sakali impor. Mangga bagi berkas kana sababaraha bagian."
+    ],
+    [
+        "File tidak berisi baris transaksi.",
+        "The file contains no transaction rows.",
+        "Berkas teu ngandung baris transaksi."
+    ],
+    [
+        "File tidak bisa dibaca. Pastikan formatnya .xlsx, .xls, atau .csv.",
+        "Cannot read the file. Use .xlsx, .xls, or .csv.",
+        "Berkas teu tiasa dibaca. Mangga anggo .xlsx, .xls, atanapi .csv."
+    ],
+    [
+        "Kolom wajib tidak ditemukan di baris pertama: {columns}. Gunakan template impor.",
+        "Required columns missing from the first row: {columns}. Use the import template.",
+        "Kolom wajib teu kapendak dina baris kahiji: {columns}. Mangga anggo témplat impor."
+    ],
+    [
+        "Tanggal tidak valid (gunakan tanggal Excel atau format dd/mm/yyyy).",
+        "Invalid date (use an Excel date or dd/mm/yyyy).",
+        "Ping kaping teu leres (anggo ping kaping Excel atanapi dd/mm/yyyy)."
+    ],
+    [
+        "Jenis harus Pemasukan atau Pengeluaran.",
+        "Type must be Income or Expense.",
+        "Jinis kedah Panghasilan atanapi Pangeluaran."
+    ],
+    [
+        "Jenis wajib diisi (Pemasukan/Pengeluaran).",
+        "Type is required (Income/Expense).",
+        "Jinis kedah dieusian (Panghasilan/Pangeluaran)."
+    ],
+    [
+        "Nominal terlalu besar.",
+        "Amount is too large.",
+        "Nominal ageung teuing."
+    ],
+    [
+        "Metode tidak dikenal (pilihan: {choices}).",
+        "Unknown payment method (options: {choices}).",
+        "Métode teu dikenal (pilihan: {choices})."
+    ],
+    [
+        "PDF dibatasi {max} transaksi (hasil filter: {count}). Persempit filter atau gunakan export Excel.",
+        "PDF is limited to {max} transactions ({count} match your filters). Narrow the filters or export to Excel.",
+        "PDF diwatesan {max} transaksi (hasil saringan: {count}). Mangga heureutkeun saringan atanapi ékspor ka Excel."
+    ],
+    [
+        "Minggu {number}",
+        "Week {number}",
+        "Minggu ka-{number}"
+    ],
+    [
+        "Pemasukan",
+        "Income",
+        "Panghasilan"
+    ],
+    [
+        "Pengeluaran",
+        "Expense",
+        "Pangeluaran"
+    ],
+    [
+        "Cash",
+        "Cash",
+        "Tunai"
+    ],
+    [
+        "Transfer",
+        "Transfer",
+        "Transfer"
+    ],
+    [
+        "Debit",
+        "Debit",
+        "Debit"
+    ],
+    [
+        "Kartu Kredit",
+        "Credit card",
+        "Kartu kiridit"
+    ],
+    [
+        "E-Wallet",
+        "E-wallet",
+        "Dompet éléktronik"
+    ],
+    [
+        "QRIS",
+        "QRIS",
+        "QRIS"
+    ],
+    [
+        "Lainnya",
+        "Other",
+        "Sanésna"
+    ],
+    [
+        "Januari",
+        "January",
+        "Januari"
+    ],
+    [
+        "Februari",
+        "February",
+        "Pébruari"
+    ],
+    [
+        "Maret",
+        "March",
+        "Maret"
+    ],
+    [
+        "April",
+        "April",
+        "April"
+    ],
+    [
+        "Mei",
+        "May",
+        "Méi"
+    ],
+    [
+        "Juni",
+        "June",
+        "Juni"
+    ],
+    [
+        "Juli",
+        "July",
+        "Juli"
+    ],
+    [
+        "Agustus",
+        "August",
+        "Agustus"
+    ],
+    [
+        "September",
+        "September",
+        "Séptémber"
+    ],
+    [
+        "Oktober",
+        "October",
+        "Oktober"
+    ],
+    [
+        "November",
+        "November",
+        "Nopémber"
+    ],
+    [
+        "Desember",
+        "December",
+        "Désémber"
+    ],
+    [
+        "{attribute} wajib diisi.",
+        "The {attribute} field is required.",
+        "{attribute} kedah dieusian."
+    ],
+    [
+        "{attribute} wajib diisi bersama {values}.",
+        "The {attribute} field is required with {values}.",
+        "{attribute} kedah dieusian sareng {values}."
+    ],
+    [
+        "{attribute} harus berupa teks.",
+        "The {attribute} must be text.",
+        "{attribute} kedah mangrupa téks."
+    ],
+    [
+        "{attribute} harus berupa bilangan bulat.",
+        "The {attribute} must be a whole number.",
+        "{attribute} kedah mangrupa wilangan buleud."
+    ],
+    [
+        "{attribute} harus berupa angka.",
+        "The {attribute} must be a number.",
+        "{attribute} kedah mangrupa angka."
+    ],
+    [
+        "{attribute} harus bernilai benar atau salah.",
+        "The {attribute} must be true or false.",
+        "{attribute} kedah leres atanapi lepat."
+    ],
+    [
+        "{attribute} harus berupa alamat email yang valid.",
+        "The {attribute} must be a valid email address.",
+        "{attribute} kedah mangrupa alamat email anu leres."
+    ],
+    [
+        "{attribute} harus berformat {format}.",
+        "The {attribute} must use the format {format}.",
+        "{attribute} kedah nganggo format {format}."
+    ],
+    [
+        "{attribute} harus sama dengan atau setelah {date}.",
+        "The {attribute} must be on or after {date}.",
+        "{attribute} kedah sami sareng atanapi saatos {date}."
+    ],
+    [
+        "{attribute} maksimal 2 angka di belakang koma.",
+        "The {attribute} may have up to 2 decimal places.",
+        "{attribute} maksimal 2 angka di tukangeun koma."
+    ],
+    [
+        "{attribute} tidak valid.",
+        "The selected {attribute} is invalid.",
+        "{attribute} teu leres."
+    ],
+    [
+        "{attribute} tidak valid.",
+        "The selected {attribute} is invalid.",
+        "{attribute} teu leres."
+    ],
+    [
+        "{attribute} tidak valid.",
+        "The selected {attribute} is invalid.",
+        "{attribute} teu leres."
+    ],
+    [
+        "{attribute} sudah digunakan.",
+        "The {attribute} is already in use.",
+        "{attribute} parantos dianggo."
+    ],
+    [
+        "Konfirmasi {attribute} tidak cocok.",
+        "The {attribute} confirmation does not match.",
+        "Konfirmasi {attribute} teu cocog."
+    ],
+    [
+        "{attribute} harus berupa file.",
+        "The {attribute} must be a file.",
+        "{attribute} kedah mangrupa berkas."
+    ],
+    [
+        "File harus berformat .xlsx, .xls, atau .csv.",
+        "The file must be .xlsx, .xls, or .csv.",
+        "Berkas kedah nganggo format .xlsx, .xls, atanapi .csv."
+    ],
+    [
+        "{attribute} gagal diunggah.",
+        "The {attribute} failed to upload.",
+        "{attribute} teu hasil diunggah."
+    ],
+    [
+        "{attribute} maksimal {max} karakter.",
+        "The {attribute} must be at most {max} characters.",
+        "{attribute} maksimal {max} karakter."
+    ],
+    [
+        "{attribute} maksimal {max}.",
+        "The {attribute} must be at most {max}.",
+        "{attribute} maksimal {max}."
+    ],
+    [
+        "{attribute} maksimal {max} item.",
+        "The {attribute} must be at most {max} items.",
+        "{attribute} maksimal {max} item."
+    ],
+    [
+        "{attribute} maksimal {max} kilobyte.",
+        "The {attribute} must be at most {max} kilobytes.",
+        "{attribute} maksimal {max} kilobyte."
+    ],
+    [
+        "{attribute} minimal {min} karakter.",
+        "The {attribute} must be at least {min} characters.",
+        "{attribute} sahenteuna {min} karakter."
+    ],
+    [
+        "{attribute} minimal {min}.",
+        "The {attribute} must be at least {min}.",
+        "{attribute} sahenteuna {min}."
+    ],
+    [
+        "{attribute} minimal {min} item.",
+        "The {attribute} must be at least {min} items.",
+        "{attribute} sahenteuna {min} item."
+    ],
+    [
+        "{attribute} minimal {min} kilobyte.",
+        "The {attribute} must be at least {min} kilobytes.",
+        "{attribute} sahenteuna {min} kilobyte."
+    ],
+    [
+        "{attribute} harus lebih dari {value} karakter.",
+        "The {attribute} must be more than {value} characters.",
+        "{attribute} kedah langkung ti {value} karakter."
+    ],
+    [
+        "{attribute} harus lebih dari {value}.",
+        "The {attribute} must be more than {value}.",
+        "{attribute} kedah langkung ti {value}."
+    ],
+    [
+        "{attribute} harus lebih dari {value} item.",
+        "The {attribute} must be more than {value} items.",
+        "{attribute} kedah langkung ti {value} item."
+    ],
+    [
+        "{attribute} harus lebih dari {value} kilobyte.",
+        "The {attribute} must be more than {value} kilobytes.",
+        "{attribute} kedah langkung ti {value} kilobyte."
+    ],
+    [
+        "{attribute} harus antara {min} dan {max} karakter.",
+        "The {attribute} must be between {min} and {max} characters.",
+        "{attribute} kedah antawis {min} sareng {max} karakter."
+    ],
+    [
+        "{attribute} harus antara {min} dan {max}.",
+        "The {attribute} must be between {min} and {max}.",
+        "{attribute} kedah antawis {min} sareng {max}."
+    ],
+    [
+        "{attribute} harus berisi {min} sampai {max} item.",
+        "The {attribute} must be between {min} and {max} items.",
+        "{attribute} kedah antawis {min} sareng {max} item."
+    ],
+    [
+        "{attribute} harus antara {min} dan {max} kilobyte.",
+        "The {attribute} must be between {min} and {max} kilobytes.",
+        "{attribute} kedah antawis {min} sareng {max} kilobyte."
+    ],
+    [
+        "nama",
+        "name",
+        "nami"
+    ],
+    [
+        "Nama",
+        "Name",
+        "Nami"
+    ],
+    [
+        "email",
+        "email",
+        "email"
+    ],
+    [
+        "Email",
+        "Email",
+        "Email"
+    ],
+    [
+        "password",
+        "password",
+        "kecap akses"
+    ],
+    [
+        "Password",
+        "Password",
+        "Kecap akses"
+    ],
+    [
+        "tanggal",
+        "date",
+        "ping kaping"
+    ],
+    [
+        "Tanggal",
+        "Date",
+        "Ping kaping"
+    ],
+    [
+        "tanggal",
+        "date",
+        "ping kaping"
+    ],
+    [
+        "Tanggal",
+        "Date",
+        "Ping kaping"
+    ],
+    [
+        "jenis",
+        "type",
+        "jinis"
+    ],
+    [
+        "Jenis",
+        "Type",
+        "Jinis"
+    ],
+    [
+        "kategori",
+        "category",
+        "kategori"
+    ],
+    [
+        "Kategori",
+        "Category",
+        "Kategori"
+    ],
+    [
+        "nominal",
+        "amount",
+        "nominal"
+    ],
+    [
+        "Nominal",
+        "Amount",
+        "Nominal"
+    ],
+    [
+        "metode pembayaran",
+        "payment method",
+        "métode pamayaran"
+    ],
+    [
+        "Metode pembayaran",
+        "Payment method",
+        "Métode pamayaran"
+    ],
+    [
+        "deskripsi",
+        "description",
+        "pedaran"
+    ],
+    [
+        "Deskripsi",
+        "Description",
+        "Pedaran"
+    ],
+    [
+        "catatan",
+        "notes",
+        "catetan"
+    ],
+    [
+        "Catatan",
+        "Notes",
+        "Catetan"
+    ],
+    [
+        "tanggal mulai",
+        "start date",
+        "ping kaping mimiti"
+    ],
+    [
+        "Tanggal mulai",
+        "Start date",
+        "Ping kaping mimiti"
+    ],
+    [
+        "tanggal akhir",
+        "end date",
+        "ping kaping ahir"
+    ],
+    [
+        "Tanggal akhir",
+        "End date",
+        "Ping kaping ahir"
+    ],
+    [
+        "tahun",
+        "year",
+        "taun"
+    ],
+    [
+        "Tahun",
+        "Year",
+        "Taun"
+    ],
+    [
+        "bulan",
+        "month",
+        "sasih"
+    ],
+    [
+        "Bulan",
+        "Month",
+        "Sasih"
+    ],
+    [
+        "ikon",
+        "icon",
+        "ikon"
+    ],
+    [
+        "Ikon",
+        "Icon",
+        "Ikon"
+    ],
+    [
+        "warna",
+        "colour",
+        "warna"
+    ],
+    [
+        "Warna",
+        "Colour",
+        "Warna"
+    ],
+    [
+        "jumlah per halaman",
+        "items per page",
+        "jumlah per kaca"
+    ],
+    [
+        "Jumlah per halaman",
+        "Items per page",
+        "Jumlah per kaca"
+    ],
+    [
+        "urutan",
+        "sort field",
+        "runtuyan"
+    ],
+    [
+        "Urutan",
+        "Sort field",
+        "Runtuyan"
+    ],
+    [
+        "arah urutan",
+        "sort direction",
+        "arah runtuyan"
+    ],
+    [
+        "Arah urutan",
+        "Sort direction",
+        "Arah runtuyan"
+    ],
+    [
+        "file",
+        "file",
+        "berkas"
+    ],
+    [
+        "File",
+        "File",
+        "Berkas"
+    ],
+    [
+        "halaman",
+        "page",
+        "kaca"
+    ],
+    [
+        "Halaman",
+        "Page",
+        "Kaca"
+    ],
+    [
+        "status aktif",
+        "active status",
+        "status aktip"
+    ],
+    [
+        "Status aktif",
+        "Active status",
+        "Status aktip"
+    ],
+    [
+        "status aktif",
+        "active status",
+        "status aktip"
+    ],
+    [
+        "Status aktif",
+        "Active status",
+        "Status aktip"
+    ],
+    [
+        "pencarian",
+        "search",
+        "pamilarian"
+    ],
+    [
+        "Pencarian",
+        "Search",
+        "Pamilarian"
+    ],
+    [
+        "pemeriksaan",
+        "preview",
+        "pamariksaan"
+    ],
+    [
+        "Pemeriksaan",
+        "Preview",
+        "Pamariksaan"
+    ],
+    [
+        "lewati duplikat",
+        "skip duplicates",
+        "liwatan duplikat"
+    ],
+    [
+        "Lewati duplikat",
+        "Skip duplicates",
+        "Liwatan duplikat"
+    ],
+    [
+        "Nominal harus lebih dari 0.",
+        "The amount must be greater than 0.",
+        "Nominal kedah langkung ti 0."
+    ],
+    [
+        "Kategori tidak ditemukan atau bukan kategori pengeluaran.",
+        "Category not found or is not an expense category.",
+        "Kategori teu kapendak atanapi sanés kategori pangeluaran."
+    ],
+    [
+        "Kategori tidak ditemukan, tidak aktif, atau tidak sesuai jenis transaksi.",
+        "Category not found, inactive, or does not match the transaction type.",
+        "Kategori teu kapendak, teu aktip, atanapi teu cocog sareng jinis transaksi."
+    ],
+    [
+        "Nama kategori sudah ada untuk jenis ini.",
+        "This category name already exists for this type.",
+        "Nami kategori parantos aya kanggo jinis ieu."
+    ],
+    [
+        "Jenis kategori tidak bisa diubah karena sudah dipakai transaksi.",
+        "Cannot change the category type because transactions use it.",
+        "Jinis kategori teu tiasa dirobih kumargi parantos dianggo ku transaksi."
+    ],
+    [
+        "Budget kategori ini untuk bulan tersebut sudah ada.",
+        "A budget for this category and month already exists.",
+        "Anggaran kategori ieu kanggo sasih éta parantos aya."
+    ],
+    [
+        "Rentang tanggal maksimal 5 tahun.",
+        "The date range cannot exceed 5 years.",
+        "Rentang ping kaping maksimal 5 taun."
+    ],
+    [
+        "Ukuran file maksimal 5 MB.",
+        "The file cannot exceed 5 MB.",
+        "Ukuran berkas maksimal 5 MB."
+    ]
+]

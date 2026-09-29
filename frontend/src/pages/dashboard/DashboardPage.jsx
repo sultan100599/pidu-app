@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useT } from '../../i18n/LocaleProvider'
 import * as reportsApi from '../../api/reports'
 import CategoryDoughnut from '../../components/charts/CategoryDoughnut'
 import IncomeExpenseChart from '../../components/charts/IncomeExpenseChart'
@@ -32,10 +33,11 @@ function transactionsLink(period, extra = {}) {
 }
 
 function Section({ title, action, children, className = '' }) {
+  const t = useT()
   return (
     <div className={`card h-100 ${className}`}>
       <div className="card-header bg-transparent d-flex justify-content-between align-items-center gap-2">
-        <h2 className="h6 mb-0">{title}</h2>
+        <h2 className="h6 mb-0">{t(title)}</h2>
         {action}
       </div>
       <div className="card-body">{children}</div>
@@ -44,13 +46,14 @@ function Section({ title, action, children, className = '' }) {
 }
 
 function StatTile({ label, value, hint }) {
+  const t = useT()
   return (
     <div className="col">
       <div className="card h-100">
         <div className="card-body py-3 px-2 px-sm-3">
-          <div className="small text-body-secondary">{label}</div>
-          <div className="fw-semibold summary-value">{value}</div>
-          {hint && <div className="small text-body-secondary">{hint}</div>}
+          <div className="small text-body-secondary">{t(label)}</div>
+          <div className="fw-semibold summary-value">{t(value)}</div>
+          {hint && <div className="small text-body-secondary">{t(hint)}</div>}
         </div>
       </div>
     </div>
@@ -58,9 +61,10 @@ function StatTile({ label, value, hint }) {
 }
 
 function CategoryBreakdown({ items, period }) {
+  const t = useT()
   const theme = useChartTheme()
   if (items.length === 0) {
-    return <p className="text-body-secondary text-center my-4">Belum ada pengeluaran pada periode ini.</p>
+    return <p className="text-body-secondary text-center my-4">{t('Belum ada pengeluaran pada periode ini.')}</p>
   }
   return (
     <div className="row g-3 align-items-center">
@@ -101,8 +105,9 @@ function CategoryBreakdown({ items, period }) {
 }
 
 function LargestTransactions({ transactions }) {
+  const t = useT()
   if (transactions.length === 0) {
-    return <p className="text-body-secondary text-center my-4">Belum ada pengeluaran.</p>
+    return <p className="text-body-secondary text-center my-4">{t('Belum ada pengeluaran.')}</p>
   }
   return (
     <ul className="list-group list-group-flush largest-transactions">
@@ -123,12 +128,13 @@ function LargestTransactions({ transactions }) {
 }
 
 function BudgetList({ budgets }) {
+  const t = useT()
   if (budgets.length === 0) {
     return (
       <div className="text-center my-3">
-        <p className="text-body-secondary mb-2">Belum ada budget untuk bulan tersebut.</p>
+        <p className="text-body-secondary mb-2">{t('Belum ada budget untuk bulan tersebut.')}</p>
         <Link to="/budgets" className="btn btn-sm btn-outline-primary">
-          Atur budget
+          {t('Atur budget')}
         </Link>
       </div>
     )
@@ -145,6 +151,7 @@ function BudgetList({ budgets }) {
 }
 
 export default function DashboardPage() {
+  const t = useT()
   const { openCreate } = useTransactions()
   const periodQuery = usePeriodQuery('this_month')
   const { range } = periodQuery
@@ -177,13 +184,13 @@ export default function DashboardPage() {
     content = (
       <>
         <SummaryCards prominent summary={{ ...summary, count: summary.transaction_count }} comparison={comparison} />
-        {comparisonFetch.error && <div className="small text-body-secondary mb-3">Perbandingan gagal dimuat. <button type="button" className="btn btn-sm btn-outline-secondary" onClick={comparisonFetch.reload}>Coba lagi</button></div>}
+        {comparisonFetch.error && <div className="small text-body-secondary mb-3">{t('Perbandingan gagal dimuat.')} <button type="button" className="btn btn-sm btn-outline-secondary" onClick={comparisonFetch.reload}>{t('Coba lagi')}</button></div>}
 
         <div className="dashboard-stats row row-cols-2 g-2 g-md-3 mb-4">
           <StatTile
             label="Rata-rata pengeluaran / hari"
             value={formatRupiah(summary.avg_daily_expense)}
-            hint={`${period.days} hari`}
+            hint={t('{count} hari', { count: period.days })}
           />
           <StatTile
             label="Rasio pengeluaran"
@@ -198,14 +205,14 @@ export default function DashboardPage() {
             title="Belum ada transaksi pada periode ini"
             action={
               <button type="button" onClick={openCreate} className="btn btn-primary">
-                Catat transaksi
+                {t('Catat transaksi')}
               </button>
             }
           />
         ) : (
           <div className="row g-3">
             <div className="col-12">
-              <Section title={`Pemasukan vs Pengeluaran ${daily ? '(per hari)' : '(per bulan)'}`}>
+              <Section title={t(daily ? 'Pemasukan vs Pengeluaran (per hari)' : 'Pemasukan vs Pengeluaran (per bulan)')}>
                 <IncomeExpenseChart
                   labels={chartLabels}
                   income={chart.income}
@@ -219,7 +226,7 @@ export default function DashboardPage() {
                 title="Pengeluaran per kategori"
                 action={
                   <Link to={transactionsLink(period, { type: 'expense' })} className="small">
-                    Lihat transaksi
+                    {t('Lihat transaksi')}
                   </Link>
                 }
               >
@@ -231,7 +238,7 @@ export default function DashboardPage() {
                 title="Pengeluaran terbesar"
                 action={
                   <Link to={`${transactionsLink(period, { type: 'expense' })}&sort=amount`} className="small">
-                    Semua
+                    {t('Semua')}
                   </Link>
                 }
               >
@@ -244,10 +251,10 @@ export default function DashboardPage() {
         <div className="row g-3 mt-0">
           <div className="col-12">
             <Section
-              title={`Budget ${MONTH_NAMES[endMonth - 1]} ${endYear}`}
+              title={t('Budget {period}', { period: `${MONTH_NAMES[endMonth - 1]} ${endYear}` })}
               action={
                 <Link to="/budgets" className="small">
-                  Kelola
+                  {t('Kelola')}
                 </Link>
               }
             >
@@ -272,7 +279,7 @@ export default function DashboardPage() {
           <div className="alert alert-danger d-flex justify-content-between align-items-center gap-2" role="alert">
             <span>{getErrorMessage(error)}</span>
             <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>
-              Coba lagi
+              {t('Coba lagi')}
             </button>
           </div>
         )}

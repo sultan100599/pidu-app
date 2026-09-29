@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { Link, useSearchParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../../i18n/toast'
 import * as budgetsApi from '../../api/budgets'
 import BudgetProgress, { BUDGET_STATUS, budgetStatus } from '../../components/BudgetProgress'
 import PageHeader from '../../components/PageHeader'
@@ -36,9 +37,10 @@ function transactionsLink(budget) {
 }
 
 function Overview({ totals, budgets }) {
+  const t = useT()
   const percentage = totals.amount > 0 ? Math.round((totals.used / totals.amount) * 10000) / 100 : 0
   const overall = {
-    category: { name: 'keseluruhan' },
+    category: { name: t('keseluruhan') },
     ...totals,
     percentage,
     status: percentage >= 100 ? 'exceeded' : percentage >= 80 ? 'warning' : 'ok',
@@ -51,7 +53,7 @@ function Overview({ totals, budgets }) {
         <BudgetProgress
           budget={overall}
           height={12}
-          title={<span className="fw-semibold">Total budget</span>}
+          title={<span className="fw-semibold">{t('Total budget')}</span>}
           aside={
             <span className={`fw-semibold ${budgetStatus(overall.status).text}`}>
               {percentage.toLocaleString('id-ID')}%
@@ -61,7 +63,7 @@ function Overview({ totals, budgets }) {
         <div className="d-flex flex-wrap gap-2 mt-3">
           {Object.entries(BUDGET_STATUS).map(([key, s]) => (
             <span key={key} className={`badge ${s.badge}`}>
-              {counts[key]} {s.label.toLowerCase()}
+              {counts[key]} {t(s.label).toLowerCase()}
             </span>
           ))}
         </div>
@@ -71,6 +73,7 @@ function Overview({ totals, budgets }) {
 }
 
 function BudgetCard({ budget, onEdit, onDelete }) {
+  const t = useT()
   const status = budgetStatus(budget.status)
   const { category } = budget
 
@@ -78,7 +81,7 @@ function BudgetCard({ budget, onEdit, onDelete }) {
     <div className="col">
       <div className="card budget-card h-100">
         <div className="card-body">
-          <Link to={transactionsLink(budget)} className="budget-detail-link text-reset text-decoration-none" aria-label={`Lihat transaksi budget ${category.name}`}>
+          <Link to={transactionsLink(budget)} className="budget-detail-link text-reset text-decoration-none" aria-label={t('Lihat transaksi budget {name}', { name: category.name })}>
             <BudgetProgress
               budget={budget}
               title={
@@ -87,19 +90,19 @@ function BudgetCard({ budget, onEdit, onDelete }) {
                   <span className="text-truncate">{category.name}</span>
                 </span>
               }
-              aside={<span className={`badge ${status.badge}`}>{status.label}</span>}
+              aside={<span className={`badge ${status.badge}`}>{t(status.label)}</span>}
             />
           </Link>
           <div className="budget-actions d-flex align-items-center gap-2 mt-3">
             <span className={`fw-semibold ${status.text}`}>{budget.percentage.toLocaleString('id-ID')}%</span>
             <Link to={transactionsLink(budget)} className="small ms-2">
-              Lihat transaksi
+              {t('Lihat transaksi')}
             </Link>
             <div className="ms-auto d-flex gap-1">
               <button
                 type="button"
                 className="btn btn-sm btn-outline-primary"
-                aria-label={`Edit budget ${category.name}`}
+                aria-label={t('Edit budget {name}', { name: category.name })}
                 onClick={() => onEdit(budget)}
               >
                 <i className="bi bi-pencil" aria-hidden="true"></i>
@@ -107,7 +110,7 @@ function BudgetCard({ budget, onEdit, onDelete }) {
               <button
                 type="button"
                 className="btn btn-sm btn-outline-danger"
-                aria-label={`Hapus budget ${category.name}`}
+                aria-label={t('Hapus budget {name}', { name: category.name })}
                 onClick={() => onDelete(budget)}
               >
                 <i className="bi bi-trash" aria-hidden="true"></i>
@@ -121,6 +124,7 @@ function BudgetCard({ budget, onEdit, onDelete }) {
 }
 
 export default function BudgetsPage() {
+  const t = useT()
   const [searchParams, setSearchParams] = useSearchParams()
   // "Sekarang" dibekukan saat mount supaya render tetap murni.
   const [today] = useState(() => new Date())
@@ -182,9 +186,9 @@ export default function BudgetsPage() {
         }
       }
       if (source.length === 0) {
-        toast.info(`Tidak ada budget di ${monthLabel(prev.month, prev.year)}.`)
+        toast.info(t('Tidak ada budget di {period}.', { period: monthLabel(prev.month, prev.year) }))
       } else {
-        toast.success(`${copied} budget disalin${skipped ? `, ${skipped} dilewati` : ''}.`)
+        toast.success(t('{copied} budget disalin, {skipped} dilewati.', { copied, skipped }))
       }
       reload()
     } catch (err) {
@@ -200,7 +204,7 @@ export default function BudgetsPage() {
       className={`btn btn-outline-primary ${small ? 'btn-sm' : ''}`}
       onClick={() => setCopying({ show: true, loading: false })}>
       <i className="bi bi-copy me-1" aria-hidden="true"></i>
-      Salin bulan lalu
+      {t('Salin bulan lalu')}
     </button>
   )
 
@@ -213,13 +217,13 @@ export default function BudgetsPage() {
     content = (
       <EmptyState
         icon="bi-piggy-bank"
-        title={`Belum ada budget untuk ${monthLabel(month, year)}`}
+        title={t('Belum ada budget untuk {period}', { period: monthLabel(month, year) })}
         description="Tetapkan batas pengeluaran per kategori supaya pengeluaran lebih terkendali."
         action={
           <div className="d-flex flex-wrap justify-content-center gap-2">
             <button type="button" className="btn btn-primary" onClick={openCreate}>
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-              Tambah Budget
+              {t('Tambah Budget')}
             </button>
             {copyButton(false)}
           </div>
@@ -243,11 +247,11 @@ export default function BudgetsPage() {
     <>
       <PageHeader
         title="Budget"
-        subtitle={`Batas pengeluaran per kategori · ${monthLabel(month, year)}`}
+        subtitle={t('Batas pengeluaran per kategori · {period}', { period: monthLabel(month, year) })}
         actions={
           <button type="button" className="btn btn-primary" onClick={openCreate}>
             <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-            Tambah Budget
+            {t('Tambah Budget')}
           </button>
         }
       />
@@ -269,7 +273,7 @@ export default function BudgetsPage() {
           <div className="alert alert-danger d-flex justify-content-between align-items-center gap-2" role="alert">
             <span>{getErrorMessage(error)}</span>
             <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>
-              Coba lagi
+              {t('Coba lagi')}
             </button>
           </div>
         )}
@@ -303,8 +307,9 @@ export default function BudgetsPage() {
       >
         {deleting.budget && (
           <p className="mb-0">
-            Budget <strong>{deleting.budget.category.name}</strong> untuk {monthLabel(month, year)} (
-            {formatRupiah(deleting.budget.amount)}) akan dihapus. Transaksi tidak ikut terhapus.
+            {t('Budget {name} untuk {period} ({amount}) akan dihapus. Transaksi tidak ikut terhapus.', {
+              name: deleting.budget.category.name, period: monthLabel(month, year), amount: formatRupiah(deleting.budget.amount),
+            })}
           </p>
         )}
       </ConfirmDialog>
@@ -319,8 +324,9 @@ export default function BudgetsPage() {
         onConfirm={confirmCopy}
       >
         <p className="mb-0">
-          Semua budget {monthLabel(prev.month, prev.year)} akan disalin ke {monthLabel(month, year)}. Kategori yang sudah
-          punya budget di {monthLabel(month, year)} dilewati.
+          {t('Semua budget {from} akan disalin ke {to}. Kategori yang sudah punya budget di {to} dilewati.', {
+            from: monthLabel(prev.month, prev.year), to: monthLabel(month, year),
+          })}
         </p>
       </ConfirmDialog>
     </>

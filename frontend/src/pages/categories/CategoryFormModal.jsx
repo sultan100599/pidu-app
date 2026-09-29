@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { toast } from 'react-toastify'
+import { useT } from '../../i18n/LocaleProvider'
+import { toast } from '../../i18n/toast'
 import * as categoriesApi from '../../api/categories'
 import CategoryBadge from '../../components/CategoryBadge'
 import Modal from '../../components/ui/Modal'
@@ -10,6 +11,7 @@ import IconPicker from './IconPicker'
 
 // Form tambah/edit kategori. Dipasang ulang (key) setiap kali dibuka.
 export default function CategoryFormModal({ show, category, defaultType, onClose, onSaved }) {
+  const t = useT()
   const isEdit = Boolean(category)
   const typeLocked = isEdit && category.transactions_count > 0
   const [form, setForm] = useState(() => ({
@@ -64,11 +66,11 @@ export default function CategoryFormModal({ show, category, defaultType, onClose
   const footer = (
     <>
       <button type="button" className="btn btn-outline-secondary" onClick={close} disabled={submitting}>
-        Batal
+        {t('Batal')}
       </button>
       <button type="submit" form="category-form" className="btn btn-primary" disabled={submitting}>
         {submitting && <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>}
-        Simpan
+        {t('Simpan')}
       </button>
     </>
   )
@@ -77,13 +79,13 @@ export default function CategoryFormModal({ show, category, defaultType, onClose
     <Modal show={show} onClose={close} title={isEdit ? 'Edit Kategori' : 'Tambah Kategori'} footer={footer} busy={submitting}>
       {formError && (
         <div className="alert alert-danger py-2" role="alert">
-          {formError}
+          {t(formError)}
         </div>
       )}
       <form id="category-form" noValidate onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="cat-name" className="form-label">
-            Nama
+            {t('Nama')}
           </label>
           <input
             id="cat-name"
@@ -93,11 +95,11 @@ export default function CategoryFormModal({ show, category, defaultType, onClose
             value={form.name}
             onChange={(e) => setField('name', e.target.value)}
           />
-          {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+          {errors.name && <div className="invalid-feedback">{t(errors.name)}</div>}
         </div>
 
         <fieldset className="mb-3" disabled={typeLocked}>
-          <legend className="form-label fs-6 mb-2">Jenis</legend>
+          <legend className="form-label fs-6 mb-2">{t('Jenis')}</legend>
           <div className="d-flex gap-3">
             {Object.entries(TRANSACTION_TYPES).map(([value, label]) => (
               <div className="form-check" key={value}>
@@ -111,34 +113,34 @@ export default function CategoryFormModal({ show, category, defaultType, onClose
                   onChange={() => setField('type', value)}
                 />
                 <label className="form-check-label" htmlFor={`cat-type-${value}`}>
-                  {label}
+                  {t(label)}
                 </label>
               </div>
             ))}
           </div>
           {typeLocked && (
             <div className="form-text">
-              Jenis tidak bisa diubah karena kategori sudah dipakai {category.transactions_count} transaksi.
+              {t('Jenis tidak bisa diubah karena kategori sudah dipakai {count} transaksi.', { count: category.transactions_count })}
             </div>
           )}
-          {errors.type && <div className="text-danger small mt-1">{errors.type}</div>}
+          {errors.type && <div className="text-danger small mt-1">{t(errors.type)}</div>}
         </fieldset>
 
         <div className="mb-3">
-          <span className="form-label d-block">Ikon</span>
+          <span className="form-label d-block">{t('Ikon')}</span>
           <IconPicker value={form.icon} color={form.color} onChange={(icon) => setField('icon', icon)} />
-          {errors.icon && <div className="text-danger small mt-1">{errors.icon}</div>}
+          {errors.icon && <div className="text-danger small mt-1">{t(errors.icon)}</div>}
         </div>
 
         <div className="mb-3">
-          <span className="form-label d-block">Warna</span>
+          <span className="form-label d-block">{t('Warna')}</span>
           <ColorPicker value={form.color} onChange={(color) => setField('color', color)} />
-          {errors.color && <div className="text-danger small mt-1">{errors.color}</div>}
+          {errors.color && <div className="text-danger small mt-1">{t(errors.color)}</div>}
         </div>
 
         <div>
-          <span className="form-label d-block small text-body-secondary">Pratinjau</span>
-          <CategoryBadge category={{ name: form.name.trim() || 'Nama kategori', icon: form.icon, color: form.color }} />
+          <span className="form-label d-block small text-body-secondary">{t('Pratinjau')}</span>
+          <CategoryBadge category={{ name: form.name.trim() || t('Nama kategori'), icon: form.icon, color: form.color }} />
         </div>
       </form>
     </Modal>

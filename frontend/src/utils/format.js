@@ -7,18 +7,25 @@ const rupiahFormatter = new Intl.NumberFormat('id-ID', {
 
 const numberFormatter = new Intl.NumberFormat('id-ID')
 
-const dateFormatter = new Intl.DateTimeFormat('id-ID', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-})
+export const dateLocale = () => getLocale() === 'en' ? 'en-GB' : 'id-ID'
+const suMonths = ['Januari', 'Pébruari', 'Maret', 'April', 'Méi', 'Juni', 'Juli', 'Agustus', 'Séptémber', 'Oktober', 'Nopémber', 'Désémber']
+export const dayNames = () => getLocale() === 'su'
+  ? ['Senén', 'Salasa', 'Rebo', 'Kemis', 'Jumaah', 'Saptu', 'Minggu']
+  : Array.from({ length: 7 }, (_, day) => new Intl.DateTimeFormat(dateLocale(), { weekday: 'long' }).format(new Date(2026, 8, 28 + day)))
+export const monthNames = () => getLocale() === 'su' ? suMonths
+  : Array.from({ length: 12 }, (_, month) => new Intl.DateTimeFormat(dateLocale(), { month: 'long' }).format(new Date(2026, month, 1)))
 
-const longDateFormatter = new Intl.DateTimeFormat('id-ID', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-})
+function dateText(date, { day = true, year = true, long = false } = {}) {
+  if (getLocale() === 'su') {
+    const month = suMonths[date.getMonth()]
+    return (long ? dayNames()[(date.getDay() + 6) % 7] + ', ' : '') +
+      (day ? date.getDate() + ' ' : '') + (long ? month : month.slice(0, 3)) + (year ? ' ' + date.getFullYear() : '')
+  }
+  return new Intl.DateTimeFormat(dateLocale(), {
+    day: day ? 'numeric' : undefined, month: long ? 'long' : 'short',
+    year: year ? 'numeric' : undefined, weekday: long ? 'long' : undefined,
+  }).format(date)
+}
 
 export function formatRupiah(n) {
   return rupiahFormatter.format(n ?? 0)
@@ -31,7 +38,7 @@ export function formatNumber(n) {
 export function formatDate(ymd, style = 'short') {
   const date = parseYmd(ymd)
   if (Number.isNaN(date.getTime())) return ''
-  return style === 'long' ? longDateFormatter.format(date) : dateFormatter.format(date)
+  return dateText(date, { long: style === 'long' })
 }
 
 export function parseYmd(ymd) {
@@ -53,24 +60,27 @@ export function formatCompact(n) {
   return compactFormatter.format(n ?? 0)
 }
 
-export const MONTH_NAMES = [
-  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
-]
-
-const shortMonthFormatter = new Intl.DateTimeFormat('id-ID', { month: 'short', year: 'numeric' })
+export const MONTH_NAMES = new Proxy([], { get: (_, property) => {
+  const months = monthNames()
+  const value = months[property]
+  return typeof value === 'function' ? value.bind(months) : value
+} })
 
 // 'Y-m' → "Sep 2026"
 export function formatYearMonth(ym) {
   const [y, m] = String(ym).split('-').map(Number)
-  return shortMonthFormatter.format(new Date(y, (m || 1) - 1, 1))
+  return dateText(new Date(y, (m || 1) - 1, 1), { day: false })
 }
 
-const dayMonthFormatter = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short' })
 
 // 'Y-m-d' → "28 Sep"
 export function formatDayMonth(ymd) {
-  return dayMonthFormatter.format(parseYmd(ymd))
+  return dateText(parseYmd(ymd), { year: false })
+}
+
+export function formatDateTime(value) {
+  const date = new Date(value)
+  return dateText(date) + ' ' + new Intl.DateTimeFormat(dateLocale(), { hour: '2-digit', minute: '2-digit', hour12: false }).format(date)
 }
 
 // 25266 → "24,7 KB"
@@ -85,3 +95,4 @@ export function formatBytes(bytes) {
   }
   return `${value.toLocaleString('id-ID', { maximumFractionDigits: 1 })} ${units[unit]}`
 }
+import { getLocale } from '../i18n/locale.js'

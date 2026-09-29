@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../../i18n/toast'
 import * as transactionsApi from '../../api/transactions'
 import PageHeader from '../../components/PageHeader'
 import SummaryCards from '../../components/SummaryCards'
@@ -69,6 +70,7 @@ function countActiveFilters(query) {
 }
 
 export default function TransactionsPage() {
+  const { t, locale } = useLocale()
   const [searchParams, setSearchParams] = useSearchParams()
   const query = readQuery(searchParams)
   const { categories } = useCategories()
@@ -143,7 +145,7 @@ export default function TransactionsPage() {
   const apiParamsKey = JSON.stringify(apiParams)
   const { page: _page, per_page: _perPage, ...exportParams } = apiParams
   const [reloadToken, setReloadToken] = useState(0)
-  const requestKey = `${apiParamsKey}#${reloadToken}#${dataVersion}`
+  const requestKey = `${apiParamsKey}#${reloadToken}#${dataVersion}#${locale}`
   // Hasil disimpan bersama key request-nya; loading = key belum cocok.
   // Data lama tetap ditampilkan selama refetch.
   const [result, setResult] = useState({ key: null, data: null, error: null })
@@ -205,7 +207,7 @@ export default function TransactionsPage() {
           title="Tidak ada transaksi yang cocok dengan filter"
           action={
             <button type="button" className="btn btn-outline-secondary" onClick={handleReset}>
-              Reset filter
+              {t('Reset filter')}
             </button>
           }
         />
@@ -216,7 +218,7 @@ export default function TransactionsPage() {
           action={
             <button type="button" className="btn btn-primary" onClick={openCreate}>
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-              Tambah Transaksi
+              {t('Tambah Transaksi')}
             </button>
           }
         />
@@ -238,7 +240,7 @@ export default function TransactionsPage() {
           <div className="d-flex justify-content-end mb-2">
             <select
               className="form-select form-select-sm w-auto"
-              aria-label="Urutkan"
+              aria-label={t('Urutkan')}
               value={`${query.sort}:${query.dir}`}
               onChange={(e) => {
                 const [sort, dir] = e.target.value.split(':')
@@ -248,10 +250,10 @@ export default function TransactionsPage() {
                 )
               }}
             >
-              <option value="transaction_date:desc">Terbaru</option>
-              <option value="transaction_date:asc">Terlama</option>
-              <option value="amount:desc">Nominal terbesar</option>
-              <option value="amount:asc">Nominal terkecil</option>
+              <option value="transaction_date:desc">{t('Terbaru')}</option>
+              <option value="transaction_date:asc">{t('Terlama')}</option>
+              <option value="amount:desc">{t('Nominal terbesar')}</option>
+              <option value="amount:asc">{t('Nominal terkecil')}</option>
             </select>
           </div>
           <TransactionList
@@ -264,7 +266,7 @@ export default function TransactionsPage() {
           <Pagination meta={data.meta} onPageChange={(page) => updateQuery({ page }, { resetPage: false })} />
           <div className="d-flex align-items-center gap-2 mt-3 ms-auto">
             <label htmlFor="per-page" className="small text-body-secondary text-nowrap">
-              Per halaman
+              {t('Per halaman')}
             </label>
             <select
               id="per-page"
@@ -302,10 +304,10 @@ export default function TransactionsPage() {
               className="btn btn-primary"
               onClick={openCreate}
               aria-keyshortcuts="n"
-              title="Tambah transaksi (pintasan: N)"
+              title={t('Tambah transaksi (pintasan: N)')}
             >
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-              Tambah Transaksi
+              {t('Tambah Transaksi')}
             </button>
           </>
         }
@@ -338,7 +340,7 @@ export default function TransactionsPage() {
         <div className="alert alert-danger d-flex align-items-center justify-content-between gap-2" role="alert">
           <span>{getErrorMessage(error)}</span>
           <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>
-            Coba lagi
+            {t('Coba lagi')}
           </button>
         </div>
       )}
@@ -347,7 +349,7 @@ export default function TransactionsPage() {
         {loading && data && (
           <div className="position-absolute top-0 start-50 translate-middle-x mt-4" style={{ zIndex: 2 }}>
             <div className="spinner-border spinner-border-sm text-primary" role="status">
-              <span className="visually-hidden">Memuat...</span>
+              <span className="visually-hidden">{t('Memuat...')}</span>
             </div>
           </div>
         )}
@@ -363,17 +365,17 @@ export default function TransactionsPage() {
       >
         {deleting.transaction && (
           <>
-            <p className="mb-2">Hapus transaksi berikut? Setelah dihapus, tombol Batalkan tersedia sebentar di notifikasi.</p>
+            <p className="mb-2">{t('Hapus transaksi berikut? Setelah dihapus, tombol Batalkan tersedia sebentar di notifikasi.')}</p>
             <ul className="list-unstyled mb-0 small">
               <li>
-                <strong>Tanggal:</strong> {formatDate(deleting.transaction.transaction_date)}
+                <strong>{t('Tanggal')}:</strong> {formatDate(deleting.transaction.transaction_date)}
               </li>
               <li>
-                <strong>Deskripsi:</strong>{' '}
-                {deleting.transaction.description || deleting.transaction.category?.name || 'Tanpa deskripsi'}
+                <strong>{t('Deskripsi')}:</strong>{' '}
+                {deleting.transaction.description || deleting.transaction.category?.name || t('Tanpa deskripsi')}
               </li>
               <li>
-                <strong>Nominal:</strong>{' '}
+                <strong>{t('Nominal')}:</strong>{' '}
                 <span className={deleting.transaction.type === 'income' ? 'text-success' : 'text-danger'}>
                   {formatRupiah(deleting.transaction.amount)}
                 </span>

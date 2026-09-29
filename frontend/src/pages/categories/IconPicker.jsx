@@ -1,4 +1,5 @@
 import CategoryIcon from '../../components/CategoryIcon'
+import { useT } from '../../i18n/LocaleProvider'
 
 // Ikon keuangan mencakup semua ikon default seeder.
 export const CATEGORY_ICONS = [
@@ -11,8 +12,9 @@ export const CATEGORY_ICONS = [
 ]
 
 export default function IconPicker({ value, onChange, color }) {
+  const t = useT()
   return (
-    <div className="icon-picker" role="radiogroup" aria-label="Pilih ikon">
+    <div className="icon-picker" role="radiogroup" aria-label={t('Pilih ikon')}>
       {CATEGORY_ICONS.map((icon) => {
         const active = icon === value
         return (
@@ -21,8 +23,8 @@ export default function IconPicker({ value, onChange, color }) {
             type="button"
             role="radio"
             aria-checked={active}
-            aria-label={icon.replace('bi-', '').replaceAll('-', ' ')}
-            title={icon.replace('bi-', '')}
+            aria-label={t(icon)}
+            title={t(icon)}
             className={`btn btn-sm ${active ? 'btn-primary' : 'btn-outline-secondary'}`}
             onClick={() => onChange(icon)}
           >

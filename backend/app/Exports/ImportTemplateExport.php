@@ -20,7 +20,7 @@ class ImportTemplateExport implements WithMultipleSheets
         $today = now();
         $examples = [
             [ExcelDate::dateTimeToExcel($today->copy()->startOfMonth()), 'Pemasukan', 'Gaji', 'Gaji bulanan', null, 'Transfer', 8500000],
-            [ExcelDate::dateTimeToExcel($today), 'Pengeluaran', 'Makanan', 'Makan siang', 'Contoh baris — hapus sebelum impor', 'QRIS', 35000],
+            [ExcelDate::dateTimeToExcel($today), 'Pengeluaran', 'Makanan', 'Makan siang', 'Contoh baris, hapus sebelum impor', 'QRIS', 35000],
         ];
 
         $categories = $this->user->categories()->where('is_active', true)->orderBy('name')->get(['name', 'type']);
@@ -32,7 +32,7 @@ class ImportTemplateExport implements WithMultipleSheets
             ['Kategori', 'Wajib', 'Nama kategori. Jika belum ada, kategori baru dibuat otomatis saat impor.'],
             ['Deskripsi', 'Opsional', 'Maksimal 255 karakter.'],
             ['Catatan', 'Opsional', 'Maksimal 5000 karakter.'],
-            ['Metode', 'Opsional', 'Kosong = Cash. Pilihan: '.implode(', ', array_map(fn ($m) => $m->label(), PaymentMethod::cases())).'.'],
+            ['Metode', 'Opsional', 'Kosong = Cash. Pilihan: '.implode(', ', array_map(fn ($m) => $m->label('id'), PaymentMethod::cases())).'.'],
             ['Nominal', 'Wajib', 'Angka lebih dari 0 (tanda minus diabaikan). Contoh: 1500000 atau 1.500.000,50.'],
             [null, null, null],
             ['Kategori pengeluaran Anda', null, $byType('expense')],

@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../../i18n/toast'
 import * as budgetsApi from '../../api/budgets'
 import CategoryBadge from '../../components/CategoryBadge'
 import AmountInput from '../../components/ui/AmountInput'
@@ -12,6 +13,7 @@ import { MONTH_NAMES } from '../../utils/format'
 // - tambah: pilih kategori pengeluaran aktif; kategori yang sudah punya budget di bulan terpilih → disabled
 // - edit: kategori tidak bisa diganti (API hanya menerima amount/month/year)
 export default function BudgetFormModal({ show, budget, defaultMonth, defaultYear, categories, existing, onClose, onSaved }) {
+  const t = useT()
   const isEdit = Boolean(budget)
   const [form, setForm] = useState(() => ({
     category_id: budget ? String(budget.category.id) : '',
@@ -73,11 +75,11 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
   const footer = (
     <>
       <button type="button" className="btn btn-outline-secondary" onClick={close} disabled={submitting}>
-        Batal
+        {t('Batal')}
       </button>
       <button type="submit" form="budget-form" className="btn btn-primary" disabled={submitting}>
         {submitting && <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>}
-        Simpan
+        {t('Simpan')}
       </button>
     </>
   )
@@ -86,20 +88,20 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
     <Modal show={show} onClose={close} title={isEdit ? 'Edit Budget' : 'Tambah Budget'} footer={footer} busy={submitting}>
       {formError && (
         <div className="alert alert-danger py-2" role="alert">
-          {formError}
+          {t(formError)}
         </div>
       )}
       <form id="budget-form" noValidate onSubmit={handleSubmit}>
         <div className="mb-3">
           {isEdit ? (
             <>
-              <span className="form-label d-block">Kategori</span>
+              <span className="form-label d-block">{t('Kategori')}</span>
               <CategoryBadge category={budget.category} />
             </>
           ) : (
             <>
               <label htmlFor="budget-category" className="form-label">
-                Kategori pengeluaran
+                {t('Kategori pengeluaran')}
               </label>
               <select
                 id="budget-category"
@@ -107,18 +109,18 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
                 value={form.category_id}
                 onChange={(e) => setField('category_id', e.target.value)}
               >
-                <option value="">Pilih kategori</option>
+                <option value="">{t('Pilih kategori')}</option>
                 {expenseCategories.map((c) => (
                   <option key={c.id} value={c.id} disabled={taken.has(c.id)}>
                     {c.name}
-                    {taken.has(c.id) ? ' (sudah ada)' : ''}
+                    {taken.has(c.id) ? ' ' + t('(sudah ada)') : ''}
                   </option>
                 ))}
               </select>
-              {errors.category_id && <div className="invalid-feedback">{errors.category_id}</div>}
+              {errors.category_id && <div className="invalid-feedback">{t(errors.category_id)}</div>}
               {expenseCategories.length === 0 && (
                 <div className="form-text">
-                  Belum ada kategori pengeluaran aktif. <Link to="/categories">Kelola kategori</Link>
+                  {t('Belum ada kategori pengeluaran aktif.')} <Link to="/categories">{t('Kelola kategori')}</Link>
                 </div>
               )}
             </>
@@ -127,7 +129,7 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
 
         <div className="mb-3">
           <label htmlFor="budget-amount" className="form-label">
-            Batas pengeluaran
+            {t('Batas pengeluaran')}
           </label>
           <AmountInput
             id="budget-amount"
@@ -135,13 +137,13 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
             onChange={(value) => setField('amount', value)}
             invalid={Boolean(errors.amount)}
           />
-          {errors.amount && <div className="invalid-feedback d-block">{errors.amount}</div>}
+          {errors.amount && <div className="invalid-feedback d-block">{t(errors.amount)}</div>}
         </div>
 
         <div className="row g-2">
           <div className="col-7">
             <label htmlFor="budget-month" className="form-label">
-              Bulan
+              {t('Bulan')}
             </label>
             <select
               id="budget-month"
@@ -155,11 +157,11 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
                 </option>
               ))}
             </select>
-            {errors.month && <div className="invalid-feedback">{errors.month}</div>}
+            {errors.month && <div className="invalid-feedback">{t(errors.month)}</div>}
           </div>
           <div className="col-5">
             <label htmlFor="budget-year" className="form-label">
-              Tahun
+              {t('Tahun')}
             </label>
             <input
               id="budget-year"
@@ -170,7 +172,7 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
               value={form.year}
               onChange={(e) => setField('year', Number(e.target.value))}
             />
-            {errors.year && <div className="invalid-feedback">{errors.year}</div>}
+            {errors.year && <div className="invalid-feedback">{t(errors.year)}</div>}
           </div>
         </div>
       </form>

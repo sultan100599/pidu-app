@@ -8,7 +8,7 @@ body { line-height: 1.6; }
 .app-content, .min-w-0 { min-width: 0; }
 .app-main { max-width: 1320px; margin-inline: auto; }
 .app-main > [aria-busy='true']::before {
-  content: 'Memperbarui data...';
+  content: var(--pidu-refresh-label);
   display: block;
   color: var(--pidu-muted);
   font-size: 0.875rem;

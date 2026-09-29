@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
+import { useLocale } from '../i18n/LocaleProvider'
+import LanguagePicker from '../components/LanguagePicker'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
@@ -7,6 +10,8 @@ import { getErrorMessage, getFieldErrors } from '../utils/errors'
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function RegisterPage() {
+  const { t, locale } = useLocale()
+  useEffect(() => { document.title = `${t('Daftar')} · Pidu-App` }, [locale, t])
   const { register } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const [form, setForm] = useState({
@@ -65,12 +70,13 @@ export default function RegisterPage() {
 
   return (
     <main className="auth-page d-flex align-items-center justify-content-center p-3">
-      <div className="position-absolute top-0 end-0 p-3">
+      <div className="auth-tools position-absolute top-0 end-0 p-3">
+        <LanguagePicker />
         <button
           type="button"
           className="btn btn-link text-body"
           onClick={toggleTheme}
-          aria-label={theme === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap'}
+          aria-label={t(theme === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap')}
         >
           <i className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon-stars'} fs-5`} aria-hidden="true"></i>
         </button>
@@ -80,20 +86,20 @@ export default function RegisterPage() {
         <div className="card-body p-4">
           <div className="auth-heading text-center">
             <i className="bi bi-wallet2 display-5 text-primary" aria-hidden="true"></i>
-            <h1 className="h4 mt-2 mb-1">Daftar ke Pidu</h1>
-            <p className="text-body-secondary mb-0">Buat akun untuk mulai mencatat</p>
+            <h1 className="h4 mt-2 mb-1">{t('Daftar ke Pidu')}</h1>
+            <p className="text-body-secondary mb-0">{t('Buat akun untuk mulai mencatat')}</p>
           </div>
 
           {formError && (
             <div className="alert alert-danger py-2" role="alert">
-              {formError}
+              {t(formError)}
             </div>
           )}
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="mb-3">
               <label htmlFor="name" className="form-label">
-                Nama
+                {t('Nama')}
               </label>
               <input
                 id="name"
@@ -105,12 +111,12 @@ export default function RegisterPage() {
                 autoComplete="name"
                 autoFocus
               />
-              {fieldErrors.name && <div className="invalid-feedback">{fieldErrors.name}</div>}
+              {fieldErrors.name && <div className="invalid-feedback">{t(fieldErrors.name)}</div>}
             </div>
 
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
-                Email
+                {t('Email')}
               </label>
               <input
                 id="email"
@@ -121,12 +127,12 @@ export default function RegisterPage() {
                 onChange={updateField}
                 autoComplete="email"
               />
-              {fieldErrors.email && <div className="invalid-feedback">{fieldErrors.email}</div>}
+              {fieldErrors.email && <div className="invalid-feedback">{t(fieldErrors.email)}</div>}
             </div>
 
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
-                Password
+                {t('Password')}
               </label>
               <div className="input-group has-validation">
                 <input
@@ -142,20 +148,20 @@ export default function RegisterPage() {
                   type="button"
                   className="btn btn-outline-secondary"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
+                  aria-label={t(showPassword ? 'Sembunyikan password' : 'Tampilkan password')}
                 >
                   <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`} aria-hidden="true"></i>
                 </button>
                 {fieldErrors.password && (
-                  <div className="invalid-feedback">{fieldErrors.password}</div>
+                  <div className="invalid-feedback">{t(fieldErrors.password)}</div>
                 )}
               </div>
-              <div className="form-text">Minimal 8 karakter.</div>
+              <div className="form-text">{t('Minimal 8 karakter.')}</div>
             </div>
 
             <div className="mb-3">
               <label htmlFor="password_confirmation" className="form-label">
-                Konfirmasi Password
+                {t('Konfirmasi Password')}
               </label>
               <input
                 id="password_confirmation"
@@ -167,7 +173,7 @@ export default function RegisterPage() {
                 autoComplete="new-password"
               />
               {fieldErrors.password_confirmation && (
-                <div className="invalid-feedback">{fieldErrors.password_confirmation}</div>
+                <div className="invalid-feedback">{t(fieldErrors.password_confirmation)}</div>
               )}
             </div>
 
@@ -175,14 +181,14 @@ export default function RegisterPage() {
               {submitting && (
                 <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
               )}
-              Daftar
+              {t('Daftar')}
             </button>
           </form>
 
           <p className="text-center mt-3 mb-0">
-            Sudah punya akun?{' '}
+            {t('Sudah punya akun?')}{' '}
             <Link to="/login" className="text-decoration-none">
-              Masuk
+              {t('Masuk')}
             </Link>
           </p>
         </div>

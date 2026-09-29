@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getLocale } from '../i18n/locale.js'
 
 const TOKEN_KEY = 'pidu_token'
 
@@ -27,6 +28,7 @@ export function setUnauthorizedHandler(handler) {
 }
 
 client.interceptors.request.use((config) => {
+  config.headers['Accept-Language'] = getLocale()
   const token = getToken()
   if (token) {
     config.headers.Authorization = `Bearer ${token}`

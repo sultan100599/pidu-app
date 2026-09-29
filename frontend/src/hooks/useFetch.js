@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useLocale } from '../i18n/LocaleProvider'
 import { useEffect, useState } from 'react'
 import { useTransactions } from '../context/TransactionContext'
 
@@ -9,9 +10,10 @@ import { useTransactions } from '../context/TransactionContext'
 // `key` harus berubah setiap kali parameter berubah; `fetcher(signal)` → Promise<response>.
 // key = null → tidak fetch.
 export function useFetch(key, fetcher) {
+  const { locale } = useLocale()
   const { dataVersion } = useTransactions()
   const [reloadToken, setReloadToken] = useState(0)
-  const requestKey = key == null ? null : `${key}#${reloadToken}#${dataVersion}`
+  const requestKey = key == null ? null : `${key}#${reloadToken}#${dataVersion}#${locale}`
   const [result, setResult] = useState({ key: null, data: null, error: null })
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { formatNumber, formatRupiah } from '../../utils/format'
+import { useT } from '../../i18n/LocaleProvider'
 
 function BalanceCell({ value }) {
   return (
@@ -11,17 +12,18 @@ function BalanceCell({ value }) {
 // Tabel rekap generik: kolom pertama dari renderLabel(row), lalu Pemasukan | Pengeluaran | Saldo | Transaksi.
 // Baris bisa diklik (onRowClick) → dapat difokus & diaktifkan dengan Enter/Spasi.
 export default function ReportTable({ labelHeader, rows, rowKey, renderLabel, totals, onRowClick, rowActionLabel }) {
+  const t = useT()
   return (
     <div className="card">
       <div className="table-responsive">
         <table className="table table-hover align-middle mb-0 report-table">
           <thead>
             <tr>
-              <th scope="col">{labelHeader}</th>
-              <th scope="col" className="text-end">Pemasukan</th>
-              <th scope="col" className="text-end">Pengeluaran</th>
-              <th scope="col" className="text-end">Saldo</th>
-              <th scope="col" className="text-end">Transaksi</th>
+              <th scope="col">{t(labelHeader)}</th>
+              <th scope="col" className="text-end">{t('Pemasukan')}</th>
+              <th scope="col" className="text-end">{t('Pengeluaran')}</th>
+              <th scope="col" className="text-end">{t('Saldo')}</th>
+              <th scope="col" className="text-end">{t('Transaksi')}</th>
             </tr>
           </thead>
           <tbody>
@@ -58,7 +60,7 @@ export default function ReportTable({ labelHeader, rows, rowKey, renderLabel, to
           {totals && (
             <tfoot>
               <tr className="fw-semibold">
-                <td>Total</td>
+                <td>{t('Total')}</td>
                 <td className="text-end text-nowrap text-success">{formatRupiah(totals.income)}</td>
                 <td className="text-end text-nowrap text-danger">{formatRupiah(totals.expense)}</td>
                 <BalanceCell value={totals.balance} />

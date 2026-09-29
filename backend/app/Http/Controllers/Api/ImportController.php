@@ -34,20 +34,20 @@ class ImportController extends Controller
 
         if ($result['invalid'] > 0) {
             return response()->json([
-                'message' => "Masih ada {$result['invalid']} baris bermasalah. Perbaiki file lalu coba lagi.",
-                'errors' => ['file' => ["Masih ada {$result['invalid']} baris bermasalah."]],
+                'message' => __('messages.invalid_rows', ['count' => $result['invalid']]),
+                'errors' => ['file' => [__('messages.invalid_rows_short', ['count' => $result['invalid']])]],
                 'data' => $result,
             ], 422);
         }
 
         $done = $this->service->commit($user, $rows, $request->skipDuplicates());
 
-        $message = "{$done['imported']} transaksi berhasil diimpor.";
+        $message = __('messages.imported', ['count' => $done['imported']]);
         if ($done['skipped_duplicates'] > 0) {
-            $message .= " {$done['skipped_duplicates']} duplikat dilewati.";
+            $message .= ' '.__('messages.duplicates_skipped', ['count' => $done['skipped_duplicates']]);
         }
         if ($done['new_categories'] > 0) {
-            $message .= " {$done['new_categories']} kategori baru dibuat.";
+            $message .= ' '.__('messages.categories_created', ['count' => $done['new_categories']]);
         }
 
         return response()->json(['message' => $message, 'data' => $done], 201);

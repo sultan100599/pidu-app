@@ -22,13 +22,13 @@ class ExportRequest extends TransactionIndexRequest
         $out = [];
 
         if (isset($filters['type'])) {
-            $out[] = 'Jenis: '.TransactionType::from($filters['type'])->label();
+            $out[] = 'Jenis: '.TransactionType::from($filters['type'])->label('id');
         }
         if (isset($filters['category_id'])) {
             $out[] = 'Kategori: '.$this->user()->categories()->whereKey($filters['category_id'])->value('name');
         }
         if (isset($filters['payment_method'])) {
-            $out[] = 'Metode: '.PaymentMethod::from($filters['payment_method'])->label();
+            $out[] = 'Metode: '.PaymentMethod::from($filters['payment_method'])->label('id');
         }
         if (isset($filters['search'])) {
             $out[] = 'Cari: "'.$filters['search'].'"';

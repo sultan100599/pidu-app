@@ -1,0 +1,20 @@
+.locale-button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px;
+  color: var(--pidu-ink);
+  font-weight: 600;
+  flex-shrink: 0;
+  border: 1px solid var(--pidu-control-line);
+  background: var(--pidu-surface);
+  box-shadow: var(--pidu-shadow-1);
+}
+.locale-button:hover { background: var(--pidu-recess); color: var(--pidu-ink); }
+.sidebar-brand-copy { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.sidebar-brand-copy > .fs-5 { font-size: 1.875rem !important; }
+.sidebar-tagline { color: var(--pidu-muted); font: italic 0.8rem/1.5 var(--bs-body-font-family); letter-spacing: normal; }
+.topbar { gap: 8px !important; }
+.topbar > button, .topbar > div { flex-shrink: 0; }
+.topbar h2 { min-width: 0; }
+.auth-tools { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.auth-page { padding-top: 88px !important; }

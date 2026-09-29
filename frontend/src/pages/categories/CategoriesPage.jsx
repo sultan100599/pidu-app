@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { useSearchParams } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../../i18n/toast'
 import * as categoriesApi from '../../api/categories'
 import PageHeader from '../../components/PageHeader'
 import ConfirmDialog from '../../components/ui/ConfirmDialog'
@@ -15,6 +16,7 @@ import CategoryIcon from '../../components/CategoryIcon'
 import PageSkeleton from '../../components/ui/PageSkeleton'
 
 function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
+  const t = useT()
   const used = category.transactions_count > 0
   const switchId = `cat-active-${category.id}`
 
@@ -26,11 +28,11 @@ function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
       <div className="min-w-0 flex-grow-1">
         <div className={`fw-semibold text-truncate ${category.is_active ? '' : 'text-body-secondary'}`}>
           {category.name}
-          {!category.is_active && <span className="badge text-bg-secondary ms-2 fw-normal">Nonaktif</span>}
+          {!category.is_active && <span className="badge text-bg-secondary ms-2 fw-normal">{t('Nonaktif')}</span>}
         </div>
-        <div className="small text-body-secondary">{formatNumber(category.transactions_count)} transaksi</div>
+        <div className="small text-body-secondary">{t('{count} transaksi', { count: formatNumber(category.transactions_count) })}</div>
       </div>
-      <div className="form-check form-switch mb-0" title={category.is_active ? 'Nonaktifkan' : 'Aktifkan'}>
+      <div className="form-check form-switch mb-0" title={t(category.is_active ? 'Nonaktifkan' : 'Aktifkan')}>
         <input
           className="form-check-input"
           type="checkbox"
@@ -41,23 +43,23 @@ function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
           onChange={() => onToggle(category)}
         />
         <label className="visually-hidden" htmlFor={switchId}>
-          Kategori {category.name} aktif
+          {t('Kategori {name} aktif', { name: category.name })}
         </label>
       </div>
       <button
         type="button"
         className="btn btn-sm btn-outline-primary"
-        aria-label={`Edit kategori ${category.name}`}
+        aria-label={t('Edit kategori {name}', { name: category.name })}
         onClick={() => onEdit(category)}
       >
         <i className="bi bi-pencil" aria-hidden="true"></i>
       </button>
       {/* span pembungkus supaya title tetap muncul pada tombol disabled */}
-      <span title={used ? `Masih dipakai ${category.transactions_count} transaksi, nonaktifkan saja` : undefined}>
+      <span title={used ? t('Masih dipakai {count} transaksi, nonaktifkan saja', { count: category.transactions_count }) : undefined}>
         <button
           type="button"
           className="btn btn-sm btn-outline-danger"
-          aria-label={`Hapus kategori ${category.name}`}
+          aria-label={t('Hapus kategori {name}', { name: category.name })}
           disabled={used}
           onClick={() => onDelete(category)}
         >
@@ -69,6 +71,7 @@ function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
 }
 
 export default function CategoriesPage() {
+  const t = useT()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeType = searchParams.get('type') === 'income' ? 'income' : 'expense'
   const [showInactive, setShowInactive] = useState(true)
@@ -125,11 +128,11 @@ export default function CategoriesPage() {
     content = (
       <EmptyState
         icon="bi-tags"
-        title={`Belum ada kategori ${TRANSACTION_TYPES[activeType].toLowerCase()}`}
+        title={t('Belum ada kategori {type}', { type: t(TRANSACTION_TYPES[activeType]).toLowerCase() })}
         action={
           <button type="button" className="btn btn-primary" onClick={openCreate}>
             <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-            Tambah Kategori
+            {t('Tambah Kategori')}
           </button>
         }
       />
@@ -161,7 +164,7 @@ export default function CategoriesPage() {
         actions={
           <button type="button" className="btn btn-primary" onClick={openCreate}>
             <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-            Tambah Kategori
+            {t('Tambah Kategori')}
           </button>
         }
       />
@@ -177,7 +180,7 @@ export default function CategoriesPage() {
                 className={`nav-link ${activeType === type ? 'active' : ''}`}
                 onClick={() => selectTab(type)}
               >
-                {label}
+                {t(label)}
                 <span className={`badge ms-2 ${activeType === type ? 'text-bg-light' : 'text-bg-secondary'}`}>
                   {counts[type]}
                 </span>
@@ -195,12 +198,12 @@ export default function CategoriesPage() {
             onChange={(e) => setShowInactive(e.target.checked)}
           />
           <label className="form-check-label" htmlFor="show-inactive">
-            Tampilkan nonaktif
+            {t('Tampilkan nonaktif')}
           </label>
         </div>
       </div>
 
-      {error && categories.length > 0 && <div className="alert alert-danger" role="alert">{getErrorMessage(error)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={refetch}>Coba lagi</button></div>}
+      {error && categories.length > 0 && <div className="alert alert-danger" role="alert">{getErrorMessage(error)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={refetch}>{t('Coba lagi')}</button></div>}
       <div className={`opacity-transition ${loading && loaded ? 'opacity-50' : ''}`} aria-busy={loading}>{content}</div>
 
       {form.show && (
@@ -227,9 +230,9 @@ export default function CategoriesPage() {
         {deleting.category && (
           <>
             <p className="mb-2">
-              Kategori <strong>{deleting.category.name}</strong> akan dihapus permanen.
+              {t('Kategori akan dihapus permanen:')} <strong>{deleting.category.name}</strong>
             </p>
-            <p className="mb-0 small text-body-secondary">Budget untuk kategori ini juga akan terhapus.</p>
+            <p className="mb-0 small text-body-secondary">{t('Budget untuk kategori ini juga akan terhapus.')}</p>
           </>
         )}
       </ConfirmDialog>

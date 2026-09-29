@@ -28,7 +28,7 @@ class UpdateCategoryRequest extends StoreCategoryRequest
                 $type = $this->input('type');
 
                 if ($type && $type !== $category->type->value && $category->transactions()->exists()) {
-                    $validator->errors()->add('type', 'Jenis kategori tidak bisa diubah karena sudah dipakai transaksi.');
+                    $validator->errors()->add('type', __('validation.custom_messages.category_type_used'));
                 }
             },
         ];

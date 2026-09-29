@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../i18n/toast'
 import { setUnauthorizedHandler, setToken, getToken, resetSessionExpiredFlag } from '../api/client'
 import * as authApi from '../api/auth'
 import { getErrorMessage } from '../utils/errors'

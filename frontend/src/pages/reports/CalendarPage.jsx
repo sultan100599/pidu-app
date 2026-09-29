@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
+import { dayNames } from '../../utils/format'
 import { useSearchParams } from 'react-router-dom'
 import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
@@ -12,19 +14,19 @@ import Stepper from '../../components/ui/Stepper'
 import PageSkeleton from '../../components/ui/PageSkeleton'
 import { heatLevel } from '../../utils/dashboard'
 
-const WEEKDAYS = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
 
 // Senin = 0 … Minggu = 6 (getDay(): Minggu = 0).
 const mondayIndex = (date) => (date.getDay() + 6) % 7
 
 function DayCell({ day, isToday, onOpen, maximum }) {
+  const t = useT()
   const date = parseYmd(day.date)
   const hasData = day.count > 0
   const parts = [formatDate(day.date, 'long')]
-  if (day.income > 0) parts.push(`pemasukan ${formatRupiah(day.income)}`)
-  parts.push(`pengeluaran ${formatRupiah(day.expense)}`)
-  if (hasData) parts.push(`${day.count} transaksi`)
-  else parts.push('tidak ada transaksi')
+  if (day.income > 0) parts.push(t('Pemasukan {amount}', { amount: formatRupiah(day.income) }))
+  parts.push(t('Pengeluaran {amount}', { amount: formatRupiah(day.expense) }))
+  if (hasData) parts.push(t('{count} transaksi', { count: day.count }))
+  else parts.push(t('Tidak ada transaksi'))
 
   return (
     <button
@@ -52,7 +54,7 @@ function DayCell({ day, isToday, onOpen, maximum }) {
       )}
       {hasData && (
         <span className="d-none d-sm-block" aria-hidden="true">
-          {day.count} trx
+          {day.count}
         </span>
       )}
       {hasData && (
@@ -66,6 +68,7 @@ function DayCell({ day, isToday, onOpen, maximum }) {
 }
 
 export default function CalendarPage() {
+  const t = useT()
   const [searchParams, setSearchParams] = useSearchParams()
   // Tanggal "sekarang" dibekukan saat mount supaya render tetap murni.
   const [today] = useState(() => new Date())
@@ -97,11 +100,11 @@ export default function CalendarPage() {
         <SummaryCards summary={data.totals} />
         <div className="card calendar-panel">
           <div className="card-body p-2 p-sm-3">
-            <div className="calendar-grid" role="group" aria-label={`Kalender ${data.label}`}>
+            <div className="calendar-grid" role="group" aria-label={t('Kalender {period}', { period: `${MONTH_NAMES[month - 1]} ${year}` })}>
               {/* Nama hari hanya visual; tiap tombol tanggal sudah menyebut hari lengkap. */}
-              {WEEKDAYS.map((w) => (
+              {dayNames().map((w) => (
                 <div key={w} className="calendar-weekday" aria-hidden="true">
-                  {w}
+                  {w.slice(0, 3)}
                 </div>
               ))}
               {Array.from({ length: leading }, (_, i) => (
@@ -111,10 +114,10 @@ export default function CalendarPage() {
                 <DayCell key={day.date} day={day} maximum={maximum} isToday={day.date === todayYmd} onOpen={setDetailDate} />
               ))}
             </div>
-            <div className="heat-legend" aria-label="Intensitas pengeluaran harian, sedikit sampai banyak">
-              <span>Sedikit</span>
+            <div className="heat-legend" aria-label={t('Intensitas pengeluaran harian, sedikit sampai banyak')}>
+              <span>{t('Sedikit')}</span>
               {[0, 1, 2, 3, 4].map((level) => <span key={level} className="heat-swatch" data-heat={level} aria-hidden="true" />)}
-              <span aria-hidden="true">→</span><span>Banyak</span>
+              <span aria-hidden="true">→</span><span>{t('Banyak')}</span>
             </div>
           </div>
         </div>
@@ -138,7 +141,7 @@ export default function CalendarPage() {
           />
         }
       />
-      {error && data && <div className="alert alert-danger" role="alert">{getErrorMessage(error)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>Coba lagi</button></div>}
+      {error && data && <div className="alert alert-danger" role="alert">{getErrorMessage(error)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>{t('Coba lagi')}</button></div>}
       {content}
       <DayDetailModal date={detailDate} onClose={() => setDetailDate(null)} />
     </>

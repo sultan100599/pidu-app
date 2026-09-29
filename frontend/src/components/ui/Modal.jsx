@@ -1,10 +1,12 @@
 import { useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { useT } from '../../i18n/LocaleProvider'
 
 // Modal controlled murni React (tanpa JS Bootstrap): portal ke body, backdrop,
 // tutup via Esc / tombol × / klik backdrop, scroll body dikunci, fokus ke
 // elemen pertama saat dibuka, fullscreen di bawah breakpoint sm.
 export default function Modal({ show, onClose, title, children, footer, busy = false, initialFocus }) {
+  const t = useT()
   const titleId = useId()
   const dialogRef = useRef(null)
   // Ref mencegah fokus melompat saat callback parent berubah ketika mengetik.
@@ -79,9 +81,9 @@ export default function Modal({ show, onClose, title, children, footer, busy = f
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id={titleId}>
-                {title}
+                {t(title)}
               </h5>
-              <button type="button" className="btn-close" aria-label="Tutup" onClick={onClose} disabled={busy}></button>
+              <button type="button" className="btn-close" aria-label={t('Tutup')} onClick={onClose} disabled={busy}></button>
             </div>
             <div className="modal-body">{children}</div>
             {footer && <div className="modal-footer">{footer}</div>}

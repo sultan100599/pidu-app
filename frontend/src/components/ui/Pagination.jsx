@@ -1,3 +1,5 @@
+import { useT } from '../../i18n/LocaleProvider'
+
 // Daftar halaman: selalu sertakan 1 dan halaman terakhir, plus jendela di
 // sekitar halaman aktif; celah diganti elipsis '…'.
 function getPages(current, last) {
@@ -15,9 +17,10 @@ function getPages(current, last) {
 }
 
 function PageButton({ page, active, onClick, label, disabled }) {
+  const t = useT()
   return (
     <li className={`page-item ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}`}>
-      <button type="button" className="page-link" onClick={onClick} disabled={disabled} aria-label={label} aria-current={active ? 'page' : undefined}>
+      <button type="button" className="page-link" onClick={onClick} disabled={disabled} aria-label={t(label)} aria-current={active ? 'page' : undefined}>
         {page}
       </button>
     </li>
@@ -26,6 +29,7 @@ function PageButton({ page, active, onClick, label, disabled }) {
 
 // meta dari paginator Laravel: { current_page, last_page, per_page, total, from, to }
 export default function Pagination({ meta, onPageChange }) {
+  const t = useT()
   if (!meta || meta.last_page <= 1) return null
 
   const { current_page: current, last_page: last, total, from, to } = meta
@@ -34,9 +38,9 @@ export default function Pagination({ meta, onPageChange }) {
   return (
     <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 mt-3">
       <p className="small text-body-secondary mb-0">
-        {total > 0 ? `Menampilkan ${from}–${to} dari ${total}` : 'Tidak ada data'}
+        {total > 0 ? t('Menampilkan {from}–{to} dari {total}', { from, to, total }) : t('Tidak ada data')}
       </p>
-      <nav aria-label="Navigasi halaman">
+      <nav aria-label={t('Navigasi halaman')}>
         <ul className="pagination mb-0">
           <PageButton page="«" label="Halaman pertama" disabled={current === 1} onClick={() => onPageChange(1)} />
           <PageButton page="‹" label="Halaman sebelumnya" disabled={current === 1} onClick={() => onPageChange(current - 1)} />
@@ -48,7 +52,7 @@ export default function Pagination({ meta, onPageChange }) {
                 </span>
               </li>
             ) : (
-              <PageButton key={p} page={p} label={`Halaman ${p}`} active={p === current} onClick={() => onPageChange(p)} />
+              <PageButton key={p} page={p} label={t('Halaman {page}', { page: p })} active={p === current} onClick={() => onPageChange(p)} />
             ),
           )}
           <PageButton page="›" label="Halaman berikutnya" disabled={current === last} onClick={() => onPageChange(current + 1)} />

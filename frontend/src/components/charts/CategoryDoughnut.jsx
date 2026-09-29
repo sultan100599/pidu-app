@@ -1,4 +1,5 @@
 import './setup'
+import { useT } from '../../i18n/LocaleProvider'
 import { Doughnut } from 'react-chartjs-2'
 import { formatRupiah } from '../../utils/format'
 import { useChartTheme } from './useChartTheme'
@@ -8,6 +9,7 @@ import { accessibleColor } from '../../utils/accessibleColor'
 // Doughnut pengeluaran per kategori; warna = warna kategori.
 // items: [{ name, color, total, percentage }]
 export default function CategoryDoughnut({ items, height = 220 }) {
+  const translate = useT()
   const t = useChartTheme()
   const reducedMotion = useReducedMotion()
 
@@ -46,7 +48,7 @@ export default function CategoryDoughnut({ items, height = 220 }) {
   }
 
   return (
-    <div style={{ height }} role="img" aria-label="Grafik pengeluaran per kategori">
+    <div style={{ height }} role="img" aria-label={translate('Grafik pengeluaran per kategori')}>
       <Doughnut key={t.theme} data={data} options={options} />
     </div>
   )

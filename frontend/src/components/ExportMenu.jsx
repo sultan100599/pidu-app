@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useT } from '../i18n/LocaleProvider'
+import { toast } from '../i18n/toast'
 import * as exportApi from '../api/export'
 import { getErrorMessage } from '../utils/errors'
 import { useDropdownBounds } from '../hooks/useDropdownBounds'
@@ -11,6 +12,7 @@ const FORMATS = [
 
 // Tombol dropdown "Export" (Excel / PDF) untuk transaksi dengan filter `params`.
 export default function ExportMenu({ params, disabled = false }) {
+  const t = useT()
   const [open, setOpen] = useState(false)
   const [busy, setBusy] = useState(null)
   const ref = useRef(null)
@@ -40,7 +42,7 @@ export default function ExportMenu({ params, disabled = false }) {
     setBusy(format.key)
     try {
       const filename = await format.run(params)
-      toast.success(`${filename} diunduh.`)
+      toast.success(t('{filename} diunduh.', { filename }))
     } catch (err) {
       toast.error(getErrorMessage(err))
     } finally {
@@ -62,7 +64,7 @@ export default function ExportMenu({ params, disabled = false }) {
         ) : (
           <i className="bi bi-download me-1" aria-hidden="true"></i>
         )}
-        Export
+        {t('Export')}
       </button>
       {open && (
         <ul className="dropdown-menu dropdown-menu-end show position-absolute">

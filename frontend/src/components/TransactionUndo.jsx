@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useT } from '../i18n/LocaleProvider'
+import { toast } from '../i18n/toast'
 import * as transactionsApi from '../api/transactions'
 import { getErrorMessage, getFieldErrors } from '../utils/errors'
 import { useAuth } from '../context/AuthContext'
 
 export default function TransactionUndo({ transaction, onRestored, closeToast, toastId, userId }) {
+  const t = useT()
   const { user } = useAuth()
   const locked = useRef(false)
   const [busy, setBusy] = useState(false)
@@ -37,9 +39,9 @@ export default function TransactionUndo({ transaction, onRestored, closeToast, t
   }
   return <div className="transaction-undo" onFocus={() => toast.pause({ id: toastId })}
     onBlur={(event) => { if (!locked.current && !event.currentTarget.contains(event.relatedTarget)) toast.play({ id: toastId }) }}>
-    <span>Transaksi dihapus</span>
+    <span>{t('Transaksi dihapus')}</span>
     <button type="button" className="btn btn-outline-primary" onClick={restore} disabled={busy}>
-      {busy ? 'Memulihkan…' : 'Batalkan'}
+      {t(busy ? 'Memulihkan…' : 'Batalkan')}
     </button>
   </div>
 }

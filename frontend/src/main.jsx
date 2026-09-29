@@ -6,6 +6,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'react-toastify/dist/ReactToastify.css'
 import './styles/app.css'
 import './styles/polish.css'
+import './styles/locale.css'
+import { LocaleProvider } from './i18n/LocaleProvider.jsx'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { ThemeProvider } from './context/ThemeContext.jsx'
@@ -14,9 +16,11 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <LocaleProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </LocaleProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,

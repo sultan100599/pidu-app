@@ -35,7 +35,7 @@ class BudgetController extends Controller
         $budget = $request->user()->budgets()->create($request->validated());
 
         return response()->json([
-            'message' => 'Budget berhasil ditambahkan.',
+            'message' => __('messages.budget_created'),
             'data' => new BudgetResource($this->service->withUsage($request->user(), $budget)),
         ], 201);
     }
@@ -46,7 +46,7 @@ class BudgetController extends Controller
         $budget->update($request->validated());
 
         return response()->json([
-            'message' => 'Budget berhasil diperbarui.',
+            'message' => __('messages.budget_updated'),
             'data' => new BudgetResource($this->service->withUsage($request->user(), $budget)),
         ]);
     }
@@ -55,6 +55,6 @@ class BudgetController extends Controller
     {
         $request->user()->budgets()->findOrFail($id)->delete();
 
-        return response()->json(['message' => 'Budget berhasil dihapus.']);
+        return response()->json(['message' => __('messages.budget_deleted')]);
     }
 }

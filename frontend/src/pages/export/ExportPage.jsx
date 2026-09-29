@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useT } from '../../i18n/LocaleProvider'
 import { Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast } from '../../i18n/toast'
 import * as exportApi from '../../api/export'
 import PageHeader from '../../components/PageHeader'
 import BackupCard from './BackupCard'
@@ -12,13 +13,14 @@ import { getPeriodRange, isCustomRangeInvalid, PERIOD_PRESETS } from '../../util
 const ALL_SHEETS = ['Transaksi', 'Harian', 'Mingguan', 'Bulanan', 'Tahunan', 'Kategori', 'Budget']
 
 function useDownload() {
+  const t = useT()
   const [busy, setBusy] = useState(null)
 
   async function run(key, fn) {
     setBusy(key)
     try {
       const filename = await fn()
-      toast.success(`${filename} diunduh.`)
+      toast.success(t('{filename} diunduh.', { filename }))
     } catch (err) {
       toast.error(getErrorMessage(err))
     } finally {
@@ -30,6 +32,7 @@ function useDownload() {
 }
 
 function DownloadButton({ label, icon, variant, busy, disabled, onClick }) {
+  const t = useT()
   return (
     <button type="button" className={`btn ${variant}`} onClick={onClick} disabled={disabled || busy}>
       {busy ? (
@@ -37,12 +40,13 @@ function DownloadButton({ label, icon, variant, busy, disabled, onClick }) {
       ) : (
         <i className={`bi ${icon} me-2`} aria-hidden="true"></i>
       )}
-      {label}
+      {t(label)}
     </button>
   )
 }
 
 function TransactionsExportCard() {
+  const t = useT()
   const [period, setPeriod] = useState('this_month')
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
@@ -67,35 +71,35 @@ function TransactionsExportCard() {
       <div className="card-body d-flex flex-column">
         <h2 className="h5">
           <i className="bi bi-list-ul me-2 text-primary" aria-hidden="true"></i>
-          Export transaksi
+          {t('Export transaksi')}
         </h2>
         <p className="text-body-secondary small">
-          Daftar transaksi beserta total pemasukan, pengeluaran, dan saldo. Butuh filter kategori, metode, atau
-          pencarian? Pakai tombol <strong>Export</strong> di halaman <Link to="/transactions">Transaksi</Link>.
+          {t('Daftar transaksi beserta total pemasukan, pengeluaran, dan saldo. Untuk filter kategori, metode, atau pencarian, gunakan Export di halaman Transaksi.')}
+          {' '}<Link to="/transactions">{t('Buka Transaksi')}</Link>
         </p>
 
         <div className="row g-2 mb-3">
           <div className="col-sm-6">
             <label htmlFor="exp-period" className="form-label small mb-1">
-              Periode
+              {t('Periode')}
             </label>
             <select id="exp-period" className="form-select" value={period} onChange={(e) => changePeriod(e.target.value)}>
               {PERIOD_PRESETS.map((p) => (
                 <option key={p.value} value={p.value}>
-                  {p.value === 'all' ? 'Semua tanggal' : p.label}
+                  {t(p.value === 'all' ? 'Semua tanggal' : p.label)}
                 </option>
               ))}
             </select>
           </div>
           <div className="col-sm-6">
             <label htmlFor="exp-type" className="form-label small mb-1">
-              Jenis
+              {t('Jenis')}
             </label>
             <select id="exp-type" className="form-select" value={type} onChange={(e) => setType(e.target.value)}>
-              <option value="">Semua</option>
+              <option value="">{t('Semua')}</option>
               {Object.entries(TRANSACTION_TYPES).map(([value, label]) => (
                 <option key={value} value={value}>
-                  {label}
+                  {t(label)}
                 </option>
               ))}
             </select>
@@ -104,7 +108,7 @@ function TransactionsExportCard() {
             <>
               <div className="col-6">
                 <label htmlFor="exp-start" className="form-label small mb-1">
-                  Dari
+                  {t('Dari')}
                 </label>
                 <input
                   id="exp-start"
@@ -116,7 +120,7 @@ function TransactionsExportCard() {
               </div>
               <div className="col-6">
                 <label htmlFor="exp-end" className="form-label small mb-1">
-                  Sampai
+                  {t('Sampai')}
                 </label>
                 <input
                   id="exp-end"
@@ -129,7 +133,7 @@ function TransactionsExportCard() {
               {invalid && (
                 <div className="col-12">
                   <p className="text-danger small mb-0" role="alert">
-                    Tanggal akhir tidak boleh lebih awal dari tanggal mulai.
+                    {t('Tanggal akhir tidak boleh lebih awal dari tanggal mulai.')}
                   </p>
                 </div>
               )}
@@ -155,13 +159,14 @@ function TransactionsExportCard() {
             onClick={() => run('pdf', () => exportApi.transactionsPdf(params))}
           />
         </div>
-        <p className="small text-body-secondary mt-2 mb-0">PDF maksimal 2.000 transaksi; untuk data lebih banyak gunakan Excel.</p>
+        <p className="small text-body-secondary mt-2 mb-0">{t('PDF maksimal 2.000 transaksi; untuk data lebih banyak gunakan Excel.')}</p>
       </div>
     </div>
   )
 }
 
 function AllDataCard() {
+  const t = useT()
   const [currentYear] = useState(() => new Date().getFullYear())
   const [year, setYear] = useState(currentYear)
   const { busy, run } = useDownload()
@@ -171,13 +176,13 @@ function AllDataCard() {
       <div className="card-body d-flex flex-column">
         <h2 className="h5">
           <i className="bi bi-collection me-2 text-success" aria-hidden="true"></i>
-          Export semua ke Excel
+          {t('Export semua ke Excel')}
         </h2>
         <p className="text-body-secondary small">
-          Satu file Excel berisi seluruh data satu tahun, dengan angka yang sama seperti halaman laporan.
+          {t('Satu file Excel berisi seluruh data satu tahun, dengan angka yang sama seperti halaman laporan.')}
         </p>
         <div className="mb-3">
-          <span className="form-label small d-block mb-1">Tahun</span>
+          <span className="form-label small d-block mb-1">{t('Tahun')}</span>
           <Stepper
             label={year}
             onPrev={() => setYear((y) => y - 1)}
@@ -188,18 +193,18 @@ function AllDataCard() {
           />
         </div>
         <div className="mb-3">
-          <span className="form-label small d-block mb-1">Sheet</span>
+          <span className="form-label small d-block mb-1">{t('Sheet')}</span>
           <div className="d-flex flex-wrap gap-1">
             {ALL_SHEETS.map((s) => (
               <span key={s} className="badge bg-body-tertiary text-body border fw-normal">
-                {s}
+                {t(s)}
               </span>
             ))}
           </div>
         </div>
         <div className="mt-auto">
           <DownloadButton
-            label={`Export semua ${year}`}
+            label={t('Export semua {year}', { year })}
             icon="bi-file-earmark-spreadsheet"
             variant="btn-success"
             busy={busy === 'all'}

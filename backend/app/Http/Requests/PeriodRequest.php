@@ -44,7 +44,7 @@ class PeriodRequest extends ApiRequest
                 $end = $this->input('end_date');
                 if ($start && $end
                     && CarbonImmutable::parse($end)->gt(CarbonImmutable::parse($start)->addYears(5))) {
-                    $validator->errors()->add('end_date', 'Rentang tanggal maksimal 5 tahun.');
+                    $validator->errors()->add('end_date', __('validation.custom_messages.period_limit'));
                 }
             },
         ];

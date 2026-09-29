@@ -27,7 +27,7 @@
 <body>
 @php
     $rp = fn ($n) => ($n < 0 ? '-' : '').'Rp '.number_format(abs($n), (fmod(abs($n), 1) > 0 ? 2 : 0), ',', '.');
-    $tgl = fn ($d) => $d->translatedFormat('j M Y');
+    $tgl = fn ($d) => $d->copy()->locale('id')->translatedFormat('j M Y');
 @endphp
 
 <h1>Laporan Transaksi</h1>
@@ -73,7 +73,7 @@
                 @endif
             </td>
             <td>{{ $trx->category?->name }}</td>
-            <td>{{ $trx->payment_method->label() }}</td>
+            <td>{{ $trx->payment_method->label('id') }}</td>
             <td class="right nowrap {{ $trx->type->value }}">
                 {{ $trx->type->value === 'income' ? '+' : '-' }}{{ $rp((float) $trx->amount) }}
             </td>
@@ -84,6 +84,6 @@
     </tbody>
 </table>
 
-<div class="footer">Dibuat {{ $generatedAt->translatedFormat('j F Y H:i') }} · Pidu-App</div>
+<div class="footer">Dibuat {{ $generatedAt->copy()->locale('id')->translatedFormat('j F Y H:i') }} · Pidu-App</div>
 </body>
 </html>

@@ -30,13 +30,14 @@ class TransactionImportService
 
     /** Alias header (lowercase) → field. */
     private const HEADERS = [
-        'tanggal' => 'date', 'date' => 'date', 'tgl' => 'date',
-        'jenis' => 'type', 'type' => 'type', 'tipe' => 'type',
+        'tanggal' => 'date', 'date' => 'date', 'tgl' => 'date', 'ping kaping' => 'date',
+        'jenis' => 'type', 'type' => 'type', 'tipe' => 'type', 'jinis' => 'type',
         'kategori' => 'category', 'category' => 'category',
-        'deskripsi' => 'description', 'description' => 'description', 'keterangan' => 'description',
-        'catatan' => 'notes', 'notes' => 'notes', 'note' => 'notes',
+        'deskripsi' => 'description', 'description' => 'description', 'keterangan' => 'description', 'pedaran' => 'description',
+        'catatan' => 'notes', 'notes' => 'notes', 'note' => 'notes', 'catetan' => 'notes',
         'metode' => 'payment_method', 'metode pembayaran' => 'payment_method', 'payment_method' => 'payment_method', 'payment method' => 'payment_method',
         'nominal' => 'amount', 'jumlah' => 'amount', 'amount' => 'amount',
+        'métode' => 'payment_method', 'métode pamayaran' => 'payment_method', 'method' => 'payment_method',
     ];
 
     private const REQUIRED = ['date' => 'Tanggal', 'category' => 'Kategori', 'amount' => 'Nominal'];
@@ -69,7 +70,7 @@ class TransactionImportService
             }
             if (++$dataRows > self::MAX_ROWS) {
                 throw ValidationException::withMessages([
-                    'file' => sprintf('Maksimal %s baris per impor. Pecah file menjadi beberapa bagian.', number_format(self::MAX_ROWS, 0, ',', '.')),
+                    'file' => __('messages.import_limit', ['count' => number_format(self::MAX_ROWS, 0, ',', '.')]),
                 ]);
             }
 
@@ -90,7 +91,7 @@ class TransactionImportService
         }
 
         if ($dataRows === 0) {
-            throw ValidationException::withMessages(['file' => 'File tidak berisi baris transaksi.']);
+            throw ValidationException::withMessages(['file' => __('messages.import_empty')]);
         }
 
         $duplicates = $this->markDuplicates($user, $rows);
@@ -190,7 +191,7 @@ class TransactionImportService
             $sheets = Excel::toArray($isCsv ? new RawRowsImport : new \stdClass, $file);
         } catch (Throwable $e) {
             report($e);
-            throw ValidationException::withMessages(['file' => 'File tidak bisa dibaca. Pastikan formatnya .xlsx, .xls, atau .csv.']);
+            throw ValidationException::withMessages(['file' => __('messages.import_unreadable')]);
         }
 
         return $sheets[0] ?? [];
@@ -212,7 +213,7 @@ class TransactionImportService
         $missing = array_diff_key(self::REQUIRED, $columns);
         if ($missing) {
             throw ValidationException::withMessages([
-                'file' => 'Kolom wajib tidak ditemukan di baris pertama: '.implode(', ', $missing).'. Gunakan template impor.',
+                'file' => __('messages.import_columns', ['columns' => implode(', ', array_map(fn ($field) => ucfirst(__('validation.attributes.'.(['category' => 'category_id'][$field] ?? $field))), array_keys($missing)))]),
             ]);
         }
 
@@ -253,49 +254,49 @@ class TransactionImportService
 
         $date = $this->parseDate($c['date']);
         if ($date === null) {
-            $errors[] = 'Tanggal tidak valid (gunakan tanggal Excel atau format dd/mm/yyyy).';
+            $errors[] = __('messages.import_date');
         }
 
         $amount = $this->parseAmount($c['amount']);
         if ($amount === null) {
-            $errors[] = 'Nominal harus berupa angka.';
+            $errors[] = __('validation.numeric', ['attribute' => __('validation.attributes.amount')]);
         }
 
         $type = $this->parseType($c['type'], $amount);
         if ($type === false) {
-            $errors[] = 'Jenis harus Pemasukan atau Pengeluaran.';
+            $errors[] = __('messages.import_type');
         } elseif ($type === null) {
-            $errors[] = 'Jenis wajib diisi (Pemasukan/Pengeluaran).';
+            $errors[] = __('messages.import_type_required');
         }
 
         if ($amount !== null) {
             $amount = round(abs($amount), 2);
             if ($amount <= 0) {
-                $errors[] = 'Nominal harus lebih dari 0.';
+                $errors[] = __('validation.custom_messages.amount_positive');
             } elseif ($amount > 999999999999) {
-                $errors[] = 'Nominal terlalu besar.';
+                $errors[] = __('messages.import_amount_large');
             }
         }
 
         $category = $c['category'] === null ? '' : (string) $c['category'];
         if ($category === '') {
-            $errors[] = 'Kategori wajib diisi.';
+            $errors[] = __('validation.required', ['attribute' => __('validation.attributes.category_id')]);
         } elseif (mb_strlen($category) > 100) {
-            $errors[] = 'Nama kategori maksimal 100 karakter.';
+            $errors[] = __('validation.max.string', ['attribute' => __('validation.attributes.category_id'), 'max' => 100]);
         }
 
         $method = $this->parsePaymentMethod($c['payment_method']);
         if ($method === null) {
-            $errors[] = 'Metode tidak dikenal (pilihan: '.implode(', ', array_map(fn ($m) => $m->label(), PaymentMethod::cases())).').';
+            $errors[] = __('messages.import_method', ['choices' => implode(', ', array_map(fn ($m) => $m->label(), PaymentMethod::cases()))]);
         }
 
         $description = $c['description'] === null || $c['description'] === '' ? null : (string) $c['description'];
         if ($description !== null && mb_strlen($description) > 255) {
-            $errors[] = 'Deskripsi maksimal 255 karakter.';
+            $errors[] = __('validation.max.string', ['attribute' => __('validation.attributes.description'), 'max' => 255]);
         }
         $notes = $c['notes'] === null || $c['notes'] === '' ? null : (string) $c['notes'];
         if ($notes !== null && mb_strlen($notes) > 5000) {
-            $errors[] = 'Catatan maksimal 5000 karakter.';
+            $errors[] = __('validation.max.string', ['attribute' => __('validation.attributes.notes'), 'max' => 5000]);
         }
 
         return [[
@@ -368,8 +369,8 @@ class TransactionImportService
         }
 
         return match ($v) {
-            'pemasukan', 'income', 'masuk' => TransactionType::Income->value,
-            'pengeluaran', 'expense', 'keluar' => TransactionType::Expense->value,
+            'pemasukan', 'income', 'masuk', 'panghasilan' => TransactionType::Income->value,
+            'pengeluaran', 'expense', 'keluar', 'pangeluaran' => TransactionType::Expense->value,
             default => false,
         };
     }
@@ -381,7 +382,7 @@ class TransactionImportService
             return PaymentMethod::Cash->value;
         }
         foreach (PaymentMethod::cases() as $method) {
-            if ($v === $method->value || $v === Str::lower($method->label())) {
+            if ($v === $method->value || in_array($v, array_map(fn ($locale) => Str::lower($method->label($locale)), ['id', 'en', 'su']), true)) {
                 return $method->value;
             }
         }

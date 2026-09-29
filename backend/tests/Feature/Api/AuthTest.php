@@ -34,7 +34,7 @@ class AuthTest extends TestCase
     {
         $this->getJson('/api/auth/me')
             ->assertStatus(401)
-            ->assertExactJson(['message' => 'Unauthenticated.']);
+            ->assertExactJson(['message' => 'Silakan login terlebih dahulu.']);
 
         $this->getJson('/api/transactions')->assertStatus(401);
     }

@@ -16,7 +16,7 @@ class ReportService
     public function __construct(private TransactionService $transactions) {}
 
     /**
-     * Rekap per hari — semua tanggal dalam periode (kosong = 0), urut naik.
+     * Rekap per hari, termasuk tanggal tanpa transaksi, urut naik.
      */
     public function daily(User $user, Period $period, array $filters): array
     {
@@ -58,7 +58,7 @@ class ReportService
             $n++;
             $rows[] = [
                 'week' => $n,
-                'label' => "Minggu $n",
+                'label' => __('messages.week', ['number' => $n]),
                 'start_date' => $w['start_date'],
                 'end_date' => $w['end_date'],
                 'income' => Money::of($w['income']),
@@ -84,7 +84,7 @@ class ReportService
         $data = $this->transactions->groupedTotals($user, $period, $filters, DateSql::month('transaction_date'));
 
         $rows = [];
-        foreach (Period::MONTHS as $m => $label) {
+        foreach (trans('messages.months') as $m => $label) {
             $rows[] = ['month' => $m, 'label' => $label] + $this->row($data[(string) $m] ?? null);
         }
 
@@ -129,7 +129,7 @@ class ReportService
         return [
             'year' => $year,
             'month' => $month,
-            'label' => Period::MONTHS[$month].' '.$year,
+            'label' => __('messages.months.'.$month).' '.$year,
             'totals' => $this->sumRows($rows = $this->dailyRows($user, $period, $filters)),
             'days' => array_map(fn ($r) => [
                 'date' => $r['date'],

@@ -32,7 +32,7 @@ class BackupCommand extends Command
             } catch (Throwable $e) {
                 // Satu user gagal jangan menghentikan backup user lain.
                 report($e);
-                $this->error("User #{$user->id}: gagal — {$e->getMessage()}");
+                $this->error("User #{$user->id}: gagal: {$e->getMessage()}");
                 $failed = true;
             }
         }

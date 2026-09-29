@@ -21,7 +21,7 @@ class StoreCategoryRequest extends ApiRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'name.unique' => 'Nama kategori sudah ada untuk jenis ini.',
+            'name.unique' => __('validation.custom_messages.category_duplicate'),
         ]);
     }
 

@@ -1,7 +1,9 @@
 import CategoryBadge from '../../components/CategoryBadge'
+import { useT } from '../../i18n/LocaleProvider'
 import { formatDate, formatRupiah } from '../../utils/format'
 
 function SortableHeader({ label, column, sort, dir, onSort, className = '' }) {
+  const t = useT()
   const active = sort === column
   const icon = active ? (dir === 'asc' ? 'bi-sort-up' : 'bi-sort-down') : 'bi-sort-down text-body-tertiary'
   return (
@@ -11,13 +13,14 @@ function SortableHeader({ label, column, sort, dir, onSort, className = '' }) {
         className="table-sort"
         onClick={() => onSort(column)}
       >
-        {label} <i className={`bi ${icon}`} aria-hidden="true"></i>
+        {t(label)} <i className={`bi ${icon}`} aria-hidden="true"></i>
       </button>
     </th>
   )
 }
 
 export default function TransactionTable({ transactions, sort, dir, onSort, onEdit, onDelete }) {
+  const t = useT()
   return (
     <div className="card">
       <div className="table-responsive">
@@ -25,12 +28,12 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
           <thead>
             <tr>
               <SortableHeader label="Tanggal" column="transaction_date" sort={sort} dir={dir} onSort={onSort} />
-              <th>Deskripsi</th>
-              <th>Kategori</th>
-              <th>Metode</th>
+              <th>{t('Deskripsi')}</th>
+              <th>{t('Kategori')}</th>
+              <th>{t('Metode')}</th>
               <SortableHeader label="Nominal" column="amount" sort={sort} dir={dir} onSort={onSort} className="text-end" />
               <th>
-                <span className="visually-hidden">Aksi</span>
+                <span className="visually-hidden">{t('Aksi')}</span>
               </th>
             </tr>
           </thead>
@@ -42,7 +45,7 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
                   {trx.description ? (
                     <span>{trx.description}</span>
                   ) : (
-                    <span className="text-body-secondary">{trx.category?.name ?? 'Tanpa kategori'}</span>
+                    <span className="text-body-secondary">{trx.category?.name ?? t('Tanpa kategori')}</span>
                   )}
                   {trx.notes && (
                     <div className="small text-body-secondary text-truncate" style={{ maxWidth: 320 }}>
@@ -53,7 +56,7 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
                 <td>
                   <CategoryBadge category={trx.category} />
                 </td>
-                <td className="text-nowrap">{trx.payment_method_label}</td>
+                <td className="text-nowrap">{t(trx.payment_method_label)}</td>
                 <td
                   className={`text-end fw-semibold text-nowrap ${trx.type === 'income' ? 'text-success' : 'text-danger'}`}
                 >
@@ -64,7 +67,7 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-primary me-1"
-                    aria-label={`Edit transaksi ${trx.description || trx.category?.name || trx.id}`}
+                    aria-label={t('Edit transaksi {name}', { name: trx.description || trx.category?.name || trx.id })}
                     onClick={() => onEdit(trx)}
                   >
                     <i className="bi bi-pencil" aria-hidden="true"></i>
@@ -72,7 +75,7 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
                   <button
                     type="button"
                     className="btn btn-sm btn-outline-danger"
-                    aria-label={`Hapus transaksi ${trx.description || trx.category?.name || trx.id}`}
+                    aria-label={t('Hapus transaksi {name}', { name: trx.description || trx.category?.name || trx.id })}
                     onClick={() => onDelete(trx)}
                   >
                     <i className="bi bi-trash" aria-hidden="true"></i>

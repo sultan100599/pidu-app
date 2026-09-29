@@ -1,4 +1,5 @@
 import IncomeExpenseChart from '../../components/charts/IncomeExpenseChart'
+import { useT } from '../../i18n/LocaleProvider'
 import SummaryCards from '../../components/SummaryCards'
 import EmptyState from '../../components/ui/EmptyState'
 import ErrorState from '../../components/ui/ErrorState'
@@ -8,6 +9,7 @@ import PageSkeleton from '../../components/ui/PageSkeleton'
 // Kerangka halaman rekap: state loading/error, ringkasan total, grafik, lalu isi (tabel).
 // chart: { labels, income, expense, tooltipTitles } | null
 export default function ReportShell({ fetchState, totals, chart, emptyTitle, children }) {
+  const t = useT()
   const { data, error, loading, reload } = fetchState
 
   if (!data && error) return <ErrorState message={getErrorMessage(error)} onRetry={reload} />
@@ -21,7 +23,7 @@ export default function ReportShell({ fetchState, totals, chart, emptyTitle, chi
         <div className="alert alert-danger d-flex justify-content-between align-items-center gap-2" role="alert">
           <span>{getErrorMessage(error)}</span>
           <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>
-            Coba lagi
+            {t('Coba lagi')}
           </button>
         </div>
       )}

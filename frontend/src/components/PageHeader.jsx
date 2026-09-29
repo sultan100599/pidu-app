@@ -1,6 +1,10 @@
 import { useEffect } from 'react'
+import { useT } from '../i18n/LocaleProvider'
 
 export default function PageHeader({ title, subtitle, actions }) {
+  const t = useT()
+  title = t(title)
+  subtitle = typeof subtitle === 'string' ? t(subtitle) : subtitle
   useEffect(() => {
     document.title = `${title} · Pidu-App`
     return () => {

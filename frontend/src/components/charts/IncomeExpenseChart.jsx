@@ -1,4 +1,5 @@
 import './setup'
+import { useT } from '../../i18n/LocaleProvider'
 import { Bar } from 'react-chartjs-2'
 import { formatCompact, formatRupiah } from '../../utils/format'
 import { useChartTheme } from './useChartTheme'
@@ -7,6 +8,7 @@ import { useReducedMotion } from '../../hooks/useReducedMotion'
 // Grafik batang pemasukan vs pengeluaran. `labels` sudah dalam bentuk tampilan;
 // `tooltipTitles` (opsional) dipakai untuk judul tooltip yang lebih panjang.
 export default function IncomeExpenseChart({ labels, income, expense, tooltipTitles, height = 280, ariaLabel }) {
+  const translate = useT()
   const t = useChartTheme()
   const reducedMotion = useReducedMotion()
 
@@ -14,14 +16,14 @@ export default function IncomeExpenseChart({ labels, income, expense, tooltipTit
     labels,
     datasets: [
       {
-        label: 'Pemasukan',
+        label: translate('Pemasukan'),
         data: income,
         backgroundColor: t.income,
         borderRadius: 6,
         maxBarThickness: 28,
       },
       {
-        label: 'Pengeluaran',
+        label: translate('Pengeluaran'),
         data: expense,
         backgroundColor: t.expense,
         borderRadius: 6,
@@ -63,7 +65,7 @@ export default function IncomeExpenseChart({ labels, income, expense, tooltipTit
   }
 
   return (
-    <div style={{ height }} role="img" aria-label={ariaLabel ?? 'Grafik pemasukan dan pengeluaran'}>
+    <div style={{ height }} role="img" aria-label={translate(ariaLabel ?? 'Grafik pemasukan dan pengeluaran')}>
       {/* key = tema → chart dibuat ulang dengan warna baru saat dark mode di-toggle */}
       <Bar key={t.theme} data={data} options={options} />
     </div>
