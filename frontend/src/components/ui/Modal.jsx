@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 // Modal controlled murni React (tanpa JS Bootstrap): portal ke body, backdrop,
 // tutup via Esc / tombol × / klik backdrop, scroll body dikunci, fokus ke
 // elemen pertama saat dibuka, fullscreen di bawah breakpoint sm.
-export default function Modal({ show, onClose, title, children, footer, busy = false }) {
+export default function Modal({ show, onClose, title, children, footer, busy = false, initialFocus }) {
   const titleId = useId()
   const dialogRef = useRef(null)
   // Ref mencegah fokus melompat saat callback parent berubah ketika mengetik.
@@ -44,9 +44,10 @@ export default function Modal({ show, onClose, title, children, footer, busy = f
     const timer = setTimeout(() => {
       const dialog = dialogRef.current
       const first =
-        dialog?.querySelector(
+        (initialFocus && dialog?.querySelector(initialFocus)) ||
+        (dialog?.querySelector(
           '.modal-body input:not([type="hidden"]):not([disabled]), .modal-body select:not([disabled]), .modal-body textarea:not([disabled])',
-        ) ?? dialog?.querySelector('.modal-body button:not([disabled]), .modal-footer button:not([disabled])')
+        ) ?? dialog?.querySelector('.modal-body button:not([disabled]), .modal-footer button:not([disabled])'))
       first?.focus()
     }, 0)
 
@@ -56,7 +57,7 @@ export default function Modal({ show, onClose, title, children, footer, busy = f
       clearTimeout(timer)
       if (previousFocus?.isConnected) previousFocus.focus()
     }
-  }, [show])
+  }, [show, initialFocus])
 
   if (!show) return null
 

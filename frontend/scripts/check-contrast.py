@@ -27,6 +27,7 @@ for theme, block in zip(['light', 'dark'], blocks):
     pairs += [(fg, bg, 3) for fg in ['control-line', 'focus'] for bg in surfaces]
     pairs += [('checkmark', 'check-fill', 3)]
     pairs += [(fg, 'recess', 3) for fg in ['income', 'expense', 'warning']]
+    pairs += [(fg, bg, 4.5) for fg in ['ink', 'heat-income'] for bg in ['surface', 'heat-1', 'heat-2', 'heat-3', 'heat-4']]
     for fg, bg, threshold in pairs:
         result = subprocess.run(
             [sys.executable, str(checker), tokens[fg], tokens[bg]],

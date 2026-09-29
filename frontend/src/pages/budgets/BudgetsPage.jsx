@@ -14,6 +14,7 @@ import { getErrorMessage } from '../../utils/errors'
 import { formatRupiah, MONTH_NAMES, toYmd } from '../../utils/format'
 import BudgetFormModal from './BudgetFormModal'
 import CategoryIcon from '../../components/CategoryIcon'
+import PageSkeleton from '../../components/ui/PageSkeleton'
 
 function monthLabel(month, year) {
   return `${MONTH_NAMES[month - 1]} ${year}`
@@ -207,13 +208,7 @@ export default function BudgetsPage() {
   if (!data && error) {
     content = <ErrorState message={getErrorMessage(error)} onRetry={reload} />
   } else if (!data) {
-    content = (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Memuat...</span>
-        </div>
-      </div>
-    )
+    content = <PageSkeleton variant="budgets" />
   } else if (budgets.length === 0) {
     content = (
       <EmptyState

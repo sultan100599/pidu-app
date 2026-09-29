@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import * as transactionsApi from '../../api/transactions'
@@ -7,8 +7,11 @@ import Modal from '../../components/ui/Modal'
 import { PAYMENT_METHODS } from '../../constants/enums'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
 import { toYmd } from '../../utils/format'
+import { useAuth } from '../../context/AuthContext'
+import CategoryIcon from '../../components/CategoryIcon'
+import { readPreferences, rememberTransaction } from '../../utils/transactionPreferences'
 
-function initialForm(transaction) {
+function initialForm(transaction, payment = 'cash') {
   if (transaction) {
     return {
       type: transaction.type,
@@ -25,7 +28,7 @@ function initialForm(transaction) {
     transaction_date: toYmd(new Date()),
     category_id: '',
     amount: null,
-    payment_method: 'cash',
+    payment_method: payment,
     description: '',
     notes: '',
   }
@@ -39,11 +42,12 @@ function validate(form) {
   return errors
 }
 
-// Form tambah/edit transaksi. Dipasang ulang (key) setiap kali dibuka,
-// jadi state awal cukup dihitung sekali dari `transaction`.
-export default function TransactionFormModal({ show, transaction, categories, onClose, onSaved }) {
+// Layout memasang ulang form setiap kali dialog dibuka.
+export default function TransactionFormModal({ show, transaction, categories, categoriesLoading, categoriesError, onRetryCategories, onClose, onSaved }) {
+  const { user } = useAuth()
+  const [preferences, setPreferences] = useState(() => readPreferences(user?.id))
   const isEdit = Boolean(transaction)
-  const [form, setForm] = useState(() => initialForm(transaction))
+  const [form, setForm] = useState(() => initialForm(transaction, preferences.payment))
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -53,6 +57,34 @@ export default function TransactionFormModal({ show, transaction, categories, on
   const options = categories.filter(
     (c) => c.type === form.type && (c.is_active || c.id === originalCategoryId),
   )
+  // Belum ada riwayat simpan di browser ini → hitung kategori favorit dari 50 transaksi terakhir.
+  const hasStoredCounts = Object.keys(preferences.counts).length > 0
+  const [historyCounts, setHistoryCounts] = useState(null)
+  useEffect(() => {
+    if (isEdit || hasStoredCounts) return undefined
+    let cancelled = false
+    transactionsApi
+      .list({ per_page: 50, sort: 'transaction_date', dir: 'desc' })
+      .then((response) => {
+        if (cancelled) return
+        const counts = {}
+        for (const trx of response.data.data) {
+          if (trx.category?.id) counts[trx.category.id] = (counts[trx.category.id] ?? 0) + 1
+        }
+        setHistoryCounts(counts)
+      })
+      .catch(() => {
+        // Chip hanya pintasan; tanpa riwayat form tetap bisa dipakai lewat select.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [isEdit, hasStoredCounts])
+  const usageCounts = hasStoredCounts ? preferences.counts : (historyCounts ?? {})
+
+  const quickCategories = options.filter((c) => c.is_active && usageCounts[c.id] > 0)
+    .sort((a, b) => usageCounts[b.id] - usageCounts[a.id] || a.name.localeCompare(b.name, 'id'))
+    .slice(0, 6)
 
   function setField(name, value) {
     setForm((prev) => ({ ...prev, [name]: value }))
@@ -96,6 +128,7 @@ export default function TransactionFormModal({ show, transaction, categories, on
         ? await transactionsApi.update(transaction.id, payload)
         : await transactionsApi.create(payload)
       toast.success(response.data.message)
+      setPreferences(rememberTransaction(user?.id, form, usageCounts))
       onSaved()
       if (addAnother) {
         setForm((prev) => ({
@@ -105,6 +138,7 @@ export default function TransactionFormModal({ show, transaction, categories, on
           payment_method: prev.payment_method,
         }))
         setErrors({})
+        document.getElementById('trx-amount')?.focus()
       } else {
         onClose()
       }
@@ -148,12 +182,16 @@ export default function TransactionFormModal({ show, transaction, categories, on
       title={isEdit ? 'Edit Transaksi' : 'Tambah Transaksi'}
       footer={footer}
       busy={submitting}
+      initialFocus={isEdit ? undefined : '#trx-amount'}
     >
       {formError && (
         <div className="alert alert-danger py-2" role="alert">
           {formError}
         </div>
       )}
+      {categoriesError && <div className="alert alert-danger" role="alert">
+        {getErrorMessage(categoriesError)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={onRetryCategories}>Muat kategori lagi</button>
+      </div>}
 
       <form
         id="transaction-form"
@@ -222,8 +260,17 @@ export default function TransactionFormModal({ show, transaction, categories, on
           <label htmlFor="trx-category" className="form-label">
             Kategori
           </label>
+          {quickCategories.length > 0 && <div className="quick-categories mb-2" role="group" aria-label="Kategori yang sering dipakai">
+            {quickCategories.map((category) => <button key={category.id} type="button"
+              className="category-chip" aria-pressed={form.category_id === String(category.id)}
+              onClick={() => setField('category_id', String(category.id))}>
+              <CategoryIcon icon={category.icon} color={category.color} />{category.name}
+              {form.category_id === String(category.id) && <i className="bi bi-check-lg" aria-hidden="true" />}
+            </button>)}
+          </div>}
           <select
             id="trx-category"
+            disabled={categoriesLoading && categories.length === 0}
             className={`form-select ${errors.category_id ? 'is-invalid' : ''}`}
             value={form.category_id}
             onChange={(e) => setField('category_id', e.target.value)}
@@ -237,9 +284,9 @@ export default function TransactionFormModal({ show, transaction, categories, on
             ))}
           </select>
           {errors.category_id && <div className="invalid-feedback">{errors.category_id}</div>}
-          {options.length === 0 && (
+          {!categoriesLoading && !categoriesError && options.length === 0 && (
             <div className="form-text">
-              Belum ada kategori aktif untuk jenis ini. <Link to="/categories">Kelola kategori</Link>
+              Belum ada kategori aktif untuk jenis ini. <Link to="/categories" onClick={close}>Kelola kategori</Link>
             </div>
           )}
         </div>

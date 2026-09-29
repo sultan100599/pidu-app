@@ -1,9 +1,13 @@
 import { Suspense, useEffect, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
+import TransactionProvider from './TransactionProvider'
+import BottomNav from './BottomNav'
+import PageSkeleton from '../ui/PageSkeleton'
 
 export default function AppLayout() {
+  const { pathname } = useLocation()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const closeSidebar = () => setSidebarOpen(false)
 
@@ -15,7 +19,7 @@ export default function AppLayout() {
   }, [sidebarOpen])
 
   return (
-    <div className="app-shell">
+    <TransactionProvider><div className="app-shell">
       <Sidebar open={sidebarOpen} onClose={closeSidebar} />
       {sidebarOpen && (
         <div
@@ -29,17 +33,14 @@ export default function AppLayout() {
         <main className="app-main p-3 p-lg-4">
           <Suspense
             fallback={
-              <div className="text-center py-5">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Memuat...</span>
-                </div>
-              </div>
+              <PageSkeleton variant={pathname === '/' ? 'dashboard' : pathname.includes('calendar') ? 'calendar' : 'report'} />
             }
           >
             <Outlet />
           </Suspense>
         </main>
       </div>
-    </div>
+      <BottomNav />
+    </div></TransactionProvider>
   )
 }

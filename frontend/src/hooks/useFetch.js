@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { useTransactions } from '../context/TransactionContext'
 
 // Fetch berbasis key (pola dari halaman Transaksi):
 // - hasil disimpan bersama key request-nya → loading = key belum cocok (tanpa setState sinkron di effect)
@@ -8,17 +9,18 @@ import { useEffect, useState } from 'react'
 // `key` harus berubah setiap kali parameter berubah; `fetcher(signal)` → Promise<response>.
 // key = null → tidak fetch.
 export function useFetch(key, fetcher) {
+  const { dataVersion } = useTransactions()
   const [reloadToken, setReloadToken] = useState(0)
-  const requestKey = key == null ? null : `${key}#${reloadToken}`
+  const requestKey = key == null ? null : `${key}#${reloadToken}#${dataVersion}`
   const [result, setResult] = useState({ key: null, data: null, error: null })
 
   useEffect(() => {
     if (requestKey == null) return undefined
     const controller = new AbortController()
     fetcher(controller.signal)
-      .then((response) => setResult({ key: requestKey, data: response.data, error: null }))
+      .then((response) => { if (!controller.signal.aborted) setResult({ key: requestKey, data: response.data, error: null }) })
       .catch((err) => {
-        if (axios.isCancel(err)) return
+        if (controller.signal.aborted || axios.isCancel(err)) return
         setResult((prev) => ({ key: requestKey, data: prev.data, error: err }))
       })
     return () => controller.abort()

@@ -9,25 +9,28 @@ import { getErrorMessage } from '../../utils/errors'
 import { formatCompact, formatDate, formatRupiah, MONTH_NAMES, parseYmd, toYmd } from '../../utils/format'
 import DayDetailModal from './DayDetailModal'
 import Stepper from '../../components/ui/Stepper'
+import PageSkeleton from '../../components/ui/PageSkeleton'
+import { heatLevel } from '../../utils/dashboard'
 
 const WEEKDAYS = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
 
 // Senin = 0 … Minggu = 6 (getDay(): Minggu = 0).
 const mondayIndex = (date) => (date.getDay() + 6) % 7
 
-function DayCell({ day, isToday, onOpen }) {
+function DayCell({ day, isToday, onOpen, maximum }) {
   const date = parseYmd(day.date)
   const hasData = day.count > 0
   const parts = [formatDate(day.date, 'long')]
   if (day.income > 0) parts.push(`pemasukan ${formatRupiah(day.income)}`)
-  if (day.expense > 0) parts.push(`pengeluaran ${formatRupiah(day.expense)}`)
+  parts.push(`pengeluaran ${formatRupiah(day.expense)}`)
   if (hasData) parts.push(`${day.count} transaksi`)
   else parts.push('tidak ada transaksi')
 
   return (
     <button
       type="button"
-      className={`calendar-cell ${hasData ? '' : 'is-empty'} ${isToday ? 'is-today' : ''}`}
+      className={`calendar-cell calendar-heat ${hasData ? '' : 'is-empty'} ${isToday ? 'is-today' : ''}`}
+      data-heat={heatLevel(day.expense, maximum)}
       onClick={() => onOpen(day.date)}
       aria-current={isToday ? 'date' : undefined}
     >
@@ -38,17 +41,17 @@ function DayCell({ day, isToday, onOpen }) {
       </span>
       {/* ≥ sm: nominal ringkas; < sm: sel terlalu sempit → titik warna saja (detail via tap) */}
       {day.income > 0 && (
-        <span className="text-success text-truncate d-none d-sm-block" aria-hidden="true">
+        <span className="calendar-income text-truncate d-none d-sm-block" aria-hidden="true">
           +{formatCompact(day.income)}
         </span>
       )}
       {day.expense > 0 && (
-        <span className="text-danger text-truncate d-none d-sm-block" aria-hidden="true">
+        <span className="calendar-expense text-truncate d-none d-sm-block" aria-hidden="true">
           −{formatCompact(day.expense)}
         </span>
       )}
       {hasData && (
-        <span className="text-body-secondary d-none d-sm-block" aria-hidden="true">
+        <span className="d-none d-sm-block" aria-hidden="true">
           {day.count} trx
         </span>
       )}
@@ -85,15 +88,10 @@ export default function CalendarPage() {
   if (!data && error) {
     content = <ErrorState message={getErrorMessage(error)} onRetry={reload} />
   } else if (!data) {
-    content = (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Memuat...</span>
-        </div>
-      </div>
-    )
+    content = <PageSkeleton variant="calendar" />
   } else {
     const leading = mondayIndex(parseYmd(data.days[0].date))
+    const maximum = Math.max(0, ...data.days.map((day) => Number(day.expense)))
     content = (
       <div className={`opacity-transition ${loading ? 'opacity-50' : ''}`} aria-busy={loading}>
         <SummaryCards summary={data.totals} />
@@ -110,8 +108,13 @@ export default function CalendarPage() {
                 <div key={`filler-${i}`} className="calendar-filler" aria-hidden="true"></div>
               ))}
               {data.days.map((day) => (
-                <DayCell key={day.date} day={day} isToday={day.date === todayYmd} onOpen={setDetailDate} />
+                <DayCell key={day.date} day={day} maximum={maximum} isToday={day.date === todayYmd} onOpen={setDetailDate} />
               ))}
+            </div>
+            <div className="heat-legend" aria-label="Intensitas pengeluaran harian, sedikit sampai banyak">
+              <span>Sedikit</span>
+              {[0, 1, 2, 3, 4].map((level) => <span key={level} className="heat-swatch" data-heat={level} aria-hidden="true" />)}
+              <span aria-hidden="true">→</span><span>Banyak</span>
             </div>
           </div>
         </div>
@@ -135,6 +138,7 @@ export default function CalendarPage() {
           />
         }
       />
+      {error && data && <div className="alert alert-danger" role="alert">{getErrorMessage(error)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>Coba lagi</button></div>}
       {content}
       <DayDetailModal date={detailDate} onClose={() => setDetailDate(null)} />
     </>

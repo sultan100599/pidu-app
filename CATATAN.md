@@ -11,7 +11,7 @@ Terakhir diperbarui: 29 September 2026.
 
 Pidu-App adalah aplikasi pencatat keuangan pribadi: catat pemasukan dan pengeluaran, lihat rekap harian sampai tahunan, atur budget per kategori, lalu export, impor, dan backup data.
 
-- **Status:** semua tahap (0–10) selesai dan di-commit di branch `main` (commit terakhir `8495190`).
+- **Status:** semua tahap (0–12) selesai dan di-commit di branch `main` (lihat `git log`).
 - **Tes:** 76 tes backend lolos di SQLite dan MariaDB; lint & build frontend bersih; `npm audit` dan `composer audit` tanpa celah.
 - **Menjalankan:** `npm start` di `C:\Pidu-App`, lalu buka http://localhost:8010.
 - **Akun demo:** `demo@pidu.test` / `password` (data Juni–September 2026 + data ringan 2024–2025). Akun kedua `other@pidu.test` / `password` untuk uji isolasi data.
@@ -88,9 +88,19 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 - **Uji MariaDB:** 76/76 tes lolos; angka laporan identik dengan SQLite. Dijalankan dengan instance sementara lalu dihapus; database XAMPP user tidak disentuh.
 - **Bug ditemukan:** di CSV, "12.500" terbaca Rp 12,50 tanpa error; urutan kategori berbeda antara SQLite dan MySQL.
 
+### Phase 11: Redesign UI (29 Sep, Codex, `722d512`)
+- Arah dari pemilik (`DESIGN.md`): hangat & ramah, palet krem/peach/terakota, membulat, 3D lewat CSS saja; aturan anti-slop diterapkan selama pengerjaan.
+- Putaran 1: token desain, judul serif, kartu Saldo peach timbul, tombol timbul, dark mode cokelat hangat, warna kategori otomatis dijaga kontrasnya.
+- Putaran 2: kartu Saldo miring mengikuti kursor (mati di HP/"kurangi animasi"), ubin ikon timbul, menu aktif timbul, lapisan kertas, hover terangkat hanya pada elemen yang bisa diklik.
+- **Bug ditemukan:** menu logout/Export terpotong ke kanan di layar lebar (dilaporkan user), header tabel tidak seragam.
+
+### Phase 12: Polish UX & visual (29 Sep, Codex + Claude)
+- Tombol Catat global + shortcut `N`, chip kategori favorit & metode terakhir diingat, "Batalkan" setelah hapus, navigasi bawah di HP, skeleton loading, heatmap kalender, sapaan + ringkasan hari ini, perbandingan dengan bulan/periode sebelumnya, angka Saldo menghitung naik, font judul Fraunces.
+- **Diperbaiki Claude setelah review:** chip kategori kosong di browser baru (kini dari riwayat transaksi) dan label pembanding yang terlalu panjang (kini "dari Agustus 2026").
+
 ## 5. Anti-slop (aturan UI untuk AI agent)
 
-**Sumber:** https://github.com/miqdadbadjuber/anti-slop (versi 3.2.19). Dipasang 29 Sep 2026, belum dipakai.
+**Sumber:** https://github.com/miqdadbadjuber/anti-slop (versi 3.2.19). Dipasang 29 Sep 2026; dipakai (mode "selama pengerjaan") untuk redesign Phase 11–12 oleh Codex.
 
 **Apa itu:** kumpulan aturan untuk AI coding agent supaya UI, teks, dan komentar kode tidak terlihat generik "buatan AI" (gradien biru-ungu, kartu template, angka karangan, ikon/emoji hiasan, dan sejenisnya), plus aksesibilitas dan tampilan mobile. Isinya **filter**, bukan panduan gaya: tidak menentukan warna, font, atau layout.
 
@@ -114,10 +124,10 @@ Hanya folder skill yang dipasang, tanpa repo utuh (sama dengan yang dilakukan in
 
 ## 6. Yang perlu dilakukan
 
-- [ ] Restart `npm start` (Ctrl+C lalu `npm start` lagi) supaya scheduler backup harian ikut berjalan.
-- [ ] Login ulang di browser jika diminta (token login sempat terhapus saat pembersihan data uji; data aman).
-- [ ] Commit `.claude/`, `CLAUDE.md`, dan `CATATAN.md` (belum di-commit).
-- [ ] Penyesuaian UI dengan anti-slop (buka sesi Claude Code baru dulu).
+- [x] Restart `npm start` supaya scheduler backup harian berjalan (sudah dilakukan user).
+- [x] Commit skill anti-slop, `CLAUDE.md`, `AGENTS.md`, `DESIGN.md`, `CATATAN.md` (commit Phase 11).
+- [x] Penyesuaian UI dengan anti-slop (Phase 11–12).
+- [ ] Opsional (butuh keputusan/aset dari pemilik): ilustrasi empty state, dan PWA (ikon aplikasi) agar bisa di-install di HP.
 
 ## 7. Referensi cepat
 

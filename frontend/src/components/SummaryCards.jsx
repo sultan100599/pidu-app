@@ -1,8 +1,11 @@
 import { formatNumber, formatRupiah } from '../utils/format'
 import { usePointerTilt } from '../hooks/usePointerTilt'
+import AnimatedBalance from './AnimatedBalance'
+import PeriodComparison from './PeriodComparison'
+import { SkeletonBar } from './ui/PageSkeleton'
 
 // Nominal boleh turun baris agar angka utuh tetap terbaca di HP.
-export default function SummaryCards({ summary, prominent = false }) {
+export default function SummaryCards({ summary, prominent = false, comparison }) {
   const balanceRef = usePointerTilt()
   const cards = [
     {
@@ -37,7 +40,8 @@ export default function SummaryCards({ summary, prominent = false }) {
   ]
 
   return (
-    <div className={`summary-grid${prominent ? ' summary-grid-prominent' : ''}`}>
+    <div className={`summary-grid${prominent ? ' summary-grid-prominent' : ''}`} aria-busy={!summary}>
+      {!summary && <span className="visually-hidden">Memuat…</span>}
       {cards.map((card) => (
         <div className={`min-w-0 summary-slot${card.key === 'balance' ? ' balance-stack' : ''}`} key={card.key} ref={card.key === 'balance' ? balanceRef : undefined}>
           <div className="card h-100 summary-card" data-summary={card.key}>
@@ -46,12 +50,13 @@ export default function SummaryCards({ summary, prominent = false }) {
               <div className="min-w-0">
                 <div className="small text-body-secondary">{card.label}</div>
                 {card.value == null ? (
-                  <div className="placeholder-glow">
-                    <span className="placeholder col-8"></span>
-                  </div>
+                  <SkeletonBar className="skeleton-value" />
                 ) : (
-                  <div className={`fw-semibold text-break summary-value ${card.raw ? '' : card.iconClass}`}>{card.value}</div>
+                  <div className={`fw-semibold text-break summary-value ${card.raw ? '' : card.iconClass}`}>
+                    {prominent && card.key === 'balance' ? <AnimatedBalance value={Number(summary.balance)} /> : card.value}
+                  </div>
                 )}
+                {comparison && !card.raw && <PeriodComparison {...comparison} kind={card.key} current={summary?.[card.key]} previous={comparison.summary?.[card.key]} />}
               </div>
             </div>
           </div>

@@ -15,6 +15,10 @@ import { formatDate, formatRupiah, formatYearMonth, MONTH_NAMES } from '../../ut
 import { useChartTheme } from '../../components/charts/useChartTheme'
 import { accessibleColor } from '../../utils/accessibleColor'
 import CategoryIcon from '../../components/CategoryIcon'
+import PageSkeleton from '../../components/ui/PageSkeleton'
+import TodaySummary from './TodaySummary'
+import { previousPeriod } from '../../utils/dashboard'
+import { useTransactions } from '../../context/TransactionContext'
 
 // Link ke Transaksi dengan periode yang sama (+ filter tambahan).
 function transactionsLink(period, extra = {}) {
@@ -141,22 +145,27 @@ function BudgetList({ budgets }) {
 }
 
 export default function DashboardPage() {
+  const { openCreate } = useTransactions()
   const periodQuery = usePeriodQuery('this_month')
   const { range } = periodQuery
   const key = range ? JSON.stringify(range) : null
   const { data, error, loading, reload } = useFetch(key, (signal) => reportsApi.dashboard(range, { signal }))
+  const previousInfo = previousPeriod(range)
+  const previous = previousInfo && { start_date: previousInfo.start_date, end_date: previousInfo.end_date }
+  const comparisonFetch = useFetch(previous ? `comparison:${JSON.stringify(previous)}` : null,
+    (signal) => reportsApi.dashboard(previous, { signal }))
+  const comparison = {
+    summary: comparisonFetch.data?.summary,
+    loading: loading || comparisonFetch.loading,
+    error: error || comparisonFetch.error || !previous,
+    label: previousInfo?.label ?? '',
+  }
 
   let content
   if (!data && error) {
     content = <ErrorState message={getErrorMessage(error)} onRetry={reload} />
   } else if (!data) {
-    content = (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Memuat...</span>
-        </div>
-      </div>
-    )
+    content = <PageSkeleton variant="dashboard" />
   } else {
     const { period, summary, chart, category_breakdown: breakdown, largest_transactions: largest, budgets } = data
     const daily = chart.granularity === 'day'
@@ -167,7 +176,8 @@ export default function DashboardPage() {
 
     content = (
       <>
-        <SummaryCards prominent summary={{ ...summary, count: summary.transaction_count }} />
+        <SummaryCards prominent summary={{ ...summary, count: summary.transaction_count }} comparison={comparison} />
+        {comparisonFetch.error && <div className="small text-body-secondary mb-3">Perbandingan gagal dimuat. <button type="button" className="btn btn-sm btn-outline-secondary" onClick={comparisonFetch.reload}>Coba lagi</button></div>}
 
         <div className="dashboard-stats row row-cols-2 g-2 g-md-3 mb-4">
           <StatTile
@@ -187,9 +197,9 @@ export default function DashboardPage() {
             icon="bi-bar-chart"
             title="Belum ada transaksi pada periode ini"
             action={
-              <Link to="/transactions" className="btn btn-primary">
+              <button type="button" onClick={openCreate} className="btn btn-primary">
                 Catat transaksi
-              </Link>
+              </button>
             }
           />
         ) : (
@@ -256,6 +266,7 @@ export default function DashboardPage() {
         subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)}` : ' '}
         actions={<PeriodPicker query={periodQuery} idPrefix="dash-period" />}
       />
+      <TodaySummary />
       <div className={`opacity-transition ${loading && data ? 'opacity-50' : ''}`} aria-busy={loading}>
         {error && data && (
           <div className="alert alert-danger d-flex justify-content-between align-items-center gap-2" role="alert">

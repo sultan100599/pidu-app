@@ -16,6 +16,11 @@
   --pidu-line: #ddcbbd;
   --pidu-control-line: #8c7362;
   --pidu-focus: #994b32;
+  --pidu-heat-1: #f6e6d6;
+  --pidu-heat-2: #f6d8c5;
+  --pidu-heat-3: #eab99d;
+  --pidu-heat-4: #dba080;
+  --pidu-heat-income: #1c442b;
   --pidu-shadow-1: 0 2px 0 #ddcbbd;
   --pidu-shadow-2: 0 5px 0 #ddcbbd, 0 12px 24px rgb(69 43 28 / 9%);
   --pidu-shadow-3: 0 8px 16px rgb(69 43 28 / 12%), 0 24px 56px rgb(69 43 28 / 16%);
@@ -56,6 +61,11 @@
   --pidu-line: #58463a;
   --pidu-control-line: #a58b78;
   --pidu-focus: #f1ad88;
+  --pidu-heat-1: #3a3029;
+  --pidu-heat-2: #4a3329;
+  --pidu-heat-3: #60402f;
+  --pidu-heat-4: #764b38;
+  --pidu-heat-income: #c9f1cf;
   --pidu-shadow-1: 0 2px 0 #15110f;
   --pidu-shadow-2: 0 5px 0 #15110f, 0 12px 24px rgb(0 0 0 / 18%);
   --pidu-shadow-3: 0 8px 16px rgb(0 0 0 / 24%), 0 24px 56px rgb(0 0 0 / 32%);
@@ -82,7 +92,7 @@
 :root,
 [data-bs-theme] {
   --pidu-font: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --pidu-heading-font: Georgia, 'Times New Roman', serif;
+  --pidu-heading-font: 'Fraunces', Georgia, 'Times New Roman', serif;
   --pidu-radius-sm: 0.5rem;
   --pidu-radius-control: 0.75rem;
   --pidu-radius-card: 1.25rem;

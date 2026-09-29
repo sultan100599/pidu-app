@@ -3,6 +3,7 @@ import SummaryCards from '../../components/SummaryCards'
 import EmptyState from '../../components/ui/EmptyState'
 import ErrorState from '../../components/ui/ErrorState'
 import { getErrorMessage } from '../../utils/errors'
+import PageSkeleton from '../../components/ui/PageSkeleton'
 
 // Kerangka halaman rekap: state loading/error, ringkasan total, grafik, lalu isi (tabel).
 // chart: { labels, income, expense, tooltipTitles } | null
@@ -11,13 +12,7 @@ export default function ReportShell({ fetchState, totals, chart, emptyTitle, chi
 
   if (!data && error) return <ErrorState message={getErrorMessage(error)} onRetry={reload} />
   if (!data) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Memuat...</span>
-        </div>
-      </div>
-    )
+    return <PageSkeleton variant="report" />
   }
 
   return (

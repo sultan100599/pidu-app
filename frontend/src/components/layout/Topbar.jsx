@@ -4,8 +4,10 @@ import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import { findMenuItem } from './nav'
 import { useDropdownBounds } from '../../hooks/useDropdownBounds'
+import { useTransactions } from '../../context/TransactionContext'
 
 export default function Topbar({ onMenuClick, sidebarOpen }) {
+  const { openCreate } = useTransactions()
   const location = useLocation()
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
@@ -54,6 +56,10 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
       <h2 className="h6 mb-0 text-truncate">{pageTitle}</h2>
 
       <div className="ms-auto d-flex align-items-center gap-1">
+        <button type="button" className="btn btn-primary d-none d-lg-inline-flex align-items-center gap-2 me-2"
+          onClick={openCreate} aria-keyshortcuts="n" title="Catat transaksi (N)">
+          <i className="bi bi-plus-lg" aria-hidden="true" />Catat transaksi <span className="shortcut-key" aria-hidden="true">N</span>
+        </button>
         <button
           type="button"
           className="btn btn-link text-body p-1"

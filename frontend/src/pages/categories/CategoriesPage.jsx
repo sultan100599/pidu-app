@@ -12,6 +12,7 @@ import { getErrorMessage } from '../../utils/errors'
 import { formatNumber } from '../../utils/format'
 import CategoryFormModal from './CategoryFormModal'
 import CategoryIcon from '../../components/CategoryIcon'
+import PageSkeleton from '../../components/ui/PageSkeleton'
 
 function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
   const used = category.transactions_count > 0
@@ -71,7 +72,7 @@ export default function CategoriesPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const activeType = searchParams.get('type') === 'income' ? 'income' : 'expense'
   const [showInactive, setShowInactive] = useState(true)
-  const { categories, loading, error, refetch } = useCategories()
+  const { categories, loading, error, loaded, refetch } = useCategories()
   const [togglingId, setTogglingId] = useState(null)
   const [form, setForm] = useState({ show: false, category: null, key: 0 })
   const [deleting, setDeleting] = useState({ category: null, loading: false })
@@ -116,14 +117,8 @@ export default function CategoriesPage() {
   const openEdit = (category) => setForm((f) => ({ show: true, category, key: f.key + 1 }))
 
   let content
-  if (loading) {
-    content = (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Memuat...</span>
-        </div>
-      </div>
-    )
+  if (loading && !loaded) {
+    content = <PageSkeleton variant="categories" />
   } else if (error && categories.length === 0) {
     content = <ErrorState message={getErrorMessage(error)} onRetry={refetch} />
   } else if (visible.length === 0) {
@@ -205,7 +200,8 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      {content}
+      {error && categories.length > 0 && <div className="alert alert-danger" role="alert">{getErrorMessage(error)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={refetch}>Coba lagi</button></div>}
+      <div className={`opacity-transition ${loading && loaded ? 'opacity-50' : ''}`} aria-busy={loading}>{content}</div>
 
       {form.show && (
         <CategoryFormModal

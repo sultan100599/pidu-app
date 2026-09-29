@@ -1,0 +1,35 @@
+import { useLayoutEffect, useRef } from 'react'
+import { NavLink } from 'react-router-dom'
+import { useTransactions } from '../../context/TransactionContext'
+
+export default function BottomNav() {
+  const { openCreate } = useTransactions()
+  const navRef = useRef(null)
+  useLayoutEffect(() => {
+    const element = navRef.current
+    const measure = () => document.documentElement.style.setProperty('--pidu-bottom-nav-height', `${element.getBoundingClientRect().height}px`)
+    const observer = new ResizeObserver(measure)
+    observer.observe(element)
+    measure()
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty('--pidu-bottom-nav-height')
+    }
+  }, [])
+  const item = (to, icon, label) => (
+    <NavLink to={to} end className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}>
+      <i className={`bi ${icon}`} aria-hidden="true" /><span>{label}</span>
+    </NavLink>
+  )
+  return (
+    <nav className="bottom-nav d-lg-none" aria-label="Navigasi utama" ref={navRef}>
+      {item('/', 'bi-house', 'Dashboard')}
+      {item('/transactions', 'bi-receipt', 'Transaksi')}
+      <button type="button" className="bottom-nav-item bottom-nav-create" onClick={openCreate}>
+        <i className="bi bi-plus-lg icon-tile" aria-hidden="true" /><span>Catat</span>
+      </button>
+      {item('/reports/daily', 'bi-bar-chart', 'Laporan')}
+      {item('/budgets', 'bi-piggy-bank', 'Budget')}
+    </nav>
+  )
+}

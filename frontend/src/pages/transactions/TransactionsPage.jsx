@@ -15,7 +15,9 @@ import { getErrorMessage } from '../../utils/errors'
 import { formatDate, formatRupiah } from '../../utils/format'
 import { getPeriodRange, isCustomRangeInvalid } from '../../utils/period'
 import TransactionFilters from './TransactionFilters'
-import TransactionFormModal from './TransactionFormModal'
+import { useTransactions } from '../../context/TransactionContext'
+import TransactionUndo from '../../components/TransactionUndo'
+import PageSkeleton from '../../components/ui/PageSkeleton'
 import TransactionList from './TransactionList'
 import TransactionTable from './TransactionTable'
 
@@ -69,7 +71,8 @@ function countActiveFilters(query) {
 export default function TransactionsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = readQuery(searchParams)
-  const { categories, refetch: refetchCategories } = useCategories()
+  const { categories } = useCategories()
+  const { dataVersion, openCreate, openEdit, refreshTransactions, userId } = useTransactions()
 
   // --- sinkron URL -------------------------------------------------------
   // `changes`: {key: value}; nilai kosong dihapus dari URL. Ganti filter → page 1.
@@ -140,7 +143,7 @@ export default function TransactionsPage() {
   const apiParamsKey = JSON.stringify(apiParams)
   const { page: _page, per_page: _perPage, ...exportParams } = apiParams
   const [reloadToken, setReloadToken] = useState(0)
-  const requestKey = `${apiParamsKey}#${reloadToken}`
+  const requestKey = `${apiParamsKey}#${reloadToken}#${dataVersion}`
   // Hasil disimpan bersama key request-nya; loading = key belum cocok.
   // Data lama tetap ditampilkan selama refetch.
   const [result, setResult] = useState({ key: null, data: null, error: null })
@@ -166,24 +169,21 @@ export default function TransactionsPage() {
   const activeCount = countActiveFilters(query)
 
   // --- form & hapus -------------------------------------------------------
-  const [form, setForm] = useState({ show: false, transaction: null, key: 0 })
-  const openCreate = () => setForm((f) => ({ show: true, transaction: null, key: f.key + 1 }))
-  const openEdit = (transaction) => setForm((f) => ({ show: true, transaction, key: f.key + 1 }))
-  const closeForm = () => setForm((f) => ({ ...f, show: false }))
-
   const [deleting, setDeleting] = useState({ transaction: null, loading: false })
 
   async function confirmDelete() {
     const target = deleting.transaction
     setDeleting((d) => ({ ...d, loading: true }))
     try {
-      const response = await transactionsApi.remove(target.id)
-      toast.success(response.data.message)
+      await transactionsApi.remove(target.id)
+      toast.success(({ closeToast, toastProps }) => <TransactionUndo transaction={target} onRestored={refreshTransactions} closeToast={closeToast} toastId={toastProps.toastId} userId={userId} />, {
+        autoClose: 6000, closeOnClick: false, pauseOnHover: true, pauseOnFocusLoss: true,
+        className: 'transaction-undo-toast',
+      })
       setDeleting({ transaction: null, loading: false })
+      refreshTransactions()
       if (transactions.length === 1 && query.page > 1) {
         updateQuery({ page: query.page - 1 }, { resetPage: false })
-      } else {
-        reload()
       }
     } catch (err) {
       toast.error(getErrorMessage(err))
@@ -196,13 +196,7 @@ export default function TransactionsPage() {
   if (!data && error) {
     content = <ErrorState message={getErrorMessage(error)} onRetry={reload} />
   } else if (!data) {
-    content = (
-      <div className="text-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Memuat...</span>
-        </div>
-      </div>
-    )
+    content = <PageSkeleton variant="transactions" summary={false} />
   } else if (transactions.length === 0) {
     content =
       activeCount > 0 ? (
@@ -354,21 +348,6 @@ export default function TransactionsPage() {
         {content}
       </div>
 
-      {form.show && (
-        <TransactionFormModal
-          key={form.key}
-          show={form.show}
-          transaction={form.transaction}
-          categories={categories}
-          onClose={closeForm}
-          onSaved={() => {
-            reload()
-            // Jumlah transaksi per kategori berubah.
-            refetchCategories()
-          }}
-        />
-      )}
-
       <ConfirmDialog
         show={Boolean(deleting.transaction)}
         title="Hapus transaksi?"
@@ -378,7 +357,7 @@ export default function TransactionsPage() {
       >
         {deleting.transaction && (
           <>
-            <p className="mb-2">Transaksi berikut akan dihapus permanen:</p>
+            <p className="mb-2">Hapus transaksi berikut? Setelah dihapus, tombol Batalkan tersedia sebentar di notifikasi.</p>
             <ul className="list-unstyled mb-0 small">
               <li>
                 <strong>Tanggal:</strong> {formatDate(deleting.transaction.transaction_date)}
