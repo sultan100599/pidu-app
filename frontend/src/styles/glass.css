@@ -101,15 +101,23 @@ p.glass-strip { width: fit-content; max-width: 100%; }
 }
 
 @media (min-width: 992px) {
+  /* Selama halaman bisa digulir, bawah sidebar menempel ke dasar layar; saat mentok bawah ikut melayang. */
   .sidebar.offcanvas-lg {
-    inset: var(--pidu-float-gap) auto var(--pidu-float-gap) var(--pidu-float-gap);
+    inset: var(--pidu-float-gap) auto 0 var(--pidu-float-gap);
     height: auto;
+    transition: width 220ms ease, bottom 220ms cubic-bezier(0.16, 1, 0.3, 1), border-radius 220ms ease;
     background: var(--pidu-glass) !important;
     -webkit-backdrop-filter: var(--pidu-glass-blur);
     backdrop-filter: var(--pidu-glass-blur);
     border: 1px solid var(--pidu-glass-border) !important;
-    border-radius: var(--pidu-float-radius);
+    border-radius: var(--pidu-float-radius) var(--pidu-float-radius) 0 0;
+    border-bottom-color: transparent !important;
     box-shadow: var(--pidu-glass-shadow);
+  }
+  .scroll-at-end .sidebar.offcanvas-lg {
+    bottom: var(--pidu-float-gap);
+    border-radius: var(--pidu-float-radius);
+    border-bottom-color: var(--pidu-glass-border) !important;
   }
   .sidebar nav { background-image: none; }
   .app-content { margin-left: calc(252px + var(--pidu-float-gap) * 2); }
@@ -133,6 +141,10 @@ p.glass-strip { width: fit-content; max-width: 100%; }
   .sidebar.offcanvas-lg.show { background: var(--pidu-surface); }
   /* Ruang untuk bottom nav yang melayang: tinggi nav + jarak di bawahnya + jarak ke konten. */
   .app-main, .app-main-dashboard { padding-bottom: calc(var(--pidu-bottom-nav-height, 84px) + var(--pidu-float-gap) * 2 + env(safe-area-inset-bottom)) !important; }
+}
+
+@media (min-width: 992px) and (prefers-reduced-motion: reduce) {
+  .sidebar.offcanvas-lg { transition: none; }
 }
 
 /* Browser tanpa backdrop-filter, atau pengguna yang meminta transparansi dikurangi: panel padat. */

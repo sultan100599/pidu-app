@@ -34,6 +34,23 @@ export default function AppLayout() {
     try { localStorage.setItem(COLLAPSE_KEY, next ? '1' : '0') } catch { /* abaikan */ }
   }
 
+  // Sidebar menempel ke dasar layar selama halaman masih bisa digulir; saat mentok di bawah
+  // (atau halaman pendek), sidebar ikut melayang sejajar dengan akhir konten.
+  const [atEnd, setAtEnd] = useState(true)
+  useEffect(() => {
+    const update = () => setAtEnd(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2)
+    const observer = new ResizeObserver(update)
+    observer.observe(document.body)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    update()
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [])
+
   useEffect(() => {
     document.body.style.overflow = sidebarOpen ? 'hidden' : ''
     return () => {
@@ -42,7 +59,7 @@ export default function AppLayout() {
   }, [sidebarOpen])
 
   return (
-    <TransactionProvider><TopbarSlotsContext.Provider value={slotsValue}><div className={`app-shell${collapsed ? ' sidebar-collapsed' : ''}`}>
+    <TransactionProvider><TopbarSlotsContext.Provider value={slotsValue}><div className={`app-shell${collapsed ? ' sidebar-collapsed' : ''}${atEnd ? ' scroll-at-end' : ''}`}>
       <Sidebar open={sidebarOpen} onClose={closeSidebar} collapsed={collapsed} onToggleCollapsed={toggleCollapsed} />
       {sidebarOpen && (
         <div
