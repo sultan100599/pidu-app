@@ -156,3 +156,38 @@ body { line-height: 1.6; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
   .btn-primary:active { transform: none; }
 }
+
+/* Sidebar bisa diciutkan jadi ikon saja (desktop). Label tetap ada untuk pembaca layar. */
+.sidebar-collapse-btn { align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 0.75rem; color: var(--pidu-muted); font-size: 1.5rem; }
+.sidebar-collapse-btn:hover { color: var(--bs-body-color); background: var(--pidu-peach); }
+@media (min-width: 992px) {
+  .sidebar.offcanvas-lg { display: flex; flex-direction: column; overflow-x: hidden; transition: width 220ms ease; }
+  .app-content { transition: margin-left 220ms ease; }
+  .sidebar-collapsed .sidebar.offcanvas-lg { width: 80px; }
+  .sidebar-collapsed .app-content { margin-left: 80px; }
+  .sidebar.is-collapsed .sidebar-label, .sidebar.is-collapsed .sidebar-brand-copy, .sidebar.is-collapsed .sidebar-group-label {
+    position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important;
+    overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;
+  }
+  .sidebar.is-collapsed .sidebar-brand { justify-content: center; margin-inline: 0.5rem; padding-inline: 0 !important; }
+  .sidebar.is-collapsed .sidebar-brand > .bi-wallet2 { display: none; }
+  .sidebar.is-collapsed .sidebar-collapse-btn { margin-left: 0 !important; }
+  .sidebar.is-collapsed .nav-link { justify-content: center; padding-inline: 0; }
+  .sidebar.is-collapsed nav li.mt-2 { margin-top: 0.75rem !important; padding-top: 0.75rem; border-top: 1px solid var(--pidu-line); }
+}
+@media (min-width: 992px) and (prefers-reduced-motion: reduce) {
+  .sidebar.offcanvas-lg, .app-content { transition: none; }
+}
+
+/* HP: tabel rekap jadi kartu per baris supaya semua kolom terlihat tanpa geser ke samping. */
+@media (max-width: 575.98px) {
+  .report-table thead {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap;
+  }
+  .report-table, .report-table tbody, .report-table tfoot { display: block; width: 100%; }
+  .report-table tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem 1rem; padding: 0.875rem 1rem; border-bottom: 1px solid var(--pidu-line); }
+  .report-table tfoot tr { border-bottom: 0; }
+  .report-table tr > td { display: block; padding: 0; border: 0; text-align: left !important; background: transparent; box-shadow: none; }
+  .report-table tr > td:first-child { grid-column: 1 / -1; font-weight: 650; white-space: normal !important; }
+  .report-table td[data-label]::before { content: attr(data-label); display: block; font-size: 0.75rem; font-weight: 400; color: var(--pidu-muted); }
+}

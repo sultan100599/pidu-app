@@ -6,7 +6,7 @@ import PeriodComparison from './PeriodComparison'
 import { SkeletonBar } from './ui/PageSkeleton'
 
 // Nominal boleh turun baris agar angka utuh tetap terbaca di HP.
-export default function SummaryCards({ summary, prominent = false, comparison }) {
+export default function SummaryCards({ summary, prominent = false, comparison, className = '', children }) {
   const t = useT()
   const balanceRef = usePointerTilt()
   const cards = [
@@ -42,7 +42,7 @@ export default function SummaryCards({ summary, prominent = false, comparison })
   ]
 
   return (
-    <div className={`summary-grid${prominent ? ' summary-grid-prominent' : ''}`} aria-busy={!summary}>
+    <div className={`summary-grid${prominent ? ' summary-grid-prominent' : ''} ${className}`} aria-busy={!summary}>
       {!summary && <span className="visually-hidden">{t('Memuat…')}</span>}
       {cards.map((card) => (
         <div className={`min-w-0 summary-slot${card.key === 'balance' ? ' balance-stack' : ''}`} key={card.key} ref={card.key === 'balance' ? balanceRef : undefined}>
@@ -64,6 +64,7 @@ export default function SummaryCards({ summary, prominent = false, comparison })
           </div>
         </div>
       ))}
+      {children}
     </div>
   )
 }

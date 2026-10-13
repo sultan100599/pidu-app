@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useLocale } from '../i18n/LocaleProvider'
 import LanguagePicker from '../components/LanguagePicker'
+import AuthScene from '../components/AuthScene'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useTheme } from '../context/ThemeContext'
@@ -69,6 +70,7 @@ export default function LoginPage() {
 
   return (
     <main className="auth-page d-flex align-items-center justify-content-center p-3">
+      <AuthScene />
       <div className="auth-tools position-absolute top-0 end-0 p-3">
         <LanguagePicker />
         <button

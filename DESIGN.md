@@ -32,3 +32,11 @@ Reading this as: aplikasi keuangan pribadi (dashboard + formulir) untuk individu
 - ENERGY 2: harus "eye-catching" dan tidak polos, tetapi tetap alat kerja harian, bukan halaman portofolio.
 - RHYTHM 2: pola konsisten antarhalaman dengan beberapa pengecualian yang disengaja (misalnya dashboard dan login).
 - MOTION 2: transisi, hover-depth, dan tilt yang punya tujuan; tanpa animasi berulang tanpa henti.
+
+## Tambahan Phase 14 (29 Sep 2026): sentuhan washitsu
+Kata-kata user: dashboard "penuh, tidak terlalu banyak scroll", "elegant dan estetik", "sentuhan bergaya Jepang washitsu", dengan "animasi pintu kamar yang bisa dibuka tutup berdasarkan tema gelap dan terang".
+- Washitsu melengkapi arah hangat di atas, tidak menggantikannya: kertas washi, kayu hinoki, anyaman tatami, kisi kumiko pada shoji, tinta sumi. Aksen terakota tetap (dekat dengan warna shu/beni).
+- Gaya "ma" (ruang kosong yang disengaja) dan garis kayu tipis, bukan ornamen tempelan (tanpa kanji dekoratif, bunga sakura, atau torii).
+- Mode gelap = ruang washitsu malam: arang sumi hangat dengan cahaya lentera andon, bukan hitam-biru.
+- Pola dibuat dengan CSS saja. Tetap tanpa aset gambar baru.
+- Ganti tema: dua panel shoji menutup dari kiri dan kanan, tema berganti saat pintu tertutup, lalu pintu terbuka lagi.

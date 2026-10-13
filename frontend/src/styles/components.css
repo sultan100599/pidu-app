@@ -122,6 +122,8 @@ a { text-underline-offset: 0.2em; }
   --pidu-switch-thumb: var(--pidu-on-color);
   --pidu-switch-position: 32px;
   background-color: transparent;
+  /* Bootstrap menggeser background ke kanan saat :checked; track ini digambar dari tengah. */
+  background-position: center;
 }
 .form-switch .form-check-input:focus-visible { outline: 3px solid var(--pidu-focus); outline-offset: 2px; }
 .form-check-input:disabled, .form-check-input:disabled ~ .form-check-label { opacity: 1; cursor: default; }

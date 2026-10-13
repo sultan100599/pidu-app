@@ -1,7 +1,7 @@
 # Catatan Pidu-App
 
 Satu tempat untuk semua catatan proyek: rencana, keputusan, riwayat pembuatan per tahap, bug yang ditemukan, alat bantu UI (anti-slop), dan pekerjaan berikutnya.
-Terakhir diperbarui: 29 September 2026.
+Terakhir diperbarui: 13 Oktober 2026.
 
 > Arsip asli (brief & laporan lengkap per tahap, log Kimi) tetap ada di `docs/lead/`. File ini adalah ringkasannya dan cukup dibaca sendiri.
 
@@ -11,7 +11,7 @@ Terakhir diperbarui: 29 September 2026.
 
 Pidu-App adalah aplikasi pencatat keuangan pribadi: catat pemasukan dan pengeluaran, lihat rekap harian sampai tahunan, atur budget per kategori, lalu export, impor, dan backup data.
 
-- **Status:** semua tahap (0–13) selesai dan di-commit di branch `main` (lihat `git log`). Phase 14 (dashboard washitsu) sedang dikerjakan.
+- **Status:** semua tahap (0–14) selesai dan di-commit di branch `main` (lihat `git log`).
 - **Tes:** 89 tes backend lolos di SQLite (76 tes sebelum Phase 13 juga lolos di MariaDB); lint & build frontend bersih; `npm audit` dan `composer audit` tanpa celah.
 - **Menjalankan:** `npm start` di `C:\Pidu-App`, lalu buka http://localhost:8010.
 - **Akun demo:** `demo@pidu.test` / `password` (data Juni–September 2026 + data ringan 2024–2025). Akun kedua `other@pidu.test` / `password` untuk uji isolasi data.
@@ -105,6 +105,14 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 - Tetap bahasa Indonesia: isi file Excel/PDF, data milik user (nama kategori, catatan), format Rupiah & singkatan angka grafik ("jt").
 - Cek kunci: `node frontend/scripts/check-locales.mjs`. Tes backend 89 lulus. Terjemahan Sunda sebaiknya dibaca penutur asli.
 - Codex sempat terhenti (memori laptop penuh) lalu dilanjutkan dengan `codex exec resume <id>`.
+
+### Phase 14: Dashboard washitsu (29 Sep–3 Okt, Codex + Claude)
+- Material washitsu (kayu, kertas washi) pada shell dan kartu; tiga panel dashboard (kategori, terbesar, budget) terbuka penuh dengan dasar sejajar.
+- Ganti tema memakai animasi pintu shoji (±920 ms); langsung tanpa pintu bila `prefers-reduced-motion`.
+- Sidebar bisa diciutkan jadi ikon saja (tombol garis tiga di atas, disimpan di `pidu_sidebar_collapsed`).
+- Tabel laporan berubah jadi tumpukan kartu di HP; perbaikan tampilan form-switch saat aktif.
+- Latar Masuk/Daftar dari video washitsu milik user (`frontend/src/assets/auth/`, `AuthScene.jsx`).
+- Masih terbuka: video versi malam untuk mode gelap (opsional dari user); tekstur washi masih sangat tipis (2,5%).
 
 ## 5. Anti-slop (aturan UI untuk AI agent)
 

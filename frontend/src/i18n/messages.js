@@ -100,6 +100,16 @@ const entries = [
     "Tutup menu"
   ],
   [
+    "Ciutkan menu",
+    "Collapse menu",
+    "Leutikan menu"
+  ],
+  [
+    "Lebarkan menu",
+    "Expand menu",
+    "Legaan menu"
+  ],
+  [
     "Menu pengguna",
     "User menu",
     "Menu pangguna"

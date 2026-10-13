@@ -22,7 +22,19 @@ for theme, block in zip(['light', 'dark'], blocks):
     tokens = dict(re.findall(r'--pidu-([\w-]+):\s*(#[\da-fA-F]{6});', block))
     tokens.update(common)
     tokens['checkmark'] = '#ffffff'
+    fiber = tokens['fiber']
+    alpha = float(re.search(r'--pidu-fiber-alpha:\s*([\d.]+);', block).group(1))
+    textured = []
+    for surface, layers in [(surface, 2 if surface == 'canvas' else 1) for surface in surfaces] + [('surface', 2)]:
+        # Two overlapping tatami strokes bound the washitsu textures conservatively.
+        opacity = 1 - (1 - alpha) ** layers
+        color = ''.join(f'{round(int(tokens[surface][i:i+2], 16) * (1-opacity) + int(fiber[i:i+2], 16) * opacity):02x}' for i in (1, 3, 5))
+        name = f'{surface}-tatami' if surface == 'surface' and layers == 2 else f'{surface}-fiber'
+        tokens[name] = f'#{color}'
+        textured.append(name)
     pairs = [(fg, bg, 4.5) for fg in foregrounds for bg in surfaces]
+    pairs += [(fg, bg, 4.5) for fg in foregrounds for bg in textured]
+    pairs += [(fg, bg, 3) for fg in ['control-line', 'focus'] for bg in textured]
     pairs += [('on-color', bg, 4.5) for bg in foregrounds]
     pairs += [(fg, bg, 3) for fg in ['control-line', 'focus'] for bg in surfaces]
     pairs += [('checkmark', 'check-fill', 3)]

@@ -35,26 +35,24 @@ function transactionsLink(period, extra = {}) {
 function Section({ title, action, children, className = '' }) {
   const t = useT()
   return (
-    <div className={`card h-100 ${className}`}>
+    <section className={`card dashboard-panel ${className}`} aria-label={t(title)}>
       <div className="card-header bg-transparent d-flex justify-content-between align-items-center gap-2">
         <h2 className="h6 mb-0">{t(title)}</h2>
         {action}
       </div>
       <div className="card-body">{children}</div>
-    </div>
+    </section>
   )
 }
 
 function StatTile({ label, value, hint }) {
   const t = useT()
   return (
-    <div className="col">
-      <div className="card h-100">
-        <div className="card-body py-3 px-2 px-sm-3">
-          <div className="small text-body-secondary">{t(label)}</div>
-          <div className="fw-semibold summary-value">{t(value)}</div>
-          {hint && <div className="small text-body-secondary">{t(hint)}</div>}
-        </div>
+    <div className="card dashboard-stat">
+      <div className="card-body">
+        <div className="small text-body-secondary">{t(label)}</div>
+        <div className="fw-semibold summary-value">{t(value)}</div>
+        {hint && <div className="small text-body-secondary">{t(hint)}</div>}
       </div>
     </div>
   )
@@ -67,11 +65,11 @@ function CategoryBreakdown({ items, period }) {
     return <p className="text-body-secondary text-center my-4">{t('Belum ada pengeluaran pada periode ini.')}</p>
   }
   return (
-    <div className="row g-3 align-items-center">
-      <div className="col-md-5">
-        <CategoryDoughnut items={items} />
+    <div className="dashboard-categories">
+      <div className="dashboard-doughnut">
+        <CategoryDoughnut items={items} height="100%" />
       </div>
-      <div className="col-md-7">
+      <div>
         <ul className="list-unstyled mb-0 category-breakdown">
           {items.map((item) => (
             <li key={item.category_id} className="mb-2">
@@ -183,10 +181,7 @@ export default function DashboardPage() {
 
     content = (
       <>
-        <SummaryCards prominent summary={{ ...summary, count: summary.transaction_count }} comparison={comparison} />
-        {comparisonFetch.error && <div className="small text-body-secondary mb-3">{t('Perbandingan gagal dimuat.')} <button type="button" className="btn btn-sm btn-outline-secondary" onClick={comparisonFetch.reload}>{t('Coba lagi')}</button></div>}
-
-        <div className="dashboard-stats row row-cols-2 g-2 g-md-3 mb-4">
+        <SummaryCards prominent className="dashboard-summary" summary={{ ...summary, count: summary.transaction_count }} comparison={comparison}>
           <StatTile
             label="Rata-rata pengeluaran / hari"
             value={formatRupiah(summary.avg_daily_expense)}
@@ -197,84 +192,81 @@ export default function DashboardPage() {
             value={summary.expense_ratio == null ? 'Belum tersedia' : `${summary.expense_ratio.toLocaleString('id-ID')}%`}
             hint={summary.expense_ratio == null ? 'Belum ada pemasukan' : 'dari pemasukan'}
           />
-        </div>
+        </SummaryCards>
+        {comparisonFetch.error && <div className="small text-body-secondary dashboard-notice">{t('Perbandingan gagal dimuat.')} <button type="button" className="btn btn-sm btn-outline-secondary" onClick={comparisonFetch.reload}>{t('Coba lagi')}</button></div>}
 
-        {summary.transaction_count === 0 ? (
-          <EmptyState
-            icon="bi-bar-chart"
-            title="Belum ada transaksi pada periode ini"
-            action={
-              <button type="button" onClick={openCreate} className="btn btn-primary">
-                {t('Catat transaksi')}
-              </button>
-            }
-          />
-        ) : (
-          <div className="row g-3">
-            <div className="col-12">
-              <Section title={t(daily ? 'Pemasukan vs Pengeluaran (per hari)' : 'Pemasukan vs Pengeluaran (per bulan)')}>
-                <IncomeExpenseChart
-                  labels={chartLabels}
-                  income={chart.income}
-                  expense={chart.expense}
-                  tooltipTitles={tooltipTitles}
-                />
-              </Section>
-            </div>
-            <div className="col-lg-7">
-              <Section
-                title="Pengeluaran per kategori"
+        <div className="dashboard-panels">
+          {summary.transaction_count === 0 ? (
+            <div className="card dashboard-chart dashboard-empty">
+              <EmptyState
+                icon="bi-bar-chart"
+                title="Belum ada transaksi pada periode ini"
                 action={
-                  <Link to={transactionsLink(period, { type: 'expense' })} className="small">
-                    {t('Lihat transaksi')}
-                  </Link>
+                  <button type="button" onClick={openCreate} className="btn btn-primary">
+                    {t('Catat transaksi')}
+                  </button>
                 }
-              >
-                <CategoryBreakdown items={breakdown} period={period} />
-              </Section>
+              />
             </div>
-            <div className="col-lg-5">
-              <Section
-                title="Pengeluaran terbesar"
-                action={
-                  <Link to={`${transactionsLink(period, { type: 'expense' })}&sort=amount`} className="small">
-                    {t('Semua')}
-                  </Link>
-                }
-              >
-                <LargestTransactions transactions={largest} />
-              </Section>
-            </div>
-          </div>
-        )}
-
-        <div className="row g-3 mt-0">
-          <div className="col-12">
-            <Section
-              title={t('Budget {period}', { period: `${MONTH_NAMES[endMonth - 1]} ${endYear}` })}
-              action={
-                <Link to="/budgets" className="small">
-                  {t('Kelola')}
-                </Link>
-              }
-            >
-              <BudgetList budgets={budgets} />
+          ) : (
+            <Section className="dashboard-chart" title={t(daily ? 'Pemasukan vs Pengeluaran (per hari)' : 'Pemasukan vs Pengeluaran (per bulan)')}>
+              <IncomeExpenseChart
+                labels={chartLabels}
+                income={chart.income}
+                expense={chart.expense}
+                tooltipTitles={tooltipTitles}
+                height="100%"
+              />
             </Section>
-          </div>
+          )}
+          <Section
+            className="dashboard-category-panel"
+            title="Pengeluaran per kategori"
+            action={
+              <Link to={transactionsLink(period, { type: 'expense' })} className="small">
+                {t('Lihat transaksi')}
+              </Link>
+            }
+          >
+            <CategoryBreakdown items={breakdown} period={period} />
+          </Section>
+          <Section
+            className="dashboard-largest"
+            title="Pengeluaran terbesar"
+            action={
+              <Link to={`${transactionsLink(period, { type: 'expense' })}&sort=amount`} className="small">
+                {t('Semua')}
+              </Link>
+            }
+          >
+            <LargestTransactions transactions={largest} />
+          </Section>
+          <Section
+            className="dashboard-budget"
+            title={t('Budget {period}', { period: `${MONTH_NAMES[endMonth - 1]} ${endYear}` })}
+            action={
+              <Link to="/budgets" className="small">
+                {t('Kelola')}
+              </Link>
+            }
+          >
+            <BudgetList budgets={budgets} />
+          </Section>
         </div>
       </>
     )
   }
 
   return (
-    <>
+    <div className="dashboard-room">
       <PageHeader
         title="Dashboard"
         subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)}` : ' '}
         actions={<PeriodPicker query={periodQuery} idPrefix="dash-period" />}
       />
       <TodaySummary />
-      <div className={`opacity-transition ${loading && data ? 'opacity-50' : ''}`} aria-busy={loading}>
+      <div className="dashboard-content" aria-busy={loading}>
+        {loading && data && <span className="dashboard-refresh" role="status">{t('Memperbarui data...')}</span>}
         {error && data && (
           <div className="alert alert-danger d-flex justify-content-between align-items-center gap-2" role="alert">
             <span>{getErrorMessage(error)}</span>
@@ -285,6 +277,6 @@ export default function DashboardPage() {
         )}
         {content}
       </div>
-    </>
+    </div>
   )
 }

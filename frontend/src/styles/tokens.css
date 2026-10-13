@@ -16,6 +16,12 @@
   --pidu-line: #ddcbbd;
   --pidu-control-line: #8c7362;
   --pidu-focus: #994b32;
+  --pidu-hinoki: #d4bea3;
+  --pidu-fiber: #ddcbbd;
+  --pidu-fiber-alpha: 0.025;
+  --pidu-shoji-paper: #f5ead7;
+  --pidu-shoji-light: #fffaf4;
+  --pidu-shoji-frame: #b29978;
   --pidu-heat-1: #f6e6d6;
   --pidu-heat-2: #f6d8c5;
   --pidu-heat-3: #eab99d;
@@ -61,6 +67,12 @@
   --pidu-line: #58463a;
   --pidu-control-line: #a58b78;
   --pidu-focus: #f1ad88;
+  --pidu-hinoki: #65503e;
+  --pidu-fiber: #795d4b;
+  --pidu-fiber-alpha: 0.025;
+  --pidu-shoji-paper: #47372a;
+  --pidu-shoji-light: #8e6847;
+  --pidu-shoji-frame: #30251d;
   --pidu-heat-1: #3a3029;
   --pidu-heat-2: #4a3329;
   --pidu-heat-3: #60402f;

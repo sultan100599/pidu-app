@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { MENU } from './nav'
 import { useT } from '../../i18n/LocaleProvider'
 
-function MenuLink({ item, onNavigate }) {
+function MenuLink({ item, onNavigate, collapsed }) {
   const t = useT()
   return (
     <li className="nav-item">
@@ -11,16 +11,17 @@ function MenuLink({ item, onNavigate }) {
         to={item.path}
         end={item.path === '/'}
         onClick={onNavigate}
+        title={collapsed ? t(item.label) : undefined}
         className={({ isActive }) => `nav-link d-flex align-items-center gap-2${isActive ? ' active' : ''}`}
       >
         <i className={`bi ${item.icon} icon-tile`} aria-hidden="true"></i>
-        <span>{t(item.label)}</span>
+        <span className="sidebar-label">{t(item.label)}</span>
       </NavLink>
     </li>
   )
 }
 
-export default function Sidebar({ open, onClose }) {
+export default function Sidebar({ open, onClose, collapsed, onToggleCollapsed }) {
   const t = useT()
   const panelRef = useRef(null)
   const onCloseRef = useRef(onClose)
@@ -57,12 +58,22 @@ export default function Sidebar({ open, onClose }) {
     <aside
       id="app-sidebar"
       ref={panelRef}
-      className={`sidebar offcanvas-lg offcanvas-start${open ? ' show' : ''}`}
+      className={`sidebar offcanvas-lg offcanvas-start${open ? ' show' : ''}${collapsed ? ' is-collapsed' : ''}`}
       aria-label={t('Menu navigasi')}
     >
       <div className="sidebar-brand d-flex align-items-center gap-2 px-3 py-3">
         <i className="bi bi-wallet2 fs-4 text-primary" aria-hidden="true"></i>
         <span className="sidebar-brand-copy"><span className="fw-bold fs-5">Pidu</span><span className="sidebar-tagline" lang="su">Piduiteun</span></span>
+        <button
+          type="button"
+          className="sidebar-collapse-btn btn ms-auto d-none d-lg-inline-flex"
+          onClick={onToggleCollapsed}
+          aria-expanded={!collapsed}
+          aria-label={t(collapsed ? 'Lebarkan menu' : 'Ciutkan menu')}
+          title={t(collapsed ? 'Lebarkan menu' : 'Ciutkan menu')}
+        >
+          <i className="bi bi-list" aria-hidden="true"></i>
+        </button>
         <button
           type="button"
           className="btn btn-sm btn-link text-body ms-auto d-lg-none"
@@ -82,12 +93,12 @@ export default function Sidebar({ open, onClose }) {
                 </div>
                 <ul className="nav nav-pills flex-column gap-1 mt-1">
                   {item.children.map((child) => (
-                    <MenuLink key={child.path} item={child} onNavigate={onClose} />
+                    <MenuLink key={child.path} item={child} onNavigate={onClose} collapsed={collapsed} />
                   ))}
                 </ul>
               </li>
             ) : (
-              <MenuLink key={item.path} item={item} onNavigate={onClose} />
+              <MenuLink key={item.path} item={item} onNavigate={onClose} collapsed={collapsed} />
             ),
           )}
         </ul>

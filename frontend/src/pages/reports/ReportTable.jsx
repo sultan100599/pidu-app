@@ -1,9 +1,9 @@
 import { formatNumber, formatRupiah } from '../../utils/format'
 import { useT } from '../../i18n/LocaleProvider'
 
-function BalanceCell({ value }) {
+function BalanceCell({ value, label }) {
   return (
-    <td className={`text-end text-nowrap ${value < 0 ? 'text-danger' : value > 0 ? 'text-success' : 'text-body-secondary'}`}>
+    <td data-label={label} className={`text-end text-nowrap ${value < 0 ? 'text-danger' : value > 0 ? 'text-success' : 'text-body-secondary'}`}>
       {formatRupiah(value)}
     </td>
   )
@@ -49,10 +49,10 @@ export default function ReportTable({ labelHeader, rows, rowKey, renderLabel, to
                   aria-label={clickable && rowActionLabel ? rowActionLabel(row) : undefined}
                 >
                   <td className="text-nowrap">{renderLabel(row)}</td>
-                  <td className={`text-end text-nowrap ${row.income > 0 ? 'text-success' : ''}`}>{formatRupiah(row.income)}</td>
-                  <td className={`text-end text-nowrap ${row.expense > 0 ? 'text-danger' : ''}`}>{formatRupiah(row.expense)}</td>
-                  <BalanceCell value={row.balance} />
-                  <td className="text-end">{formatNumber(row.count)}</td>
+                  <td data-label={t('Pemasukan')} className={`text-end text-nowrap ${row.income > 0 ? 'text-success' : ''}`}>{formatRupiah(row.income)}</td>
+                  <td data-label={t('Pengeluaran')} className={`text-end text-nowrap ${row.expense > 0 ? 'text-danger' : ''}`}>{formatRupiah(row.expense)}</td>
+                  <BalanceCell value={row.balance} label={t('Saldo')} />
+                  <td data-label={t('Transaksi')} className="text-end">{formatNumber(row.count)}</td>
                 </tr>
               )
             })}
@@ -61,10 +61,10 @@ export default function ReportTable({ labelHeader, rows, rowKey, renderLabel, to
             <tfoot>
               <tr className="fw-semibold">
                 <td>{t('Total')}</td>
-                <td className="text-end text-nowrap text-success">{formatRupiah(totals.income)}</td>
-                <td className="text-end text-nowrap text-danger">{formatRupiah(totals.expense)}</td>
-                <BalanceCell value={totals.balance} />
-                <td className="text-end">{formatNumber(totals.count)}</td>
+                <td data-label={t('Pemasukan')} className="text-end text-nowrap text-success">{formatRupiah(totals.income)}</td>
+                <td data-label={t('Pengeluaran')} className="text-end text-nowrap text-danger">{formatRupiah(totals.expense)}</td>
+                <BalanceCell value={totals.balance} label={t('Saldo')} />
+                <td data-label={t('Transaksi')} className="text-end">{formatNumber(totals.count)}</td>
               </tr>
             </tfoot>
           )}

@@ -15,7 +15,7 @@
           stored = localStorage.getItem('pidu_theme');
         } catch (e) {}
         var theme =
-          stored ||
+          (stored === 'light' || stored === 'dark' ? stored : null) ||
           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-bs-theme', theme);
       })();

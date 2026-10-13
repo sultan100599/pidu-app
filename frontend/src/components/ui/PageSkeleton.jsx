@@ -6,6 +6,18 @@ export function SkeletonBar({ className = '' }) {
 
 export default function PageSkeleton({ variant = 'report', summary = true }) {
   const t = useT()
+  if (variant === 'dashboard') return <div className="page-skeleton skeleton-dashboard" aria-busy="true" role="status">
+    <span className="visually-hidden">{t('Memuat…')}</span>
+    <div className="dashboard-summary" aria-hidden="true">
+      {Array.from({ length: 6 }, (_, i) => <div className={`card p-3${i === 0 ? ' balance-stack' : i >= 4 ? ' dashboard-stat' : ''}`} key={i}><SkeletonBar className="w-50" /><SkeletonBar className="skeleton-value" /></div>)}
+    </div>
+    <div className="dashboard-panels" aria-hidden="true">
+      {['chart', 'category-panel', 'largest', 'budget'].map((panel) => <div className={`card dashboard-panel dashboard-${panel} p-3`} key={panel}>
+        <SkeletonBar className="w-50" />
+        {panel === 'chart' ? <div className="skeleton-chart" /> : <><SkeletonBar /><SkeletonBar className="w-75" /><SkeletonBar /></>}
+      </div>)}
+    </div>
+  </div>
   const cards = variant === 'budgets'
   const calendar = variant === 'calendar'
   return <div className={`page-skeleton skeleton-${variant}`} aria-busy="true" role="status">
