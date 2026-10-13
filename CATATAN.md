@@ -106,7 +106,7 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 - Cek kunci: `node frontend/scripts/check-locales.mjs`. Tes backend 89 lulus. Terjemahan Sunda sebaiknya dibaca penutur asli.
 - Codex sempat terhenti (memori laptop penuh) lalu dilanjutkan dengan `codex exec resume <id>`.
 
-### Phase 14: Dashboard washitsu (29 Sep–3 Okt, Codex + Claude)
+### Phase 14: Dashboard washitsu (29 Sep–3 Okt, Codex + Claude, `34bbd96`)
 - Material washitsu (kayu, kertas washi) pada shell dan kartu; tiga panel dashboard (kategori, terbesar, budget) terbuka penuh dengan dasar sejajar.
 - Ganti tema memakai animasi pintu shoji (±920 ms); langsung tanpa pintu bila `prefers-reduced-motion`.
 - Sidebar bisa diciutkan jadi ikon saja (tombol garis tiga di atas, disimpan di `pidu_sidebar_collapsed`).
@@ -114,18 +114,19 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 - Latar Masuk/Daftar dari video washitsu milik user (`frontend/src/assets/auth/`, `AuthScene.jsx`).
 - Masih terbuka: video versi malam untuk mode gelap (opsional dari user); tekstur washi masih sangat tipis (2,5%).
 
-### Phase 15: Perbaikan hasil review usability (13 Okt, Claude)
+### Phase 15: Perbaikan hasil review usability (13 Okt, Claude, `7baf4b9`)
 - Review QA/UX untuk target pelajar, ibu rumah tangga, UMKM, karyawan, dan orang tua menghasilkan 21 temuan; semua dikerjakan (rincian di `docs/lead/report-15.md`).
 - Utama: **saldo nyata** (saldo awal + semua transaksi, ditanya sekali di dashboard, bisa diubah di halaman Akun); **lupa & ganti password** (email lewat Gmail); **satu menu Laporan** dengan tab; form transaksi lebih ringkas; kategori untuk usaha/pelajar/rumah tangga; hapus langsung dengan Batalkan.
 - Email Gmail belum aktif: isi `MAIL_USERNAME` dan `MAIL_PASSWORD` (App Password) di `backend/.env`, ganti `MAIL_MAILER=smtp`. Selama `log`, email ditulis ke `backend/storage/logs/laravel.log`.
 - Audit antislop setelah pengerjaan: `anti-slop/audit-001-2026-10-13.md` (8 temuan lanjutan, menunggu pilihan user).
 - Impeccable 4.5.2 (https://github.com/pbakaus/impeccable) dipasang sebagai alat bantu desain: `.claude/skills/impeccable/`, tanpa hook, telemetri dimatikan di `.impeccable/config.json`; clone repo di `impeccable/` (tidak ikut Git). Jangan jalankan `/impeccable document` (menimpa `DESIGN.md`).
 
-### Phase 16: Kaca buram melayang (13 Okt, Claude)
+### Phase 16: Kaca buram melayang (13 Okt, Claude, `3698798`, `d32cb78`)
 - Sidebar, bar atas, bottom nav, dan kartu jadi panel kaca buram melayang di atas foto ruang washitsu (siang/malam), terinspirasi template v0 pilihan user. Di desktop judul & tombol halaman ada di bar atas. Semua di `frontend/src/styles/glass.css`; rincian `docs/lead/report-16.md`.
 - Pengecualian aturan antislop R-10 dipilih user dan dicatat di `DESIGN.md`.
+- Sidebar menempel ke dasar layar selama halaman masih bisa digulir, dan baru ikut melayang saat halaman mentok di bawah (permintaan user). Label tombolnya "Perkecil menu" / "Perbesar menu"; saat diperkecil, yang tampil logo Pidu.
 
-### Phase 17: Tes end-to-end (13 Okt, Claude)
+### Phase 17: Tes end-to-end (13 Okt, Claude, `e1c379d`)
 - Playwright (`frontend/e2e/`, jalankan `npm run test:e2e` di root): 9 alur di desktop (daftar + saldo awal + catat, lewati saldo awal, hapus + batalkan, form transaksi, menu Laporan + judul di bar atas, sidebar diperkecil, budget terlampaui, ganti password + masuk lagi, lupa password) dan 1 alur HP (tanpa geser ke samping di 7 halaman, Catat, ganti bahasa).
 - Aman untuk data asli: tes menyalakan backend sendiri (port 8002, `backend/database/e2e.sqlite` yang dibuat ulang tiap kali) dan frontend sendiri (port 8011), memakai Chrome yang sudah terpasang.
 - Batas percobaan masuk kini diatur `AUTH_THROTTLE_PER_MINUTE` (default 5; tes memakai 1000). Proxy Vite bisa diarahkan lewat `PIDU_API_URL`.
@@ -159,7 +160,34 @@ Hanya folder skill yang dipasang, tanpa repo utuh (sama dengan yang dilakukan in
 - [x] Restart `npm start` supaya scheduler backup harian berjalan (sudah dilakukan user).
 - [x] Commit skill anti-slop, `CLAUDE.md`, `AGENTS.md`, `DESIGN.md`, `CATATAN.md` (commit Phase 11).
 - [x] Penyesuaian UI dengan anti-slop (Phase 11–12).
-- [ ] Opsional (butuh keputusan/aset dari pemilik): ilustrasi empty state, dan PWA (ikon aplikasi) agar bisa di-install di HP.
+- [ ] Opsional (butuh keputusan/aset dari pemilik): ilustrasi empty state.
+
+### Rencana berikutnya (hasil review QA 13 Okt, urutan disetujui user; hosting ditunda)
+
+**Phase 18: Dompet, Usaha/Pribadi, transaksi rutin, pengingat** (rancangan sudah disampaikan, menunggu "lanjut" dari user)
+- [ ] Dompet: nama (Tunai, BRI, DANA, Kas Warung, dll.), jenis (tunai/rekening/e-wallet), tanda **Pribadi** atau **Usaha**, saldo awal per dompet. Saldo awal akun lama dipindah ke "Dompet Utama" dan semua transaksi lama masuk ke sana.
+- [ ] Form catat memilih dompet (default dompet terakhir).
+- [ ] Transfer antar-dompet (bukan pemasukan/pengeluaran).
+- [ ] Saringan Semua / Pribadi / Usaha di dashboard dan laporan; kartu "Uang kamu sekarang" menampilkan rincian per dompet.
+- [ ] Transaksi rutin (mis. listrik tiap tanggal 5), dibuat otomatis oleh scheduler di `npm start`.
+- [ ] Pengingat: **banner di aplikasi saja** (pilihan user), "Belum ada catatan hari ini" + tombol Catat, bisa ditutup sampai besok.
+
+**Phase 19: Rapikan & lengkapi**
+- [ ] Ganti istilah (pilihan user: semua): Dashboard → Ringkasan, Budget → Anggaran, Export → Unduh, Impor → Unggah, Cash → Tunai, Export & Backup → Unduh & Cadangan.
+- [ ] Ganti font judul Fraunces (pilihan user): tunjukkan 2–3 contoh font serif hangat dulu, user memilih.
+- [ ] Sisa audit antislop `anti-slop/audit-001-2026-10-13.md` no. 3–7: kotak Filter di HP, dashboard HP terlalu panjang, placeholder "0" di Nominal, link "Ubah" terlalu kecil, jarak pilihan di kartu Unduh data.
+- [ ] Cek aksesibilitas resmi: Lighthouse, pembaca layar, navigasi keyboard penuh.
+- [ ] Data demo diperpanjang sampai bulan berjalan (sekarang berhenti 28 Sep).
+- [ ] Hapus akun, dan "keluar dari semua perangkat" di halaman Akun.
+
+**Menunggu dari user**
+- [ ] Isi `MAIL_USERNAME` (alamat Gmail) dan `MAIL_PASSWORD` (App Password 16 huruf) di `backend/.env`, ganti `MAIL_MAILER=smtp`, lalu email lupa password diuji sungguhan.
+- [ ] Teks bahasa Sunda baru (66 kunci di `frontend/src/i18n/phase15.js`) dibaca penutur asli.
+- [ ] Opsional: video/gambar washitsu versi malam untuk halaman Masuk.
+- [ ] Efek kaca dicoba di HP Android murah sungguhan (simulasi: rata-rata 60fps, 2 frame tersendat; blur dikerjakan GPU).
+
+**Ditunda (keputusan user)**
+- [ ] Hosting + PWA supaya Pidu bisa dipakai dari HP (butuh keputusan tempat & biaya hosting).
 
 ## 7. Referensi cepat
 
@@ -167,6 +195,7 @@ Hanya folder skill yang dipasang, tanpa repo utuh (sama dengan yang dilakukan in
 |---|---|
 | `npm start` | Jalankan aplikasi (backend + frontend + scheduler) |
 | `npm test` | Tes backend + lint frontend |
+| `npm run test:e2e` | Tes end-to-end Playwright (server & database tes sendiri, data asli aman) |
 | `npm run build` | Build production frontend |
 | `npm run db:reset` | Hapus semua data, isi ulang data demo |
 | `cd backend && php artisan pidu:backup` | Backup manual |
