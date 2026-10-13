@@ -42,7 +42,7 @@ export default function DailyReportPage() {
           }
         }
       >
-        <div className="d-flex flex-wrap gap-2 justify-content-between align-items-center mb-2">
+        <div className="glass-strip d-flex flex-wrap gap-2 justify-content-between align-items-center mb-2">
           <span className="small text-body-secondary">{t('Klik baris untuk melihat detail transaksi.')}</span>
           <div className="form-check form-switch mb-0">
             <input

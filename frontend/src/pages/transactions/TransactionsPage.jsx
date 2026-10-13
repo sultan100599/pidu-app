@@ -264,7 +264,7 @@ export default function TransactionsPage() {
         </div>
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-2">
           <Pagination meta={data.meta} onPageChange={(page) => updateQuery({ page }, { resetPage: false })} />
-          <div className="d-flex align-items-center gap-2 mt-3 ms-auto">
+          <div className="glass-strip d-flex align-items-center gap-2 mt-3 ms-auto">
             <label htmlFor="per-page" className="small text-body-secondary text-nowrap">
               {t('Per halaman')}
             </label>

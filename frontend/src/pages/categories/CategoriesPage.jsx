@@ -169,7 +169,7 @@ export default function CategoriesPage() {
         }
       />
 
-      <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+      <div className="glass-strip d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
         <ul className="nav nav-pills" role="tablist">
           {Object.entries(TRANSACTION_TYPES).map(([type, label]) => (
             <li className="nav-item" role="presentation" key={type}>

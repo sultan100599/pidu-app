@@ -40,3 +40,11 @@ Kata-kata user: dashboard "penuh, tidak terlalu banyak scroll", "elegant dan est
 - Mode gelap = ruang washitsu malam: arang sumi hangat dengan cahaya lentera andon, bukan hitam-biru.
 - Pola dibuat dengan CSS saja. Tetap tanpa aset gambar baru.
 - Ganti tema: dua panel shoji menutup dari kiri dan kanan, tema berganti saat pintu tertutup, lalu pintu terbuka lagi.
+
+## Tambahan Phase 16 (13 Okt 2026): kaca buram melayang
+Permintaan user: dashboard "frosted glass", sidebar kiri dan bar atas "floating" seperti template v0 *Frosted Glass UI - CRM Dashboard* (dipakai sebagai inspirasi tata letak, bukan disalin).
+- Panel = kertas shoji tembus cahaya: sidebar, bar atas, bottom nav HP, dan semua kartu isi melayang dengan jarak dari tepi layar, sudut membulat, blur di atas foto ruang washitsu (siang untuk tema terang, malam untuk tema gelap; aset milik user dari halaman Masuk).
+- Judul halaman, subjudul, dan tombol aksi halaman pindah ke bar atas di desktop; di HP tetap di halaman dalam panel kaca.
+- **Pengecualian antislop R-10 (kaca di sidebar + topbar + kartu sekaligus) dipilih user secara sadar** pada 13 Okt 2026 ("Semua, seperti template"). Modal dan dropdown tetap padat supaya formulir mudah dibaca.
+- Syarat yang tetap berlaku: kepadatan panel 72% di atas peredup 55% (teks sekunder >= 4,5:1 di kondisi foto terburuk), blur dikurangi di HP, panel jadi padat untuk browser tanpa backdrop-filter dan untuk pengguna yang meminta transparansi dikurangi. Semua di `frontend/src/styles/glass.css`.
+

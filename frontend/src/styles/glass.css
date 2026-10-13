@@ -1,0 +1,144 @@
+/*
+ * Phase 16: kaca buram melayang di atas ruang washitsu (keputusan pemilik 13 Okt 2026, lihat DESIGN.md).
+ * Panel = kertas shoji tembus cahaya: sidebar, topbar, dan kartu melayang dengan jarak dari tepi
+ * di atas foto ruang washitsu (siang/malam mengikuti tema).
+ * Kepadatan panel 72% di atas peredup 55% dihitung supaya teks sekunder tetap >= 4,5:1
+ * walau foto di belakangnya hitam (tema terang) atau putih (tema gelap).
+ */
+:root {
+  --pidu-room: url('../assets/auth/washitsu-day-open.webp');
+  --pidu-scrim: color-mix(in srgb, var(--pidu-canvas) 55%, transparent);
+  --pidu-glass: color-mix(in srgb, var(--pidu-surface) 72%, transparent);
+  --pidu-glass-peach: color-mix(in srgb, var(--pidu-peach) 85%, transparent);
+  --pidu-glass-border: rgb(255 255 255 / 55%);
+  --pidu-glass-blur: blur(18px) saturate(140%);
+  --pidu-glass-shadow: 0 10px 30px rgb(52 32 18 / 14%), inset 0 1px 0 rgb(255 255 255 / 45%);
+  --pidu-float-gap: 0.75rem;
+  --pidu-float-radius: 1.5rem;
+}
+[data-bs-theme='dark'] {
+  --pidu-room: url('../assets/auth/washitsu-night.webp');
+  --pidu-glass-border: rgb(255 240 225 / 12%);
+  --pidu-glass-shadow: 0 12px 34px rgb(0 0 0 / 38%), inset 0 1px 0 rgb(255 240 225 / 7%);
+}
+
+/* Ruang di belakang semua panel. */
+.app-shell { position: relative; isolation: isolate; }
+.app-shell::before, .app-shell::after { content: ''; position: fixed; inset: 0; pointer-events: none; }
+.app-shell::before { z-index: -2; background: var(--pidu-room) 50% 45% / cover no-repeat; }
+.app-shell::after { z-index: -1; background: var(--pidu-scrim); }
+.app-content { background: transparent; background-image: none; }
+
+/* Panel kaca: satu resep untuk sidebar, topbar, bottom nav, dan kartu isi. */
+.topbar, .bottom-nav, .app-main .card {
+  background-color: var(--pidu-glass);
+  -webkit-backdrop-filter: var(--pidu-glass-blur);
+  backdrop-filter: var(--pidu-glass-blur);
+  border: 1px solid var(--pidu-glass-border);
+  box-shadow: var(--pidu-glass-shadow);
+}
+.app-main .card { --bs-card-bg: var(--pidu-glass); --bs-card-border-color: var(--pidu-glass-border); }
+.app-main .card .table { --bs-table-bg: transparent; }
+.app-main .card .list-group-item { background: transparent; }
+.app-main .transaction-filters { background-color: var(--pidu-glass); }
+.app-main .summary-card[data-summary='balance'] { background-color: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.app-main .summary-card[data-summary='balance']::before,
+.app-main .dashboard-summary .summary-card[data-summary='balance']::before {
+  background: var(--pidu-washi), var(--pidu-glass-peach);
+  -webkit-backdrop-filter: var(--pidu-glass-blur);
+  backdrop-filter: var(--pidu-glass-blur);
+  border-color: var(--pidu-glass-border);
+}
+
+/* Topbar melayang: tidak menempel ke tepi atas maupun samping. */
+.topbar {
+  top: var(--pidu-float-gap);
+  margin: var(--pidu-float-gap) var(--pidu-float-gap) 0;
+  border-radius: 1.25rem;
+  background-image: none;
+}
+.topbar .btn-link { background: color-mix(in srgb, var(--pidu-surface) 60%, transparent); border-color: var(--pidu-glass-border); }
+
+/* Isi topbar di desktop: judul halaman di kiri, aksi halaman lalu alat (bahasa, tema, akun) di kanan. */
+.topbar { gap: 1rem !important; padding-block: 0.625rem; min-height: 72px; }
+.topbar-title h1 { margin: 0; font-family: var(--pidu-heading-font); font-size: 1.625rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.035em; }
+.topbar-title p { font-size: 0.8125rem; line-height: 1.3; overflow-wrap: anywhere; }
+.topbar-actions { align-items: end; gap: 0.5rem; flex-wrap: wrap; justify-content: end; }
+.topbar-actions:empty { display: none !important; }
+.topbar-actions:empty + .topbar-tools { margin-left: auto !important; }
+.topbar-actions .form-label { margin-bottom: 0.125rem !important; font-size: 0.75rem; }
+.topbar-actions .page-actions { align-items: end; }
+
+/* Teks yang berada langsung di atas foto ikut berpanel supaya kontrasnya terjamin. */
+.dashboard-room .today-summary, .page-header {
+  padding: 0.75rem 1rem !important;
+  background-color: var(--pidu-glass);
+  -webkit-backdrop-filter: var(--pidu-glass-blur);
+  backdrop-filter: var(--pidu-glass-blur);
+  border: 1px solid var(--pidu-glass-border) !important;
+  border-radius: var(--pidu-radius-card);
+  box-shadow: var(--pidu-glass-shadow);
+}
+
+/* Baris kecil di antara kartu (tab laporan, petunjuk, pagination): pita kaca tipis. */
+.glass-strip, .report-tabs {
+  padding: 0.375rem 0.75rem;
+  background-color: var(--pidu-glass);
+  -webkit-backdrop-filter: var(--pidu-glass-blur);
+  backdrop-filter: var(--pidu-glass-blur);
+  border: 1px solid var(--pidu-glass-border);
+  border-radius: var(--pidu-radius-control);
+  box-shadow: var(--pidu-glass-shadow);
+}
+p.glass-strip { width: fit-content; max-width: 100%; }
+.report-tabs { padding: 0.25rem; border-radius: 1rem; width: fit-content; max-width: 100%; }
+
+/* Bottom nav di HP ikut melayang di atas tepi bawah layar. */
+.bottom-nav {
+  inset: auto var(--pidu-float-gap) calc(var(--pidu-float-gap) + env(safe-area-inset-bottom));
+  padding-bottom: 0.5rem;
+  border-radius: 1.25rem;
+}
+
+@media (min-width: 992px) {
+  .sidebar.offcanvas-lg {
+    inset: var(--pidu-float-gap) auto var(--pidu-float-gap) var(--pidu-float-gap);
+    height: auto;
+    background: var(--pidu-glass) !important;
+    -webkit-backdrop-filter: var(--pidu-glass-blur);
+    backdrop-filter: var(--pidu-glass-blur);
+    border: 1px solid var(--pidu-glass-border) !important;
+    border-radius: var(--pidu-float-radius);
+    box-shadow: var(--pidu-glass-shadow);
+  }
+  .sidebar nav { background-image: none; }
+  .app-content { margin-left: calc(252px + var(--pidu-float-gap) * 2); }
+  .sidebar-collapsed .app-content { margin-left: calc(80px + var(--pidu-float-gap) * 2); }
+  .topbar { margin-left: 0; padding-inline: 1.25rem !important; }
+}
+
+/* Satu jarak untuk semua: sidebar, bar atas, dan konten sejajar di tepi kiri/kanan,
+   dan jarak bar atas ke konten sama dengan jarak antarpanel melayang. */
+.app-main, .app-main-dashboard {
+  max-width: none;
+  padding: var(--pidu-float-gap) var(--pidu-float-gap) var(--pidu-float-gap) !important;
+}
+@media (min-width: 992px) {
+  .app-main, .app-main-dashboard { padding-left: 0 !important; }
+}
+
+/* Blur besar berat di HP: dikurangi, tampilannya tetap buram. */
+@media (max-width: 991.98px) {
+  :root { --pidu-glass-blur: blur(10px) saturate(130%); --pidu-float-gap: 0.625rem; }
+  .sidebar.offcanvas-lg.show { background: var(--pidu-surface); }
+  /* Ruang untuk bottom nav yang melayang: tinggi nav + jarak di bawahnya + jarak ke konten. */
+  .app-main, .app-main-dashboard { padding-bottom: calc(var(--pidu-bottom-nav-height, 84px) + var(--pidu-float-gap) * 2 + env(safe-area-inset-bottom)) !important; }
+}
+
+/* Browser tanpa backdrop-filter, atau pengguna yang meminta transparansi dikurangi: panel padat. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --pidu-glass: var(--pidu-surface); --pidu-glass-peach: var(--pidu-peach); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root { --pidu-glass: var(--pidu-surface); --pidu-glass-peach: var(--pidu-peach); --pidu-glass-blur: none; }
+}

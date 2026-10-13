@@ -44,7 +44,7 @@ export default function WeeklyReportPage() {
           }
         }
       >
-        <p className="small text-body-secondary mb-2">{t('Klik baris untuk melihat rekap harian minggu tersebut.')}</p>
+        <p className="glass-strip small text-body-secondary mb-2">{t('Klik baris untuk melihat rekap harian minggu tersebut.')}</p>
         <ReportTable
           labelHeader="Minggu"
           rows={rows}

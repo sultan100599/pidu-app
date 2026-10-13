@@ -36,7 +36,7 @@ export default function Pagination({ meta, onPageChange }) {
   const pages = getPages(current, last)
 
   return (
-    <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 mt-3">
+    <div className="glass-strip d-flex flex-column flex-md-row align-items-center justify-content-between gap-2 mt-3">
       <p className="small text-body-secondary mb-0">
         {total > 0 ? t('Menampilkan {from}–{to} dari {total}', { from, to, total }) : t('Tidak ada data')}
       </p>

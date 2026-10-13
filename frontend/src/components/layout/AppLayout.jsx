@@ -1,10 +1,11 @@
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
 import TransactionProvider from './TransactionProvider'
 import BottomNav from './BottomNav'
 import PageSkeleton from '../ui/PageSkeleton'
+import { TopbarSlotsContext } from './TopbarSlots'
 
 const COLLAPSE_KEY = 'pidu_sidebar_collapsed'
 
@@ -22,6 +23,11 @@ export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const closeSidebar = () => setSidebarOpen(false)
   const [collapsed, setCollapsed] = useState(getInitialCollapsed)
+  const [slots, setSlots] = useState({})
+  const register = useCallback((name, element) => {
+    setSlots((current) => (current[name] === element ? current : { ...current, [name]: element }))
+  }, [])
+  const slotsValue = useMemo(() => ({ slots, register }), [slots, register])
   function toggleCollapsed() {
     const next = !collapsed
     setCollapsed(next)
@@ -36,7 +42,7 @@ export default function AppLayout() {
   }, [sidebarOpen])
 
   return (
-    <TransactionProvider><div className={`app-shell${collapsed ? ' sidebar-collapsed' : ''}`}>
+    <TransactionProvider><TopbarSlotsContext.Provider value={slotsValue}><div className={`app-shell${collapsed ? ' sidebar-collapsed' : ''}`}>
       <Sidebar open={sidebarOpen} onClose={closeSidebar} collapsed={collapsed} onToggleCollapsed={toggleCollapsed} />
       {sidebarOpen && (
         <div
@@ -58,6 +64,6 @@ export default function AppLayout() {
         </main>
       </div>
       <BottomNav />
-    </div></TransactionProvider>
+    </div></TopbarSlotsContext.Provider></TransactionProvider>
   )
 }

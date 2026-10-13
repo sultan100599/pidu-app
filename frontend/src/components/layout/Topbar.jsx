@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
 import { useDropdownBounds } from '../../hooks/useDropdownBounds'
 import LanguagePicker from '../LanguagePicker'
+import { useTopbarSlots } from './TopbarSlots'
 import { useT } from '../../i18n/LocaleProvider'
 
 export default function Topbar({ onMenuClick, sidebarOpen }) {
@@ -12,6 +13,9 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
   const { theme, toggleTheme } = useTheme()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef(null)
+  const { register } = useTopbarSlots()
+  const titleRef = useCallback((element) => register('title', element), [register])
+  const actionsRef = useCallback((element) => register('actions', element), [register])
   useDropdownBounds(userMenuRef, userMenuOpen)
 
   const isDark = theme === 'dark'
@@ -51,7 +55,11 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
         <span className="small ms-1">{t('Menu')}</span>
       </button>
 
-      <div className="ms-auto d-flex align-items-center gap-1">
+      {/* Diisi PageHeader lewat portal (desktop): judul halaman dan aksinya. */}
+      <div ref={titleRef} className="topbar-title min-w-0 d-none d-lg-block"></div>
+      <div ref={actionsRef} className="topbar-actions ms-auto d-none d-lg-flex"></div>
+
+      <div className="topbar-tools ms-auto ms-lg-0 d-flex align-items-center gap-1">
         <LanguagePicker />
         <button
           type="button"
