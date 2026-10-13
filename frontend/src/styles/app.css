@@ -7,13 +7,6 @@ body { line-height: 1.6; }
 .boot-state { min-height: 100dvh; }
 .app-content, .min-w-0 { min-width: 0; }
 .app-main { max-width: 1320px; margin-inline: auto; }
-.app-main > [aria-busy='true']::before {
-  content: var(--pidu-refresh-label);
-  display: block;
-  color: var(--pidu-muted);
-  font-size: 0.875rem;
-  margin-bottom: var(--pidu-space-3);
-}
 .page-header { padding-block: 0.5rem 1rem; border-bottom: 1px solid var(--pidu-line); }
 .page-header h1 { font-family: var(--pidu-heading-font); font-size: clamp(1.8rem, 2.5vw, 2.5rem); line-height: 1.2; letter-spacing: -0.035em; }
 .page-header p { font-size: 0.9375rem; }
@@ -171,12 +164,17 @@ body { line-height: 1.6; }
   }
   .sidebar.is-collapsed .sidebar-brand { justify-content: center; margin-inline: 0.5rem; padding-inline: 0 !important; }
   .sidebar.is-collapsed .sidebar-brand > .bi-wallet2 { display: none; }
-  .sidebar.is-collapsed .sidebar-collapse-btn { margin-left: 0 !important; }
+  .sidebar.is-collapsed .sidebar-collapse-btn { margin-left: 0 !important; color: var(--bs-primary); background: var(--pidu-peach); border-radius: 0.875rem; }
+  .sidebar-logo-toggle { display: grid; place-items: center; }
+  .sidebar-logo-toggle > .bi { grid-area: 1 / 1; transition: opacity 180ms cubic-bezier(0.16, 1, 0.3, 1), transform 180ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .sidebar-logo-expand { opacity: 0; transform: translateX(-4px); }
+  .sidebar-collapse-btn:hover .sidebar-logo-mark, .sidebar-collapse-btn:focus-visible .sidebar-logo-mark { opacity: 0; transform: translateX(4px); }
+  .sidebar-collapse-btn:hover .sidebar-logo-expand, .sidebar-collapse-btn:focus-visible .sidebar-logo-expand { opacity: 1; transform: none; }
   .sidebar.is-collapsed .nav-link { justify-content: center; padding-inline: 0; }
   .sidebar.is-collapsed nav li.mt-2 { margin-top: 0.75rem !important; padding-top: 0.75rem; border-top: 1px solid var(--pidu-line); }
 }
 @media (min-width: 992px) and (prefers-reduced-motion: reduce) {
-  .sidebar.offcanvas-lg, .app-content { transition: none; }
+  .sidebar.offcanvas-lg, .app-content, .sidebar-logo-toggle > .bi { transition: none; }
 }
 
 /* HP: tabel rekap jadi kartu per baris supaya semua kolom terlihat tanpa geser ke samping. */

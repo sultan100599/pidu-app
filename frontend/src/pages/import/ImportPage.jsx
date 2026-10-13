@@ -212,24 +212,32 @@ export default function ImportPage() {
 
       <div className="card import-upload mb-3">
         <div className="card-body">
-          <label htmlFor="import-file" className="form-label fw-semibold">
-            {t('Pilih file (.xlsx, .xls, .csv, maks. 5 MB, 5.000 baris)')}
-          </label>
-          <input
-            ref={inputRef}
-            id="import-file"
-            type="file"
-            accept={ACCEPT}
-            className={`form-control ${fileError ? 'is-invalid' : ''}`}
-            onChange={(e) => analyze(e.target.files?.[0] ?? null)}
-            disabled={busy === 'analyze' || busy === 'commit'}
-            aria-describedby="import-help"
-          />
-          {fileError && <div className="invalid-feedback">{t(fileError)}</div>}
-          <div id="import-help" className="form-text">
-            {t('Kolom wajib: Tanggal, Kategori, Nominal. Kolom opsional: Jenis, Deskripsi, Catatan, Metode.')}
-            {' '}{t('File hasil Export atau Backup Pidu-App bisa langsung diimpor. File hanya diperiksa dulu; tidak ada yang disimpan sebelum Anda menekan Impor.')}
+          <h2 className="h6 mb-2">{t('File Excel atau CSV')}</h2>
+          {/* Input file bawaan browser memakai bahasa sistem; diganti tombol berbahasa aplikasi. */}
+          <div className={`file-picker${fileError ? ' is-invalid' : ''}`}>
+            <input
+              ref={inputRef}
+              id="import-file"
+              type="file"
+              accept={ACCEPT}
+              className="visually-hidden"
+              onChange={(e) => analyze(e.target.files?.[0] ?? null)}
+              disabled={busy === 'analyze' || busy === 'commit'}
+              aria-describedby="import-file-name import-help"
+            />
+            <label htmlFor="import-file" className="btn btn-outline-primary">
+              <i className="bi bi-folder2-open me-2" aria-hidden="true"></i>
+              {t('Pilih file')}
+            </label>
+            <span id="import-file-name" className="text-body-secondary text-break">{file ? file.name : t('Belum ada file dipilih')}</span>
           </div>
+          {fileError && <div className="text-danger small mt-2" role="alert">{t(fileError)}</div>}
+          <ul id="import-help" className="form-text import-help mb-0">
+            <li>{t('Format .xlsx, .xls, atau .csv, paling besar 5 MB atau 5.000 baris.')}</li>
+            <li>{t('Kolom wajib: Tanggal, Kategori, Nominal. Boleh ditambah Jenis, Deskripsi, Catatan, Metode.')}</li>
+            <li>{t('File hasil Export atau Backup Pidu bisa langsung diimpor.')}</li>
+            <li>{t('File diperiksa dulu. Belum ada yang disimpan sampai kamu menekan Impor.')}</li>
+          </ul>
           {busy === 'analyze' && (
             <div className="d-flex align-items-center gap-2 mt-3 text-body-secondary" role="status">
               <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>

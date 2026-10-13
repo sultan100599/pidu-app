@@ -71,8 +71,13 @@ return [
         'search' => 'pencarian',
         'dry_run' => 'pemeriksaan',
         'skip_duplicates' => 'lewati duplikat',
+        'opening_balance' => 'saldo awal',
+        'current_password' => 'password lama',
+        'token' => 'token',
     ],
     'custom_messages' => [
+        'current_password_wrong' => 'Password lama salah.',
+        'password_same' => 'Password baru harus berbeda dari password lama.',
         'amount_positive' => 'Nominal harus lebih dari 0.',
         'budget_category' => 'Kategori tidak ditemukan atau bukan kategori pengeluaran.',
         'transaction_category' => 'Kategori tidak ditemukan, tidak aktif, atau tidak sesuai jenis transaksi.',

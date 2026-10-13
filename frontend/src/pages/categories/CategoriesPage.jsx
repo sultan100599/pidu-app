@@ -28,11 +28,11 @@ function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
       <div className="min-w-0 flex-grow-1">
         <div className={`fw-semibold text-truncate ${category.is_active ? '' : 'text-body-secondary'}`}>
           {category.name}
-          {!category.is_active && <span className="badge text-bg-secondary ms-2 fw-normal">{t('Nonaktif')}</span>}
+          {!category.is_active && <span className="badge text-bg-secondary ms-2 fw-normal">{t('Disembunyikan')}</span>}
         </div>
         <div className="small text-body-secondary">{t('{count} transaksi', { count: formatNumber(category.transactions_count) })}</div>
       </div>
-      <div className="form-check form-switch mb-0" title={t(category.is_active ? 'Nonaktifkan' : 'Aktifkan')}>
+      <div className="form-check form-switch mb-0" title={t(category.is_active ? 'Sembunyikan dari form' : 'Tampilkan di form')}>
         <input
           className="form-check-input"
           type="checkbox"
@@ -43,7 +43,7 @@ function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
           onChange={() => onToggle(category)}
         />
         <label className="visually-hidden" htmlFor={switchId}>
-          {t('Kategori {name} aktif', { name: category.name })}
+          {t('Kategori {name} tampil di form', { name: category.name })}
         </label>
       </div>
       <button
@@ -54,18 +54,18 @@ function CategoryRow({ category, toggling, onEdit, onToggle, onDelete }) {
       >
         <i className="bi bi-pencil" aria-hidden="true"></i>
       </button>
-      {/* span pembungkus supaya title tetap muncul pada tombol disabled */}
-      <span title={used ? t('Masih dipakai {count} transaksi, nonaktifkan saja', { count: category.transactions_count }) : undefined}>
-        <button
-          type="button"
-          className="btn btn-sm btn-outline-danger"
-          aria-label={t('Hapus kategori {name}', { name: category.name })}
-          disabled={used}
-          onClick={() => onDelete(category)}
-        >
-          <i className="bi bi-trash" aria-hidden="true"></i>
-        </button>
-      </span>
+      {/* Tetap bisa diklik walau kategori dipakai, supaya alasannya terlihat (title tidak muncul di HP). */}
+      <button
+        type="button"
+        className={`btn btn-sm btn-outline-danger${used ? ' is-blocked' : ''}`}
+        aria-label={t('Hapus kategori {name}', { name: category.name })}
+        aria-disabled={used || undefined}
+        onClick={() => used
+          ? toast.info(t('Kategori masih dipakai {count} transaksi, jadi tidak bisa dihapus. Sembunyikan saja supaya tidak muncul di form.', { count: category.transactions_count }))
+          : onDelete(category)}
+      >
+        <i className="bi bi-trash" aria-hidden="true"></i>
+      </button>
     </li>
   )
 }
@@ -74,7 +74,7 @@ export default function CategoriesPage() {
   const t = useT()
   const [searchParams, setSearchParams] = useSearchParams()
   const activeType = searchParams.get('type') === 'income' ? 'income' : 'expense'
-  const [showInactive, setShowInactive] = useState(true)
+  const [showInactive, setShowInactive] = useState(false)
   const { categories, loading, error, loaded, refetch } = useCategories()
   const [togglingId, setTogglingId] = useState(null)
   const [form, setForm] = useState({ show: false, category: null, key: 0 })
@@ -198,7 +198,7 @@ export default function CategoriesPage() {
             onChange={(e) => setShowInactive(e.target.checked)}
           />
           <label className="form-check-label" htmlFor="show-inactive">
-            {t('Tampilkan nonaktif')}
+            {t('Tampilkan yang disembunyikan')}
           </label>
         </div>
       </div>

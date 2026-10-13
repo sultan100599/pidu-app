@@ -1,7 +1,7 @@
 import { dictionaries } from './messages.js'
 
 export const locales = [
-  { value: 'id', code: 'IN', name: 'Bahasa Indonesia' },
+  { value: 'id', code: 'ID', name: 'Bahasa Indonesia' },
   { value: 'en', code: 'EN', name: 'English' },
   { value: 'su', code: 'SU', name: 'Basa Sunda' },
 ]

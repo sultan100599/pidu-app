@@ -37,6 +37,10 @@ class DashboardService
                     : null,
                 'transaction_count' => $totals['count'],
             ],
+            'wallet' => [
+                'current_balance' => $this->transactions->currentBalance($user),
+                'opening_balance' => $user->opening_balance === null ? null : Money::of($user->opening_balance),
+            ],
             'chart' => $this->chart($user, $period, $filters),
             'category_breakdown' => $breakdown,
             'top_categories' => array_slice($breakdown, 0, 5),

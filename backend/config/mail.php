@@ -111,7 +111,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        // Gmail mengirim atas nama akunnya sendiri; tanpa MAIL_USERNAME (mode log) pakai alamat lokal.
+        'address' => env('MAIL_FROM_ADDRESS') ?: env('MAIL_USERNAME') ?: 'noreply@pidu.local',
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 

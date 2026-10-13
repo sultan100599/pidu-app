@@ -151,6 +151,8 @@ export default function BudgetsPage() {
   const [deleting, setDeleting] = useState({ budget: null, loading: false })
   const [copying, setCopying] = useState({ show: false, loading: false })
   const prev = previousMonth(month, year)
+  // Tombol salin hanya muncul kalau bulan lalu memang punya budget.
+  const canCopy = (data?.previous_month_count ?? 0) > 0
 
   async function confirmDelete() {
     setDeleting((d) => ({ ...d, loading: true }))
@@ -185,11 +187,7 @@ export default function BudgetsPage() {
           skipped += 1
         }
       }
-      if (source.length === 0) {
-        toast.info(t('Tidak ada budget di {period}.', { period: monthLabel(prev.month, prev.year) }))
-      } else {
-        toast.success(t('{copied} budget disalin, {skipped} dilewati.', { copied, skipped }))
-      }
+      toast.success(t('{copied} budget disalin, {skipped} dilewati.', { copied, skipped }))
       reload()
     } catch (err) {
       toast.error(getErrorMessage(err))
@@ -225,7 +223,7 @@ export default function BudgetsPage() {
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
               {t('Tambah Budget')}
             </button>
-            {copyButton(false)}
+            {canCopy && copyButton(false)}
           </div>
         }
       />
@@ -249,10 +247,13 @@ export default function BudgetsPage() {
         title="Budget"
         subtitle={t('Batas pengeluaran per kategori · {period}', { period: monthLabel(month, year) })}
         actions={
-          <button type="button" className="btn btn-primary" onClick={openCreate}>
-            <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-            {t('Tambah Budget')}
-          </button>
+          // Saat kosong, tombol yang sama sudah ada di tengah halaman.
+          !(data && budgets.length === 0) && (
+            <button type="button" className="btn btn-primary" onClick={openCreate}>
+              <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
+              {t('Tambah Budget')}
+            </button>
+          )
         }
       />
 
@@ -265,7 +266,7 @@ export default function BudgetsPage() {
           prevLabel="Bulan sebelumnya"
           nextLabel="Bulan berikutnya"
         />
-        {budgets.length > 0 && copyButton(true)}
+        {budgets.length > 0 && canCopy && copyButton(true)}
       </div>
 
       <div className={`opacity-transition ${loading && data ? 'opacity-50' : ''}`} aria-busy={loading}>

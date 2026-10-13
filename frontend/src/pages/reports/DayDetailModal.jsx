@@ -61,7 +61,7 @@ export default function DayDetailModal({ date, onClose }) {
             <div className="fw-semibold text-danger">{formatRupiah(totals.expense)}</div>
           </div>
           <div className="col-4">
-            <div className="text-body-secondary">{t('Saldo')}</div>
+            <div className="text-body-secondary">{t('Selisih')}</div>
             <div className={`fw-semibold ${totals.balance < 0 ? 'text-danger' : 'text-success'}`}>
               {formatRupiah(totals.balance)}
             </div>

@@ -18,6 +18,7 @@ import { accessibleColor } from '../../utils/accessibleColor'
 import CategoryIcon from '../../components/CategoryIcon'
 import PageSkeleton from '../../components/ui/PageSkeleton'
 import TodaySummary from './TodaySummary'
+import OpeningBalancePrompt from './OpeningBalancePrompt'
 import { previousPeriod } from '../../utils/dashboard'
 import { useTransactions } from '../../context/TransactionContext'
 
@@ -172,7 +173,7 @@ export default function DashboardPage() {
   } else if (!data) {
     content = <PageSkeleton variant="dashboard" />
   } else {
-    const { period, summary, chart, category_breakdown: breakdown, largest_transactions: largest, budgets } = data
+    const { period, summary, wallet, chart, category_breakdown: breakdown, largest_transactions: largest, budgets } = data
     const daily = chart.granularity === 'day'
     const chartLabels = chart.labels.map((l) => (daily ? String(Number(l.slice(8))) : formatYearMonth(l)))
     const tooltipTitles = chart.labels.map((l) => (daily ? formatDate(l, 'long') : formatYearMonth(l)))
@@ -181,16 +182,28 @@ export default function DashboardPage() {
 
     content = (
       <>
-        <SummaryCards prominent className="dashboard-summary" summary={{ ...summary, count: summary.transaction_count }} comparison={comparison}>
+        {wallet.opening_balance == null && <OpeningBalancePrompt onSaved={reload} />}
+        <SummaryCards
+          prominent
+          className="dashboard-summary"
+          summary={{ ...summary, count: summary.transaction_count }}
+          comparison={comparison}
+          wallet={wallet}
+          walletNote={wallet.opening_balance > 0 && (
+            <div className="small text-body-secondary">
+              {t('Termasuk saldo awal {amount}', { amount: formatRupiah(wallet.opening_balance) })} · <Link to="/account">{t('Ubah')}</Link>
+            </div>
+          )}
+        >
           <StatTile
             label="Rata-rata pengeluaran / hari"
             value={formatRupiah(summary.avg_daily_expense)}
             hint={t('{count} hari', { count: period.days })}
           />
           <StatTile
-            label="Rasio pengeluaran"
-            value={summary.expense_ratio == null ? 'Belum tersedia' : `${summary.expense_ratio.toLocaleString('id-ID')}%`}
-            hint={summary.expense_ratio == null ? 'Belum ada pemasukan' : 'dari pemasukan'}
+            label="Pemasukan terpakai"
+            value={summary.expense_ratio == null ? 'Belum ada pemasukan' : `${Math.round(summary.expense_ratio).toLocaleString('id-ID')}%`}
+            hint={summary.expense_ratio == null ? null : 'untuk pengeluaran'}
           />
         </SummaryCards>
         {comparisonFetch.error && <div className="small text-body-secondary dashboard-notice">{t('Perbandingan gagal dimuat.')} <button type="button" className="btn btn-sm btn-outline-secondary" onClick={comparisonFetch.reload}>{t('Coba lagi')}</button></div>}
@@ -266,7 +279,7 @@ export default function DashboardPage() {
       />
       <TodaySummary />
       <div className="dashboard-content" aria-busy={loading}>
-        {loading && data && <span className="dashboard-refresh" role="status">{t('Memperbarui data...')}</span>}
+        {loading && data && <span className="visually-hidden" role="status">{t('Memperbarui data...')}</span>}
         {error && data && (
           <div className="alert alert-danger d-flex justify-content-between align-items-center gap-2" role="alert">
             <span>{getErrorMessage(error)}</span>

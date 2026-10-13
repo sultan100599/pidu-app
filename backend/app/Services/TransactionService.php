@@ -64,6 +64,21 @@ class TransactionService
     }
 
     /**
+     * Uang yang benar-benar dimiliki user: saldo awal + semua pemasukan − semua pengeluaran
+     * sampai hari ini. Transaksi bertanggal masa depan belum dihitung.
+     */
+    public function currentBalance(User $user): float
+    {
+        $row = $user->transactions()
+            ->where('transaction_date', '<=', now()->toDateString())
+            ->toBase()
+            ->selectRaw("COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) AS net")
+            ->first();
+
+        return Money::of((float) ($user->opening_balance ?? 0) + (float) $row->net);
+    }
+
+    /**
      * Agregat per kunci grup (mis. ekspresi DateSql) → [key => {income, expense, count}].
      *
      * @return array<string|int, array{income: float, expense: float, count: int}>

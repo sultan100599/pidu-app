@@ -10,6 +10,7 @@ import { useFetch } from '../../hooks/useFetch'
 import { getErrorMessage } from '../../utils/errors'
 import { formatCompact, formatDate, formatRupiah, MONTH_NAMES, parseYmd, toYmd } from '../../utils/format'
 import DayDetailModal from './DayDetailModal'
+import ReportTabs from './ReportTabs'
 import Stepper from '../../components/ui/Stepper'
 import PageSkeleton from '../../components/ui/PageSkeleton'
 import { heatLevel } from '../../utils/dashboard'
@@ -141,6 +142,7 @@ export default function CalendarPage() {
           />
         }
       />
+      <ReportTabs />
       {error && data && <div className="alert alert-danger" role="alert">{getErrorMessage(error)} <button type="button" className="btn btn-sm btn-outline-danger" onClick={reload}>{t('Coba lagi')}</button></div>}
       {content}
       <DayDetailModal date={detailDate} onClose={() => setDetailDate(null)} />

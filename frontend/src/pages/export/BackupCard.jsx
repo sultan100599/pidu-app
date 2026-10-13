@@ -40,7 +40,7 @@ export default function BackupCard() {
   const backups = data?.data ?? []
 
   return (
-    <div className="card">
+    <div className="card h-100">
       <div className="card-body">
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
           <h2 className="h5 mb-0">
@@ -57,7 +57,7 @@ export default function BackupCard() {
           </button>
         </div>
         <p className="text-body-secondary small">
-          {t('Backup berisi semua transaksi Anda dalam satu file Excel.')}
+          {t('Backup berisi semua transaksi kamu dalam satu file Excel.')}
           {data && ' ' + t('Dibuat otomatis setiap hari pukul {time} selama aplikasi berjalan; {count} backup terbaru disimpan.', { time: data.schedule, count: data.keep })}
           {' '}{t('Untuk memulihkan data, unduh backup lalu unggah di halaman Impor. Transaksi yang sudah ada otomatis dilewati.')}
           {' '}<Link to="/import">{t('Buka Impor')}</Link>

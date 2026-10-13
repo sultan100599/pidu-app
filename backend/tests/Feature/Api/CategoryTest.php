@@ -85,7 +85,7 @@ class CategoryTest extends TestCase
 
         $this->deleteJson("/api/categories/{$cat->id}")
             ->assertStatus(422)
-            ->assertJsonPath('message', 'Kategori masih dipakai 3 transaksi. Nonaktifkan saja.');
+            ->assertJsonPath('message', 'Kategori masih dipakai 3 transaksi, jadi tidak bisa dihapus. Sembunyikan saja supaya tidak muncul di form.');
         $this->assertDatabaseHas('categories', ['id' => $cat->id]);
     }
 

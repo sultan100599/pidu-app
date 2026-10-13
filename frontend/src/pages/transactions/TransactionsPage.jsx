@@ -6,14 +6,13 @@ import { toast } from '../../i18n/toast'
 import * as transactionsApi from '../../api/transactions'
 import PageHeader from '../../components/PageHeader'
 import SummaryCards from '../../components/SummaryCards'
-import ConfirmDialog from '../../components/ui/ConfirmDialog'
 import ExportMenu from '../../components/ExportMenu'
 import EmptyState from '../../components/ui/EmptyState'
 import ErrorState from '../../components/ui/ErrorState'
 import Pagination from '../../components/ui/Pagination'
 import { useCategories } from '../../hooks/useCategories'
 import { getErrorMessage } from '../../utils/errors'
-import { formatDate, formatRupiah } from '../../utils/format'
+import { formatDate } from '../../utils/format'
 import { getPeriodRange, isCustomRangeInvalid } from '../../utils/period'
 import TransactionFilters from './TransactionFilters'
 import { useTransactions } from '../../context/TransactionContext'
@@ -171,25 +170,26 @@ export default function TransactionsPage() {
   const activeCount = countActiveFilters(query)
 
   // --- form & hapus -------------------------------------------------------
-  const [deleting, setDeleting] = useState({ transaction: null, loading: false })
+  // Hapus langsung tanpa dialog konfirmasi; kesalahan klik dipulihkan lewat "Batalkan" di notifikasi.
+  const [deletingId, setDeletingId] = useState(null)
 
-  async function confirmDelete() {
-    const target = deleting.transaction
-    setDeleting((d) => ({ ...d, loading: true }))
+  async function deleteTransaction(target) {
+    if (deletingId) return
+    setDeletingId(target.id)
     try {
       await transactionsApi.remove(target.id)
       toast.success(({ closeToast, toastProps }) => <TransactionUndo transaction={target} onRestored={refreshTransactions} closeToast={closeToast} toastId={toastProps.toastId} userId={userId} />, {
-        autoClose: 6000, closeOnClick: false, pauseOnHover: true, pauseOnFocusLoss: true,
+        autoClose: 8000, closeOnClick: false, pauseOnHover: true, pauseOnFocusLoss: true,
         className: 'transaction-undo-toast',
       })
-      setDeleting({ transaction: null, loading: false })
       refreshTransactions()
       if (transactions.length === 1 && query.page > 1) {
         updateQuery({ page: query.page - 1 }, { resetPage: false })
       }
     } catch (err) {
       toast.error(getErrorMessage(err))
-      setDeleting((d) => ({ ...d, loading: false }))
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -233,7 +233,7 @@ export default function TransactionsPage() {
             dir={query.dir}
             onSort={handleSort}
             onEdit={openEdit}
-            onDelete={(trx) => setDeleting({ transaction: trx, loading: false })}
+            onDelete={deleteTransaction}
           />
         </div>
         <div className="d-md-none">
@@ -259,7 +259,7 @@ export default function TransactionsPage() {
           <TransactionList
             transactions={transactions}
             onEdit={openEdit}
-            onDelete={(trx) => setDeleting({ transaction: trx, loading: false })}
+            onDelete={deleteTransaction}
           />
         </div>
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-2">
@@ -301,7 +301,7 @@ export default function TransactionsPage() {
             <ExportMenu params={exportParams} disabled={customInvalid || !data || data.meta.total === 0} />
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary d-none d-lg-inline-block"
               onClick={openCreate}
               aria-keyshortcuts="n"
               title={t('Tambah transaksi (pintasan: N)')}
@@ -334,7 +334,7 @@ export default function TransactionsPage() {
         onReset={handleReset}
       />
 
-      <SummaryCards summary={data?.summary} />
+      <SummaryCards className="summary-compact-mobile" summary={data?.summary} />
 
       {error && data && (
         <div className="alert alert-danger d-flex align-items-center justify-content-between gap-2" role="alert">
@@ -356,34 +356,6 @@ export default function TransactionsPage() {
         {content}
       </div>
 
-      <ConfirmDialog
-        show={Boolean(deleting.transaction)}
-        title="Hapus transaksi?"
-        loading={deleting.loading}
-        onClose={() => setDeleting({ transaction: null, loading: false })}
-        onConfirm={confirmDelete}
-      >
-        {deleting.transaction && (
-          <>
-            <p className="mb-2">{t('Hapus transaksi berikut? Setelah dihapus, tombol Batalkan tersedia sebentar di notifikasi.')}</p>
-            <ul className="list-unstyled mb-0 small">
-              <li>
-                <strong>{t('Tanggal')}:</strong> {formatDate(deleting.transaction.transaction_date)}
-              </li>
-              <li>
-                <strong>{t('Deskripsi')}:</strong>{' '}
-                {deleting.transaction.description || deleting.transaction.category?.name || t('Tanpa deskripsi')}
-              </li>
-              <li>
-                <strong>{t('Nominal')}:</strong>{' '}
-                <span className={deleting.transaction.type === 'income' ? 'text-success' : 'text-danger'}>
-                  {formatRupiah(deleting.transaction.amount)}
-                </span>
-              </li>
-            </ul>
-          </>
-        )}
-      </ConfirmDialog>
     </>
   )
 }

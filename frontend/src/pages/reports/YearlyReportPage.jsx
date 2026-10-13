@@ -4,6 +4,7 @@ import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
 import { useFetch } from '../../hooks/useFetch'
 import ReportShell from './ReportShell'
+import ReportTabs from './ReportTabs'
 import ReportTable from './ReportTable'
 
 export default function YearlyReportPage() {
@@ -19,6 +20,7 @@ export default function YearlyReportPage() {
         title="Rekap Tahunan"
         subtitle={rows.length > 0 ? `${rows[0].year} – ${rows[rows.length - 1].year}` : ' '}
       />
+      <ReportTabs />
       <ReportShell
         fetchState={fetchState}
         totals={data?.totals}

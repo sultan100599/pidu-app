@@ -1,22 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useTheme } from '../../context/ThemeContext'
-import { findMenuItem } from './nav'
 import { useDropdownBounds } from '../../hooks/useDropdownBounds'
 import LanguagePicker from '../LanguagePicker'
 import { useT } from '../../i18n/LocaleProvider'
 
 export default function Topbar({ onMenuClick, sidebarOpen }) {
   const t = useT()
-  const location = useLocation()
   const { user, logout } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userMenuRef = useRef(null)
   useDropdownBounds(userMenuRef, userMenuOpen)
 
-  const pageTitle = t(findMenuItem(location.pathname)?.label ?? 'Pidu-App')
   const isDark = theme === 'dark'
 
   useEffect(() => {
@@ -54,8 +51,6 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
         <span className="small ms-1">{t('Menu')}</span>
       </button>
 
-      <h2 className="h6 mb-0 text-truncate">{pageTitle}</h2>
-
       <div className="ms-auto d-flex align-items-center gap-1">
         <LanguagePicker />
         <button
@@ -87,6 +82,12 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
               </li>
               <li>
                 <hr className="dropdown-divider" />
+              </li>
+              <li>
+                <Link to="/account" className="dropdown-item" onClick={() => setUserMenuOpen(false)}>
+                  <i className="bi bi-person-gear me-2" aria-hidden="true"></i>
+                  {t('Akun & password')}
+                </Link>
               </li>
               <li>
                 <button type="button" className="dropdown-item" onClick={logout}>

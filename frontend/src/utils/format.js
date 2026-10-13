@@ -1,8 +1,9 @@
 const rupiahFormatter = new Intl.NumberFormat('id-ID', {
   style: 'currency',
   currency: 'IDR',
+  // Rupiah tanpa sen: nilai berdesimal (rata-rata, animasi) dibulatkan saat ditampilkan.
   minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
+  maximumFractionDigits: 0,
 })
 
 const numberFormatter = new Intl.NumberFormat('id-ID')

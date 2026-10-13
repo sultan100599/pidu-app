@@ -7,6 +7,7 @@ import { useFetch } from '../../hooks/useFetch'
 import { formatDate, formatDayMonth } from '../../utils/format'
 import DayDetailModal from './DayDetailModal'
 import ReportShell from './ReportShell'
+import ReportTabs from './ReportTabs'
 import ReportTable from './ReportTable'
 
 export default function DailyReportPage() {
@@ -28,6 +29,7 @@ export default function DailyReportPage() {
         subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)}` : ' '}
         actions={<PeriodPicker query={periodQuery} idPrefix="daily-period" />}
       />
+      <ReportTabs />
       <ReportShell
         fetchState={fetchState}
         totals={data?.totals}

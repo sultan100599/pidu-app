@@ -69,10 +69,18 @@ export default function Sidebar({ open, onClose, collapsed, onToggleCollapsed })
           className="sidebar-collapse-btn btn ms-auto d-none d-lg-inline-flex"
           onClick={onToggleCollapsed}
           aria-expanded={!collapsed}
-          aria-label={t(collapsed ? 'Lebarkan menu' : 'Ciutkan menu')}
-          title={t(collapsed ? 'Lebarkan menu' : 'Ciutkan menu')}
+          aria-label={t(collapsed ? 'Perbesar menu' : 'Perkecil menu')}
+          title={t(collapsed ? 'Perbesar menu' : 'Perkecil menu')}
         >
-          <i className="bi bi-list" aria-hidden="true"></i>
+          {/* Ciut: logo Pidu tetap tampil sebagai tombol; panah "lebarkan" muncul saat hover/fokus. */}
+          {collapsed ? (
+            <span className="sidebar-logo-toggle" aria-hidden="true">
+              <i className="bi bi-wallet2 sidebar-logo-mark"></i>
+              <i className="bi bi-chevron-bar-right sidebar-logo-expand"></i>
+            </span>
+          ) : (
+            <i className="bi bi-list" aria-hidden="true"></i>
+          )}
         </button>
         <button
           type="button"

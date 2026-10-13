@@ -60,19 +60,19 @@
         "Kategori parantos dipupus."
     ],
     [
-        "Kategori diaktifkan.",
-        "Category enabled.",
-        "Kategori parantos diaktipkeun."
+        "Kategori ditampilkan lagi di form.",
+        "Category shown in the form again.",
+        "Kategori dipintonkeun deui dina formulir."
     ],
     [
-        "Kategori dinonaktifkan.",
-        "Category disabled.",
-        "Kategori parantos dinonaktipkeun."
+        "Kategori disembunyikan dari form.",
+        "Category hidden from the form.",
+        "Kategori disumputkeun tina formulir."
     ],
     [
-        "Kategori masih dipakai {count} transaksi. Nonaktifkan saja.",
-        "This category is used by {count} transactions. Disable it instead.",
-        "Kategori ieu masih dianggo ku {count} transaksi. Mangga nonaktipkeun."
+        "Kategori masih dipakai {count} transaksi, jadi tidak bisa dihapus. Sembunyikan saja supaya tidak muncul di form.",
+        "This category is used by {count} transactions, so it cannot be deleted. Hide it instead so it no longer appears in the form.",
+        "Kategori masih dianggo ku {count} transaksi, janten teu tiasa dipupus. Sumputkeun waé supados teu muncul dina formulir."
     ],
     [
         "Data tidak ditemukan.",
@@ -233,6 +233,66 @@
         "Lainnya",
         "Other",
         "Sanésna"
+    ],
+    [
+        "Data akun disimpan.",
+        "Account saved.",
+        "Data akun parantos disimpen."
+    ],
+    [
+        "Password berhasil diganti.",
+        "Password changed.",
+        "Password parantos diganti."
+    ],
+    [
+        "Jika email itu terdaftar, link untuk mengatur ulang password sudah dikirim. Cek kotak masuk atau folder spam.",
+        "If that email is registered, a password reset link has been sent. Check your inbox or spam folder.",
+        "Upami émail éta kadaptar, tautan kanggo ngatur deui password parantos dikintunkeun. Parios kotak surat atanapi folder spam."
+    ],
+    [
+        "Password baru sudah disimpan. Silakan masuk.",
+        "Your new password is saved. Please sign in.",
+        "Password énggal parantos disimpen. Mangga lebet."
+    ],
+    [
+        "Link atur ulang tidak valid atau sudah kedaluwarsa. Minta link baru.",
+        "This reset link is invalid or has expired. Request a new one.",
+        "Tautan ngatur deui teu valid atanapi parantos kadaluwarsa. Pundut tautan énggal."
+    ],
+    [
+        "Email belum bisa dikirim. Coba lagi nanti atau hubungi pemilik aplikasi.",
+        "The email could not be sent. Try again later or contact the app owner.",
+        "Émail teu acan tiasa dikintunkeun. Cobian deui engké atanapi hubungi nu gaduh aplikasi."
+    ],
+    [
+        "Atur ulang password Pidu",
+        "Reset your Pidu password",
+        "Ngatur deui password Pidu"
+    ],
+    [
+        "Halo, {name}",
+        "Hi {name}",
+        "Wilujeng, {name}"
+    ],
+    [
+        "Kami menerima permintaan untuk mengatur ulang password akun Pidu kamu.",
+        "We received a request to reset the password for your Pidu account.",
+        "Kami nampi pamundut kanggo ngatur deui password akun Pidu anjeun."
+    ],
+    [
+        "Atur ulang password",
+        "Reset password",
+        "Atur deui password"
+    ],
+    [
+        "Link ini berlaku {count} menit.",
+        "This link expires in {count} minutes.",
+        "Tautan ieu lumaku {count} menit."
+    ],
+    [
+        "Kalau bukan kamu yang meminta, abaikan email ini. Password kamu tidak berubah.",
+        "If you did not ask for this, ignore this email. Your password stays the same.",
+        "Upami sanés anjeun nu nyuhunkeun, antepkeun émail ieu. Password anjeun teu robih."
     ],
     [
         "Januari",
@@ -733,6 +793,46 @@
         "Lewati duplikat",
         "Skip duplicates",
         "Liwatan duplikat"
+    ],
+    [
+        "saldo awal",
+        "opening balance",
+        "saldo awal"
+    ],
+    [
+        "Saldo awal",
+        "Opening balance",
+        "Saldo awal"
+    ],
+    [
+        "password lama",
+        "current password",
+        "password lami"
+    ],
+    [
+        "Password lama",
+        "Current password",
+        "Password lami"
+    ],
+    [
+        "token",
+        "token",
+        "token"
+    ],
+    [
+        "Token",
+        "Token",
+        "Token"
+    ],
+    [
+        "Password lama salah.",
+        "The current password is incorrect.",
+        "Password lami lepat."
+    ],
+    [
+        "Password baru harus berbeda dari password lama.",
+        "The new password must be different from the current one.",
+        "Password énggal kedah béda ti password lami."
     ],
     [
         "Nominal harus lebih dari 0.",

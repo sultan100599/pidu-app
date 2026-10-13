@@ -1,5 +1,29 @@
 export default [
   [
+    "bi-shop",
+    "Toko",
+    "Shop",
+    "Warung"
+  ],
+  [
+    "bi-backpack",
+    "Tas sekolah",
+    "Backpack",
+    "Tas sakola"
+  ],
+  [
+    "bi-envelope-paper",
+    "Amplop",
+    "Envelope",
+    "Amplop"
+  ],
+  [
+    "bi-box2",
+    "Kardus barang",
+    "Stock box",
+    "Kardus barang"
+  ],
+  [
     "bi-cash-stack",
     "Uang tunai",
     "Cash",

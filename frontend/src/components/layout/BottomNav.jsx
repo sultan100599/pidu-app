@@ -18,8 +18,8 @@ export default function BottomNav() {
       document.documentElement.style.removeProperty('--pidu-bottom-nav-height')
     }
   }, [])
-  const item = (to, icon, label) => (
-    <NavLink to={to} end className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}>
+  const item = (to, icon, label, end = true) => (
+    <NavLink to={to} end={end} className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}>
       <i className={`bi ${icon}`} aria-hidden="true" /><span>{t(label)}</span>
     </NavLink>
   )
@@ -30,7 +30,7 @@ export default function BottomNav() {
       <button type="button" className="bottom-nav-item bottom-nav-create" onClick={openCreate}>
         <i className="bi bi-plus-lg icon-tile" aria-hidden="true" /><span>{t('Catat')}</span>
       </button>
-      {item('/reports/daily', 'bi-bar-chart', 'Laporan')}
+      {item('/reports', 'bi-bar-chart', 'Laporan', false)}
       {item('/budgets', 'bi-piggy-bank', 'Budget')}
     </nav>
   )

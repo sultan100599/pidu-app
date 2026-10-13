@@ -7,6 +7,7 @@ import PageHeader from '../../components/PageHeader'
 import { useFetch } from '../../hooks/useFetch'
 import { toYmd } from '../../utils/format'
 import ReportShell from './ReportShell'
+import ReportTabs from './ReportTabs'
 import ReportTable from './ReportTable'
 import Stepper from '../../components/ui/Stepper'
 
@@ -45,6 +46,7 @@ export default function MonthlyReportPage() {
           />
         }
       />
+      <ReportTabs />
       <ReportShell
         fetchState={fetchState}
         totals={data?.totals}

@@ -53,7 +53,7 @@ export default function TransactionFilters({
 
         <div className={`collapse d-md-block ${open ? 'show' : ''}`}>
           <div className="row g-2 align-items-end">
-            <div className="col-12 col-lg-4">
+            <div className="col-12 col-lg-3">
               <label htmlFor="filter-search" className="form-label small mb-1">
                 {t('Cari')}
               </label>
@@ -84,7 +84,7 @@ export default function TransactionFilters({
                 ))}
               </select>
             </div>
-            <div className="col-6 col-md-3 col-lg-2">
+            <div className="col-6 col-md-3 col-lg-3">
               <label htmlFor="filter-category" className="form-label small mb-1">
                 {t('Kategori')}
               </label>

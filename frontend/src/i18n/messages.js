@@ -2,6 +2,7 @@ import areas from './areas.js'
 import files from './files.js'
 import icons from './icons.js'
 import server from './server.json' with { type: 'json' }
+import phase15 from './phase15.js'
 
 const entries = [
   [
@@ -100,14 +101,14 @@ const entries = [
     "Tutup menu"
   ],
   [
-    "Ciutkan menu",
+    "Perkecil menu",
     "Collapse menu",
     "Leutikan menu"
   ],
   [
-    "Lebarkan menu",
+    "Perbesar menu",
     "Expand menu",
-    "Legaan menu"
+    "Ageungkeun menu"
   ],
   [
     "Menu pengguna",
@@ -607,5 +608,5 @@ const entries = [
 ]
 
 export const dictionaries = Object.fromEntries(['id', 'en', 'su'].map((locale, index) => [locale,
-  Object.fromEntries([...server, ...entries, ...areas, ...files].map((row) => [row[0], row[index]]).concat(icons.map((row) => [row[0], row[index + 1]]))),
+  Object.fromEntries([...server, ...entries, ...areas, ...files, ...phase15].map((row) => [row[0], row[index]]).concat(icons.map((row) => [row[0], row[index + 1]]))),
 ]))

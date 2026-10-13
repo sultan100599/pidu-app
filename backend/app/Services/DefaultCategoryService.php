@@ -9,6 +9,9 @@ class DefaultCategoryService
 {
     private const INCOME = [
         ['name' => 'Gaji', 'icon' => 'bi-cash-stack', 'color' => '#198754'],
+        ['name' => 'Hasil Jualan', 'icon' => 'bi-shop', 'color' => '#2f9e44'],
+        ['name' => 'Uang Saku', 'icon' => 'bi-backpack', 'color' => '#0d6efd'],
+        ['name' => 'Uang Bulanan', 'icon' => 'bi-envelope-paper', 'color' => '#a0522d'],
         ['name' => 'Bonus', 'icon' => 'bi-gift', 'color' => '#20c997'],
         ['name' => 'Freelance', 'icon' => 'bi-laptop', 'color' => '#0d6efd'],
         ['name' => 'Bisnis', 'icon' => 'bi-briefcase', 'color' => '#6f42c1'],
@@ -17,10 +20,23 @@ class DefaultCategoryService
         ['name' => 'Lainnya', 'icon' => 'bi-three-dots', 'color' => '#6c757d'],
     ];
 
+    /** Kategori yang ditambahkan Phase 15; dipakai migrasi untuk user lama. */
+    public const ADDED_IN_PHASE_15 = [
+        'income' => [
+            ['name' => 'Hasil Jualan', 'icon' => 'bi-shop', 'color' => '#2f9e44'],
+            ['name' => 'Uang Saku', 'icon' => 'bi-backpack', 'color' => '#0d6efd'],
+            ['name' => 'Uang Bulanan', 'icon' => 'bi-envelope-paper', 'color' => '#a0522d'],
+        ],
+        'expense' => [
+            ['name' => 'Modal Usaha', 'icon' => 'bi-box2', 'color' => '#8d6e63'],
+        ],
+    ];
+
     private const EXPENSE = [
         ['name' => 'Makanan', 'icon' => 'bi-cup-hot', 'color' => '#dc3545'],
         ['name' => 'Transportasi', 'icon' => 'bi-car-front', 'color' => '#0d6efd'],
         ['name' => 'Belanja', 'icon' => 'bi-bag', 'color' => '#6f42c1'],
+        ['name' => 'Modal Usaha', 'icon' => 'bi-box2', 'color' => '#8d6e63'],
         ['name' => 'Tagihan', 'icon' => 'bi-receipt', 'color' => '#fd7e14'],
         ['name' => 'Listrik', 'icon' => 'bi-lightning-charge', 'color' => '#b8860b'],
         ['name' => 'Internet', 'icon' => 'bi-wifi', 'color' => '#20c997'],

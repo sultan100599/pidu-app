@@ -6,6 +6,7 @@ import PeriodPicker, { usePeriodQuery } from '../../components/PeriodPicker'
 import { useFetch } from '../../hooks/useFetch'
 import { formatDate, formatDayMonth } from '../../utils/format'
 import ReportShell from './ReportShell'
+import ReportTabs from './ReportTabs'
 import ReportTable from './ReportTable'
 
 function weekRange(row) {
@@ -30,6 +31,7 @@ export default function WeeklyReportPage() {
         subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)} · ${t('minggu Senin–Minggu')}` : ' '}
         actions={<PeriodPicker query={periodQuery} idPrefix="weekly-period" />}
       />
+      <ReportTabs />
       <ReportShell
         fetchState={fetchState}
         totals={data?.totals}

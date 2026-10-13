@@ -9,6 +9,7 @@ export const CATEGORY_ICONS = [
   'bi-film', 'bi-wind', 'bi-airplane', 'bi-cart', 'bi-basket', 'bi-bus-front', 'bi-fuel-pump',
   'bi-piggy-bank', 'bi-bank', 'bi-credit-card', 'bi-wallet2', 'bi-coin', 'bi-controller',
   'bi-music-note-beamed', 'bi-book', 'bi-capsule', 'bi-droplet', 'bi-tag',
+  'bi-shop', 'bi-backpack', 'bi-envelope-paper', 'bi-box2',
 ]
 
 export default function IconPicker({ value, onChange, color }) {

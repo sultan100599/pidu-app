@@ -71,8 +71,13 @@ return [
         'search' => 'pamilarian',
         'dry_run' => 'pamariksaan',
         'skip_duplicates' => 'liwatan duplikat',
+        'opening_balance' => 'saldo awal',
+        'current_password' => 'password lami',
+        'token' => 'token',
     ],
     'custom_messages' => [
+        'current_password_wrong' => 'Password lami lepat.',
+        'password_same' => 'Password énggal kedah béda ti password lami.',
         'amount_positive' => 'Nominal kedah langkung ti 0.',
         'budget_category' => 'Kategori teu kapendak atanapi sanés kategori pangeluaran.',
         'transaction_category' => 'Kategori teu kapendak, teu aktip, atanapi teu cocog sareng jinis transaksi.',

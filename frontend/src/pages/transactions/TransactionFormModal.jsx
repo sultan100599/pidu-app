@@ -53,6 +53,8 @@ export default function TransactionFormModal({ show, transaction, categories, ca
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  // Metode & catatan jarang diubah; terbuka otomatis saat edit transaksi yang punya catatan.
+  const [detailsOpen, setDetailsOpen] = useState(Boolean(transaction?.notes))
 
   const originalCategoryId = transaction?.category?.id
   // Kategori aktif sesuai jenis; kategori lama yang sudah nonaktif tetap boleh saat edit.
@@ -146,7 +148,9 @@ export default function TransactionFormModal({ show, transaction, categories, ca
       }
     } catch (err) {
       if (err.response?.status === 422) {
-        setErrors(getFieldErrors(err))
+        const fieldErrors = getFieldErrors(err)
+        if (fieldErrors.payment_method || fieldErrors.notes) setDetailsOpen(true)
+        setErrors(fieldErrors)
       } else {
         setFormError(getErrorMessage(err))
       }
@@ -163,7 +167,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
       {!isEdit && (
         <button
           type="button"
-          className="btn btn-outline-primary"
+          className="btn btn-outline-secondary"
           onClick={() => submit(true)}
           disabled={submitting}
         >
@@ -230,32 +234,19 @@ export default function TransactionFormModal({ show, transaction, categories, ca
           {errors.type && <div className="text-danger small mt-1">{t(errors.type)}</div>}
         </div>
 
-        <div className="row g-3 mb-3">
-          <div className="col-sm-6">
-            <label htmlFor="trx-date" className="form-label">
-              {t('Tanggal')}
-            </label>
-            <input
-              type="date"
-              id="trx-date"
-              className={`form-control ${errors.transaction_date ? 'is-invalid' : ''}`}
-              value={form.transaction_date}
-              onChange={(e) => setField('transaction_date', e.target.value)}
-            />
-            {errors.transaction_date && <div className="invalid-feedback">{t(errors.transaction_date)}</div>}
-          </div>
-          <div className="col-sm-6">
-            <label htmlFor="trx-amount" className="form-label">
-              {t('Nominal')}
-            </label>
-            <AmountInput
-              id="trx-amount"
-              value={form.amount}
-              onChange={(value) => setField('amount', value)}
-              invalid={Boolean(errors.amount)}
-            />
-            {errors.amount && <div className="invalid-feedback d-block">{t(errors.amount)}</div>}
-          </div>
+        <div className="mb-3">
+          <label htmlFor="trx-amount" className="form-label">
+            {t('Nominal')}
+          </label>
+          <AmountInput
+            id="trx-amount"
+            className="amount-input-lg"
+            value={form.amount}
+            onChange={(value) => setField('amount', value)}
+            invalid={Boolean(errors.amount)}
+            allowDecimals={Boolean(transaction && Number(transaction.amount) % 1)}
+          />
+          {errors.amount && <div className="invalid-feedback d-block">{t(errors.amount)}</div>}
         </div>
 
         <div className="mb-3">
@@ -281,7 +272,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
             {options.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
-                {c.is_active ? '' : ' ' + t('(nonaktif)')}
+                {c.is_active ? '' : ' ' + t('(disembunyikan)')}
               </option>
             ))}
           </select>
@@ -293,55 +284,80 @@ export default function TransactionFormModal({ show, transaction, categories, ca
           )}
         </div>
 
-        <div className="mb-3">
-          <label htmlFor="trx-payment" className="form-label">
-            {t('Metode pembayaran')}
-          </label>
-          <select
-            id="trx-payment"
-            className={`form-select ${errors.payment_method ? 'is-invalid' : ''}`}
-            value={form.payment_method}
-            onChange={(e) => setField('payment_method', e.target.value)}
-          >
-            {Object.entries(PAYMENT_METHODS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {t(label)}
-              </option>
-            ))}
-          </select>
-          {errors.payment_method && <div className="invalid-feedback">{t(errors.payment_method)}</div>}
+        <div className="row g-3 mb-3">
+          <div className="col-sm-5">
+            <label htmlFor="trx-date" className="form-label">
+              {t('Tanggal')}
+            </label>
+            <input
+              type="date"
+              id="trx-date"
+              className={`form-control ${errors.transaction_date ? 'is-invalid' : ''}`}
+              value={form.transaction_date}
+              onChange={(e) => setField('transaction_date', e.target.value)}
+            />
+            {errors.transaction_date && <div className="invalid-feedback">{t(errors.transaction_date)}</div>}
+          </div>
+          <div className="col-sm-7">
+            <label htmlFor="trx-description" className="form-label">
+              {t('Deskripsi')} <span className="text-body-secondary small">{t('(opsional)')}</span>
+            </label>
+            <input
+              type="text"
+              id="trx-description"
+              maxLength={255}
+              className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+              value={form.description}
+              onChange={(e) => setField('description', e.target.value)}
+              placeholder={t('mis. Makan siang')}
+            />
+            {errors.description && <div className="invalid-feedback">{t(errors.description)}</div>}
+          </div>
         </div>
 
-        <div className="mb-3">
-          <label htmlFor="trx-description" className="form-label">
-            {t('Deskripsi')} <span className="text-body-secondary small">{t('(opsional)')}</span>
-          </label>
-          <input
-            type="text"
-            id="trx-description"
-            maxLength={255}
-            className={`form-control ${errors.description ? 'is-invalid' : ''}`}
-            value={form.description}
-            onChange={(e) => setField('description', e.target.value)}
-            placeholder={t('mis. Makan siang')}
-          />
-          {errors.description && <div className="invalid-feedback">{t(errors.description)}</div>}
-        </div>
+        <details className="form-details" open={detailsOpen} onToggle={(e) => setDetailsOpen(e.currentTarget.open)}>
+          <summary>
+            {t('Detail lain')}{' '}
+            <span className="text-body-secondary small">
+              · {t(PAYMENT_METHODS[form.payment_method] ?? 'Lainnya')}{form.notes.trim() ? ' · ' + t('ada catatan') : ''}
+            </span>
+          </summary>
+          <div className="form-details-body">
+            <div className="mb-3">
+              <label htmlFor="trx-payment" className="form-label">
+                {t('Metode pembayaran')}
+              </label>
+              <select
+                id="trx-payment"
+                className={`form-select ${errors.payment_method ? 'is-invalid' : ''}`}
+                value={form.payment_method}
+                onChange={(e) => setField('payment_method', e.target.value)}
+              >
+                {Object.entries(PAYMENT_METHODS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {t(label)}
+                  </option>
+                ))}
+              </select>
+              {errors.payment_method && <div className="invalid-feedback">{t(errors.payment_method)}</div>}
+            </div>
 
-        <div>
-          <label htmlFor="trx-notes" className="form-label">
-            {t('Catatan')} <span className="text-body-secondary small">{t('(opsional)')}</span>
-          </label>
-          <textarea
-            id="trx-notes"
-            rows={2}
-            maxLength={5000}
-            className={`form-control ${errors.notes ? 'is-invalid' : ''}`}
-            value={form.notes}
-            onChange={(e) => setField('notes', e.target.value)}
-          ></textarea>
-          {errors.notes && <div className="invalid-feedback">{t(errors.notes)}</div>}
-        </div>
+            <div>
+              <label htmlFor="trx-notes" className="form-label">
+                {t('Catatan')} <span className="text-body-secondary small">{t('(opsional)')}</span>
+              </label>
+              <textarea
+                id="trx-notes"
+                rows={2}
+                maxLength={5000}
+                className={`form-control ${errors.notes ? 'is-invalid' : ''}`}
+                value={form.notes}
+                onChange={(e) => setField('notes', e.target.value)}
+              ></textarea>
+              {errors.notes && <div className="invalid-feedback">{t(errors.notes)}</div>}
+            </div>
+          </div>
+        </details>
       </form>
     </Modal>
   )

@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // Alamat frontend (React) untuk link di email, mis. atur ulang password.
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost:8010'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

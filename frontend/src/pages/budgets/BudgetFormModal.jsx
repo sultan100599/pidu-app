@@ -140,41 +140,9 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
           {errors.amount && <div className="invalid-feedback d-block">{t(errors.amount)}</div>}
         </div>
 
-        <div className="row g-2">
-          <div className="col-7">
-            <label htmlFor="budget-month" className="form-label">
-              {t('Bulan')}
-            </label>
-            <select
-              id="budget-month"
-              className={`form-select ${errors.month ? 'is-invalid' : ''}`}
-              value={form.month}
-              onChange={(e) => setField('month', Number(e.target.value))}
-            >
-              {MONTH_NAMES.map((name, i) => (
-                <option key={name} value={i + 1}>
-                  {name}
-                </option>
-              ))}
-            </select>
-            {errors.month && <div className="invalid-feedback">{t(errors.month)}</div>}
-          </div>
-          <div className="col-5">
-            <label htmlFor="budget-year" className="form-label">
-              {t('Tahun')}
-            </label>
-            <input
-              id="budget-year"
-              type="number"
-              min={2000}
-              max={2100}
-              className={`form-control ${errors.year ? 'is-invalid' : ''}`}
-              value={form.year}
-              onChange={(e) => setField('year', Number(e.target.value))}
-            />
-            {errors.year && <div className="invalid-feedback">{t(errors.year)}</div>}
-          </div>
-        </div>
+        <p className="form-text mb-0">
+          {t('Berlaku untuk {period}. Ganti bulan lewat tombol panah di halaman Budget.', { period: `${MONTH_NAMES[form.month - 1]} ${form.year}` })}
+        </p>
       </form>
     </Modal>
   )

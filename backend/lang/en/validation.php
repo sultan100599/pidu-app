@@ -71,8 +71,13 @@ return [
         'search' => 'search',
         'dry_run' => 'preview',
         'skip_duplicates' => 'skip duplicates',
+        'opening_balance' => 'opening balance',
+        'current_password' => 'current password',
+        'token' => 'token',
     ],
     'custom_messages' => [
+        'current_password_wrong' => 'The current password is incorrect.',
+        'password_same' => 'The new password must be different from the current one.',
         'amount_positive' => 'The amount must be greater than 0.',
         'budget_category' => 'Category not found or is not an expense category.',
         'transaction_category' => 'Category not found, inactive, or does not match the transaction type.',

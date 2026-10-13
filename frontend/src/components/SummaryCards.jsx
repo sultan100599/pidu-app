@@ -5,18 +5,34 @@ import AnimatedBalance from './AnimatedBalance'
 import PeriodComparison from './PeriodComparison'
 import { SkeletonBar } from './ui/PageSkeleton'
 
+const tone = (value) => (value < 0 ? 'text-danger' : 'text-success')
+
+// Ringkasan periode: Selisih (pemasukan − pengeluaran), Pemasukan, Pengeluaran, Jumlah transaksi.
+// Dengan `wallet` (dashboard), kartu utama menjadi uang yang benar-benar dimiliki user
+// dan kartu jumlah transaksi diganti Selisih periode.
 // Nominal boleh turun baris agar angka utuh tetap terbaca di HP.
-export default function SummaryCards({ summary, prominent = false, comparison, className = '', children }) {
+export default function SummaryCards({ summary, prominent = false, comparison, wallet, walletNote, className = '', children }) {
   const t = useT()
   const balanceRef = usePointerTilt()
+  const net = {
+    key: 'balance',
+    label: 'Selisih',
+    icon: 'bi-plus-slash-minus',
+    iconClass: summary ? tone(summary.balance) : '',
+    value: summary ? formatRupiah(summary.balance) : null,
+  }
   const cards = [
-    {
-      key: 'balance',
-      label: 'Saldo',
-      icon: 'bi-wallet2',
-      iconClass: summary && summary.balance < 0 ? 'text-danger' : 'text-success',
-      value: summary ? formatRupiah(summary.balance) : null,
-    },
+    wallet
+      ? {
+        key: 'wallet',
+        label: 'Uang kamu sekarang',
+        icon: 'bi-wallet2',
+        iconClass: tone(wallet.current_balance),
+        value: formatRupiah(wallet.current_balance),
+        animated: Number(wallet.current_balance),
+        note: walletNote,
+      }
+      : { ...net, icon: 'bi-wallet2', animated: summary ? Number(summary.balance) : null },
     {
       key: 'income',
       label: 'Pemasukan',
@@ -31,22 +47,25 @@ export default function SummaryCards({ summary, prominent = false, comparison, c
       iconClass: 'text-danger',
       value: summary ? formatRupiah(summary.expense) : null,
     },
-    {
-      key: 'count',
-      label: 'Jumlah transaksi',
-      icon: 'bi-receipt',
-      iconClass: 'text-primary',
-      value: summary ? formatNumber(summary.count) : null,
-      raw: true,
-    },
+    wallet
+      ? net
+      : {
+        key: 'count',
+        label: 'Jumlah transaksi',
+        icon: 'bi-receipt',
+        iconClass: 'text-primary',
+        value: summary ? formatNumber(summary.count) : null,
+        raw: true,
+      },
   ]
 
   return (
     <div className={`summary-grid${prominent ? ' summary-grid-prominent' : ''} ${className}`} aria-busy={!summary}>
       {!summary && <span className="visually-hidden">{t('Memuat…')}</span>}
-      {cards.map((card) => (
-        <div className={`min-w-0 summary-slot${card.key === 'balance' ? ' balance-stack' : ''}`} key={card.key} ref={card.key === 'balance' ? balanceRef : undefined}>
-          <div className="card h-100 summary-card" data-summary={card.key}>
+      {cards.map((card, index) => (
+        <div className={`min-w-0 summary-slot${index === 0 ? ' balance-stack' : ''}`} key={card.key} ref={index === 0 ? balanceRef : undefined}>
+          {/* Gaya kartu utama di CSS memakai data-summary="balance"; Selisih di posisi lain memakai "net". */}
+          <div className="card h-100 summary-card" data-summary={index === 0 ? 'balance' : card.key === 'balance' ? 'net' : card.key}>
             <div className="card-body">
               <i className={`bi ${card.icon} icon-tile summary-icon ${card.iconClass}`} aria-hidden="true"></i>
               <div className="min-w-0">
@@ -55,10 +74,13 @@ export default function SummaryCards({ summary, prominent = false, comparison, c
                   <SkeletonBar className="skeleton-value" />
                 ) : (
                   <div className={`fw-semibold text-break summary-value ${card.raw ? '' : card.iconClass}`}>
-                    {prominent && card.key === 'balance' ? <AnimatedBalance value={Number(summary.balance)} /> : card.value}
+                    {prominent && index === 0 ? <AnimatedBalance value={card.animated} /> : card.value}
                   </div>
                 )}
-                {comparison && !card.raw && <PeriodComparison {...comparison} kind={card.key} current={summary?.[card.key]} previous={comparison.summary?.[card.key]} />}
+                {card.note}
+                {comparison && !card.raw && card.key !== 'wallet' && (
+                  <PeriodComparison {...comparison} kind={card.key} current={summary?.[card.key]} previous={comparison.summary?.[card.key]} />
+                )}
               </div>
             </div>
           </div>

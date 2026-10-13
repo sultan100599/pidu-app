@@ -80,11 +80,14 @@ class AuthTest extends TestCase
             'name' => 'Baru',
             'email' => 'baru@pidu.test',
             'password' => 'rahasia123',
-            'password_confirmation' => 'rahasia123',
-        ])->assertCreated()->assertJsonStructure(['token', 'user']);
+        ])->assertCreated()
+            ->assertJsonStructure(['token', 'user'])
+            ->assertJsonPath('user.opening_balance', null);
 
         $user = User::where('email', 'baru@pidu.test')->firstOrFail();
-        $this->assertSame(22, $user->categories()->count());
+        $this->assertSame(26, $user->categories()->count());
+        $this->assertTrue($user->categories()->where('type', 'income')->where('name', 'Hasil Jualan')->exists());
+        $this->assertTrue($user->categories()->where('type', 'expense')->where('name', 'Modal Usaha')->exists());
     }
 
     public function test_login_is_throttled(): void

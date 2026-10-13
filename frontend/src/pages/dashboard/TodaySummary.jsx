@@ -29,7 +29,9 @@ export default function TodaySummary() {
     <div className="text-body-secondary" aria-busy={day.loading || budget.loading}>
       {day.loading ? <><SkeletonBar className="today-skeleton" /><span className="visually-hidden">{t('Memuat pengeluaran hari ini…')}</span></> : day.error ? <span>{t('Pengeluaran hari ini belum tersedia.')} <button className="btn btn-sm btn-outline-secondary" onClick={day.reload}>{t('Coba lagi')}</button></span> :
         <span>{Number(day.data?.totals.expense) === 0 ? t('Belum ada pengeluaran hari ini') : t('Pengeluaran hari ini {amount}', { amount: formatRupiah(day.data?.totals.expense) })}</span>}
-      {budget.loading ? <span className="visually-hidden">{t('Memuat budget bulan ini…')}</span> : budget.error ? <span> · {t('Budget bulan ini belum tersedia.')} <button className="btn btn-sm btn-outline-secondary" onClick={budget.reload}>{t('Coba lagi')}</button></span> : budgets.length > 0 && <span> · {t('Sisa budget bulan ini {amount}', { amount: formatRupiah(remaining) })}</span>}
+      {budget.loading ? <span className="visually-hidden">{t('Memuat budget bulan ini…')}</span> : budget.error ? <span> · {t('Budget bulan ini belum tersedia.')} <button className="btn btn-sm btn-outline-secondary" onClick={budget.reload}>{t('Coba lagi')}</button></span> : budgets.length > 0 && <span> · {remaining < 0
+        ? t('Budget bulan ini lebih {amount}', { amount: formatRupiah(-remaining) })
+        : t('Sisa budget bulan ini {amount}', { amount: formatRupiah(remaining) })}</span>}
     </div>
   </section>
 }

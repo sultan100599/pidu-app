@@ -145,7 +145,7 @@ a { text-underline-offset: 0.2em; }
 .table { --bs-table-bg: var(--pidu-surface); --bs-table-color: var(--pidu-ink); --bs-table-hover-bg: var(--pidu-recess); --bs-table-hover-color: var(--pidu-ink); --bs-table-border-color: var(--pidu-line); font-variant-numeric: tabular-nums; }
 .table > :not(caption) > * > * { padding: 0.9rem 1rem; }
 .table thead { --bs-table-bg: var(--pidu-recess); font-size: 0.8125rem; }
-.table thead th { font-weight: 600; }
+.table thead th { font-weight: 600; vertical-align: middle; }
 .table-sort { display: inline-flex; align-items: center; justify-content: inherit; gap: 0.375rem; min-width: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 0.25rem; background: transparent; color: inherit; font: inherit; text-align: inherit; }
 .table thead th.text-end { text-align: right !important; }
 .table thead th.text-end .table-sort { justify-content: flex-end; }

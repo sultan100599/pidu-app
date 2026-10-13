@@ -21,10 +21,14 @@ class BudgetController extends Controller
         $month = $period->end->month;
         $year = $period->end->year;
         $budgets = $this->service->forMonth($request->user(), $month, $year);
+        $previous = $period->end->startOfMonth()->subMonth();
 
         return response()->json([
             'month' => $month,
             'year' => $year,
+            // Dipakai frontend untuk menampilkan "Salin bulan lalu" hanya jika ada yang bisa disalin.
+            'previous_month_count' => $request->user()->budgets()
+                ->where('month', $previous->month)->where('year', $previous->year)->count(),
             'data' => BudgetResource::collection($budgets),
             'totals' => $this->service->totals($budgets),
         ]);

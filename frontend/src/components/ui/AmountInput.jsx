@@ -5,13 +5,13 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 // atau null saat kosong. Posisi kursor dipertahankan berdasar jumlah digit di
 // depannya supaya tidak melompat saat mengetik/menghapus di tengah angka.
 
-function sanitize(raw) {
+function sanitize(raw, allowDecimals = true) {
   let out = ''
   let hasComma = false
   for (const ch of raw) {
     if (ch >= '0' && ch <= '9') {
       out += ch
-    } else if (ch === ',' && !hasComma) {
+    } else if (ch === ',' && !hasComma && allowDecimals) {
       hasComma = true
       out += ','
     }
@@ -34,9 +34,9 @@ function toNumber(sanitized) {
   return Number(sanitized.replace(',', '.'))
 }
 
-function formatNumberValue(value) {
+function formatNumberValue(value, allowDecimals) {
   if (value == null || value === '') return ''
-  return toDisplay(sanitize(String(value).replace('.', ',')))
+  return toDisplay(sanitize(String(value).replace('.', ','), allowDecimals))
 }
 
 // Karakter "bermakna" = digit dan koma desimal (titik ribuan diabaikan).
@@ -64,8 +64,10 @@ function cursorAfterSignificant(text, n) {
   return text.length
 }
 
-export default function AmountInput({ value, onChange, id, invalid = false, disabled = false, ...rest }) {
-  const [display, setDisplay] = useState(() => formatNumberValue(value))
+// Rupiah dipakai tanpa sen, jadi default-nya bilangan bulat (keyboard angka di HP).
+// allowDecimals untuk mengedit nominal lama yang terlanjur punya sen.
+export default function AmountInput({ value, onChange, id, invalid = false, disabled = false, allowDecimals = false, className = '', ...rest }) {
+  const [display, setDisplay] = useState(() => formatNumberValue(value, allowDecimals))
   const lastEmitted = useRef(value)
   const inputRef = useRef(null)
   const pendingCursor = useRef(null)
@@ -83,16 +85,16 @@ export default function AmountInput({ value, onChange, id, invalid = false, disa
   useEffect(() => {
     if (value !== lastEmitted.current) {
       lastEmitted.current = value
-      setDisplay(formatNumberValue(value))
+      setDisplay(formatNumberValue(value, allowDecimals))
     }
-  }, [value])
+  }, [value, allowDecimals])
 
   function handleChange(event) {
     const input = event.target
     const cursor = input.selectionStart ?? input.value.length
-    const before = countSignificant(sanitize(input.value.slice(0, cursor)))
+    const before = countSignificant(sanitize(input.value.slice(0, cursor), allowDecimals))
 
-    const sanitized = sanitize(input.value)
+    const sanitized = sanitize(input.value, allowDecimals)
     const nextDisplay = toDisplay(sanitized)
     const nextValue = toNumber(sanitized)
 
@@ -103,14 +105,14 @@ export default function AmountInput({ value, onChange, id, invalid = false, disa
   }
 
   return (
-    <div className="input-group has-validation">
+    <div className={`input-group has-validation ${className}`}>
       <span className="input-group-text" aria-hidden="true">
         Rp
       </span>
       <input
         {...rest}
         type="text"
-        inputMode="decimal"
+        inputMode={allowDecimals ? 'decimal' : 'numeric'}
         id={id}
         ref={inputRef}
         className={`form-control ${invalid ? 'is-invalid' : ''}`}
