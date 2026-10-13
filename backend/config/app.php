@@ -57,6 +57,9 @@ return [
     // Alamat frontend (React) untuk link di email, mis. atur ulang password.
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:8010'),
 
+    // Batas percobaan masuk/daftar/lupa password per menit per IP. Tes end-to-end menaikkannya.
+    'auth_throttle' => (int) env('AUTH_THROTTLE_PER_MINUTE', 5),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

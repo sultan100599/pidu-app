@@ -28,3 +28,7 @@ desktop.ini
 backend/storage/logs/*.log
 backend/bootstrap/cache/*.php
 npm-debug.log*
+
+# Tes end-to-end (Playwright)
+frontend/test-results/
+frontend/playwright-report/

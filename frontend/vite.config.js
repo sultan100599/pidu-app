@@ -18,7 +18,8 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8001',
+        // Tes end-to-end memakai backend terpisah (PIDU_API_URL) supaya data asli tidak tersentuh.
+        target: process.env.PIDU_API_URL ?? 'http://127.0.0.1:8001',
         changeOrigin: true,
       },
     },

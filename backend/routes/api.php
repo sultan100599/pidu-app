@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::pattern('id', '[0-9]+');
 
 Route::prefix('auth')->group(function () {
-    Route::middleware('throttle:5,1')->group(function () {
+    Route::middleware('throttle:'.config('app.auth_throttle').',1')->group(function () {
         Route::post('login', [AuthController::class, 'login']);
         Route::post('register', [AuthController::class, 'register']);
         Route::post('forgot-password', [AuthController::class, 'forgotPassword']);

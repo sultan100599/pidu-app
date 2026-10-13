@@ -11,8 +11,8 @@ Terakhir diperbarui: 13 Oktober 2026.
 
 Pidu-App adalah aplikasi pencatat keuangan pribadi: catat pemasukan dan pengeluaran, lihat rekap harian sampai tahunan, atur budget per kategori, lalu export, impor, dan backup data.
 
-- **Status:** tahap 0–16 selesai dan di-commit di branch `main` (lihat `git log`).
-- **Tes:** 95 tes backend lolos (89 sebelum Phase 15) di SQLite (76 tes sebelum Phase 13 juga lolos di MariaDB); lint & build frontend bersih; `npm audit` dan `composer audit` tanpa celah.
+- **Status:** tahap 0–17 selesai dan di-commit di branch `main` (lihat `git log`).
+- **Tes:** 95 tes backend + 10 tes end-to-end Playwright (`npm run test:e2e`) lolos (89 tes backend sebelum Phase 15) di SQLite (76 tes sebelum Phase 13 juga lolos di MariaDB); lint & build frontend bersih; `npm audit` dan `composer audit` tanpa celah.
 - **Menjalankan:** `npm start` di `C:\Pidu-App`, lalu buka http://localhost:8010.
 - **Akun demo:** `demo@pidu.test` / `password` (data Juni–September 2026 + data ringan 2024–2025). Akun kedua `other@pidu.test` / `password` untuk uji isolasi data.
 
@@ -124,6 +124,11 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 ### Phase 16: Kaca buram melayang (13 Okt, Claude)
 - Sidebar, bar atas, bottom nav, dan kartu jadi panel kaca buram melayang di atas foto ruang washitsu (siang/malam), terinspirasi template v0 pilihan user. Di desktop judul & tombol halaman ada di bar atas. Semua di `frontend/src/styles/glass.css`; rincian `docs/lead/report-16.md`.
 - Pengecualian aturan antislop R-10 dipilih user dan dicatat di `DESIGN.md`.
+
+### Phase 17: Tes end-to-end (13 Okt, Claude)
+- Playwright (`frontend/e2e/`, jalankan `npm run test:e2e` di root): 9 alur di desktop (daftar + saldo awal + catat, lewati saldo awal, hapus + batalkan, form transaksi, menu Laporan + judul di bar atas, sidebar diperkecil, budget terlampaui, ganti password + masuk lagi, lupa password) dan 1 alur HP (tanpa geser ke samping di 7 halaman, Catat, ganti bahasa).
+- Aman untuk data asli: tes menyalakan backend sendiri (port 8002, `backend/database/e2e.sqlite` yang dibuat ulang tiap kali) dan frontend sendiri (port 8011), memakai Chrome yang sudah terpasang.
+- Batas percobaan masuk kini diatur `AUTH_THROTTLE_PER_MINUTE` (default 5; tes memakai 1000). Proxy Vite bisa diarahkan lewat `PIDU_API_URL`.
 
 ## 5. Anti-slop (aturan UI untuk AI agent)
 
