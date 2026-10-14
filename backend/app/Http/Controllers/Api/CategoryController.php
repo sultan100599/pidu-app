@@ -75,6 +75,9 @@ class CategoryController extends Controller
                 'category' => __('messages.category_used', ['count' => $category->transactions_count]),
             ]);
         }
+        if ($category->recurringTransactions()->exists()) {
+            throw ValidationException::withMessages(['category' => __('messages.category_recurring')]);
+        }
 
         $category->delete();
 

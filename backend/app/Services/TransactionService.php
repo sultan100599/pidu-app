@@ -31,7 +31,7 @@ class TransactionService
         int $perPage = 15,
     ): LengthAwarePaginator {
         return $this->query($user, $period, $filters)
-            ->with('category')
+            ->with('category', 'wallet')
             ->orderBy($sort, $dir)
             ->orderByDesc('id')
             ->paginate($perPage)
@@ -64,21 +64,6 @@ class TransactionService
     }
 
     /**
-     * Uang yang benar-benar dimiliki user: saldo awal + semua pemasukan − semua pengeluaran
-     * sampai hari ini. Transaksi bertanggal masa depan belum dihitung.
-     */
-    public function currentBalance(User $user): float
-    {
-        $row = $user->transactions()
-            ->where('transaction_date', '<=', now()->toDateString())
-            ->toBase()
-            ->selectRaw("COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) AS net")
-            ->first();
-
-        return Money::of((float) ($user->opening_balance ?? 0) + (float) $row->net);
-    }
-
-    /**
      * Agregat per kunci grup (mis. ekspresi DateSql) → [key => {income, expense, count}].
      *
      * @return array<string|int, array{income: float, expense: float, count: int}>
@@ -103,14 +88,14 @@ class TransactionService
 
     public function create(User $user, array $data): Transaction
     {
-        return $user->transactions()->create($data)->load('category');
+        return $user->transactions()->create($data)->load('category', 'wallet');
     }
 
     public function update(Transaction $transaction, array $data): Transaction
     {
         $transaction->update($data);
 
-        return $transaction->load('category');
+        return $transaction->load('category', 'wallet');
     }
 
     public function delete(Transaction $transaction): void

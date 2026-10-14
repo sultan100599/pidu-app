@@ -6,14 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\UserResource;
+use App\Services\WalletService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
-    public function update(UpdateAccountRequest $request): JsonResponse
+    /**
+     * opening_balance (pertanyaan pertama di dashboard) diisi ke dompet utama; kolom di users
+     * hanya menandai bahwa user sudah pernah menjawab.
+     */
+    public function update(UpdateAccountRequest $request, WalletService $wallets): JsonResponse
     {
         $user = $request->user();
-        $user->update($request->validated());
+        DB::transaction(function () use ($user, $request, $wallets) {
+            $user->update($request->validated());
+            if ($request->has('opening_balance')) {
+                $wallets->setOpeningBalance($user, (float) $request->validated('opening_balance'));
+            }
+        });
 
         return response()->json([
             'message' => __('messages.account_updated'),

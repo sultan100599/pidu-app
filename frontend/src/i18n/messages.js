@@ -3,6 +3,7 @@ import files from './files.js'
 import icons from './icons.js'
 import server from './server.json' with { type: 'json' }
 import phase15 from './phase15.js'
+import phase18 from './phase18.js'
 
 const entries = [
   [
@@ -608,5 +609,5 @@ const entries = [
 ]
 
 export const dictionaries = Object.fromEntries(['id', 'en', 'su'].map((locale, index) => [locale,
-  Object.fromEntries([...server, ...entries, ...areas, ...files, ...phase15].map((row) => [row[0], row[index]]).concat(icons.map((row) => [row[0], row[index + 1]]))),
+  Object.fromEntries([...server, ...entries, ...areas, ...files, ...phase15, ...phase18].map((row) => [row[0], row[index]]).concat(icons.map((row) => [row[0], row[index + 1]]))),
 ]))

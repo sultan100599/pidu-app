@@ -7,6 +7,7 @@ import PageHeader from '../../components/PageHeader'
 import SummaryCards from '../../components/SummaryCards'
 import ErrorState from '../../components/ui/ErrorState'
 import { useFetch } from '../../hooks/useFetch'
+import { usePurpose } from '../../hooks/usePurpose'
 import { getErrorMessage } from '../../utils/errors'
 import { formatCompact, formatDate, formatRupiah, MONTH_NAMES, parseYmd, toYmd } from '../../utils/format'
 import DayDetailModal from './DayDetailModal'
@@ -83,8 +84,10 @@ export default function CalendarPage() {
     setSearchParams(isCurrent ? {} : { year: String(d.getFullYear()), month: String(d.getMonth() + 1) })
   }
 
-  const { data, error, loading, reload } = useFetch(`${year}-${month}`, (signal) =>
-    reportsApi.calendar({ year, month }, { signal }),
+  const { withPurpose } = usePurpose()
+  const params = withPurpose({ year, month })
+  const { data, error, loading, reload } = useFetch(JSON.stringify(params), (signal) =>
+    reportsApi.calendar(params, { signal }),
   )
   const todayYmd = toYmd(today)
 

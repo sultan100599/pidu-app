@@ -30,6 +30,12 @@ class ExportRequest extends TransactionIndexRequest
         if (isset($filters['payment_method'])) {
             $out[] = 'Metode: '.PaymentMethod::from($filters['payment_method'])->label('id');
         }
+        if (isset($filters['wallet_id'])) {
+            $out[] = 'Dompet: '.$this->user()->wallets()->whereKey($filters['wallet_id'])->value('name');
+        }
+        if (isset($filters['purpose'])) {
+            $out[] = 'Dompet: '.($filters['purpose'] === 'business' ? 'Usaha' : 'Pribadi');
+        }
         if (isset($filters['search'])) {
             $out[] = 'Cari: "'.$filters['search'].'"';
         }

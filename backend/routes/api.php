@@ -8,8 +8,11 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\ImportController;
+use App\Http\Controllers\Api\RecurringController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\TransferController;
+use App\Http\Controllers\Api\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::pattern('id', '[0-9]+');
@@ -43,6 +46,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('categories/{id}', [CategoryController::class, 'update']);
     Route::patch('categories/{id}/toggle', [CategoryController::class, 'toggle']);
     Route::delete('categories/{id}', [CategoryController::class, 'destroy']);
+
+    Route::get('wallets', [WalletController::class, 'index']);
+    Route::post('wallets', [WalletController::class, 'store']);
+    Route::put('wallets/{id}', [WalletController::class, 'update']);
+    Route::patch('wallets/{id}/toggle', [WalletController::class, 'toggle']);
+    Route::delete('wallets/{id}', [WalletController::class, 'destroy']);
+
+    Route::get('transfers', [TransferController::class, 'index']);
+    Route::post('transfers', [TransferController::class, 'store']);
+    Route::delete('transfers/{id}', [TransferController::class, 'destroy']);
+
+    Route::get('recurring', [RecurringController::class, 'index']);
+    Route::post('recurring', [RecurringController::class, 'store']);
+    Route::put('recurring/{id}', [RecurringController::class, 'update']);
+    Route::patch('recurring/{id}/toggle', [RecurringController::class, 'toggle']);
+    Route::delete('recurring/{id}', [RecurringController::class, 'destroy']);
 
     Route::get('dashboard', DashboardController::class);
 

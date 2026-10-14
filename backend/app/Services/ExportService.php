@@ -8,6 +8,7 @@ use App\Exports\Sheets\TransactionsSheet;
 use App\Exports\TransactionsExport;
 use App\Http\Resources\BudgetResource;
 use App\Models\User;
+use App\Support\Locale;
 use App\Support\Period;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -37,7 +38,7 @@ class ExportService
     public function transactionsQuery(User $user, ?Period $period, array $filters, string $sort = 'transaction_date', string $dir = 'desc'): HasMany|Builder
     {
         return $this->transactions->query($user, $period, $filters)
-            ->with('category')
+            ->with('category', 'wallet')
             ->orderBy($sort, $dir)
             ->orderBy('id', $dir);
     }
@@ -78,8 +79,8 @@ class ExportService
         $period = Period::year($year);
 
         $daily = $this->reports->daily($user, $period, []);
-        $weekly = \App\Support\Locale::in('id', fn () => $this->reports->weekly($user, $period, []));
-        $monthly = \App\Support\Locale::in('id', fn () => $this->reports->monthly($user, $year, []));
+        $weekly = Locale::in('id', fn () => $this->reports->weekly($user, $period, []));
+        $monthly = Locale::in('id', fn () => $this->reports->monthly($user, $year, []));
         $yearly = $this->reports->yearly($user, []);
         $categories = $this->reports->categoryTotals($user, $period);
         $budgets = $this->budgetRows($user, $year);

@@ -13,3 +13,6 @@ Schedule::command('sanctum:prune-expired --hours=24')->daily();
 
 // Backup harian: snapshot SQLite + xlsx semua transaksi per user (lihat config/pidu.php).
 Schedule::command('pidu:backup')->dailyAt(config('pidu.backup.time'))->withoutOverlapping();
+
+// Transaksi rutin (listrik tiap tanggal 5, dll.). Tiap jam, supaya jadwal yang terlewat saat aplikasi mati ikut dibuat.
+Schedule::command('pidu:recurring')->hourly()->withoutOverlapping();

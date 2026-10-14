@@ -10,15 +10,16 @@ use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\DefaultCategoryService;
+use App\Services\WalletService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Exception\ExceptionInterface as MimeException;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -33,11 +34,12 @@ class AuthController extends Controller
         return $this->tokenResponse($user);
     }
 
-    public function register(RegisterRequest $request, DefaultCategoryService $categories): JsonResponse
+    public function register(RegisterRequest $request, DefaultCategoryService $categories, WalletService $wallets): JsonResponse
     {
-        $user = DB::transaction(function () use ($request, $categories) {
+        $user = DB::transaction(function () use ($request, $categories, $wallets) {
             $user = User::create($request->validated());
             $categories->createFor($user);
+            $wallets->primaryFor($user);
 
             return $user;
         });

@@ -42,7 +42,7 @@ class TransactionController extends Controller
 
     public function show(Request $request, int $id): TransactionResource
     {
-        return new TransactionResource($request->user()->transactions()->with('category')->findOrFail($id));
+        return new TransactionResource($request->user()->transactions()->with('category', 'wallet')->findOrFail($id));
     }
 
     public function update(UpdateTransactionRequest $request): JsonResponse

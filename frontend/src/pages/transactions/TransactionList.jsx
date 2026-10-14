@@ -2,7 +2,7 @@ import { formatDate, formatRupiah } from '../../utils/format'
 import { useT } from '../../i18n/LocaleProvider'
 
 // Kartu per transaksi untuk layar kecil (< md).
-export default function TransactionList({ transactions, onEdit, onDelete }) {
+export default function TransactionList({ transactions, onEdit, onDelete, showWallet = false }) {
   const t = useT()
   return (
     <div>
@@ -13,9 +13,12 @@ export default function TransactionList({ transactions, onEdit, onDelete }) {
             <div className="card-body py-2 px-3">
               <div className="transaction-main d-flex justify-content-between align-items-start gap-2">
                 <div className="min-w-0">
-                  <div className="fw-semibold text-truncate">{title}</div>
+                  <div className="fw-semibold text-truncate">
+                    {title}
+                    {trx.recurring_transaction_id && <i className="bi bi-arrow-repeat text-body-secondary ms-1" role="img" aria-label={t('Transaksi rutin')}></i>}
+                  </div>
                   <div className="small text-body-secondary text-truncate">
-                    {formatDate(trx.transaction_date)} · {trx.category?.name ?? t('Tanpa kategori')} · {t(trx.payment_method_label)}
+                    {formatDate(trx.transaction_date)} · {trx.category?.name ?? t('Tanpa kategori')} · {showWallet && trx.wallet ? trx.wallet.name : t(trx.payment_method_label)}
                   </div>
                 </div>
                 <div

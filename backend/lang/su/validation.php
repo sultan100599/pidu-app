@@ -74,6 +74,13 @@ return [
         'opening_balance' => 'saldo awal',
         'current_password' => 'password lami',
         'token' => 'token',
+        'wallet_id' => 'dompét',
+        'from_wallet_id' => 'dompét asal',
+        'to_wallet_id' => 'dompét tujuan',
+        'kind' => 'jinis dompét',
+        'purpose' => 'dianggo kanggo',
+        'frequency' => 'jadwal',
+        'transfer_date' => 'ping kaping',
     ],
     'custom_messages' => [
         'current_password_wrong' => 'Password lami lepat.',
@@ -86,5 +93,9 @@ return [
         'budget_duplicate' => 'Anggaran kategori ieu kanggo sasih éta parantos aya.',
         'period_limit' => 'Rentang ping kaping maksimal 5 taun.',
         'file_size' => 'Ukuran berkas maksimal 5 MB.',
+        'wallet_duplicate' => 'Nami dompét parantos dianggo.',
+        'wallet_invalid' => 'Dompét teu kapendak atanapi parantos diarsipkeun.',
+        'transfer_same' => 'Dompét asal sareng tujuan kedah béda.',
+        'recurring_start' => 'Ping kaping mimiti paling tebih 1 taun ka tukang atanapi 1 taun ka payun.',
     ],
 ];

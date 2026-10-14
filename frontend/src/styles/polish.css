@@ -142,3 +142,32 @@
   .summary-compact-mobile .balance-stack::before, .summary-compact-mobile .balance-stack::after { content: none; }
   .opening-balance-form .input-group { max-width: none; }
 }
+
+/* Phase 18: dompet, pindah uang, transaksi rutin, pengingat. */
+.wallet-choice { display: grid; grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr)); gap: 0.5rem; }
+.wallet-choice-item { display: flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0.5rem 0.75rem; border: 1px solid var(--pidu-line); border-radius: var(--pidu-radius-control); cursor: pointer; font-weight: 500; }
+.wallet-choice-item:hover { background: var(--pidu-recess); }
+.wallet-choice-item.active { border-color: var(--pidu-accent); background: var(--pidu-peach); }
+.wallet-choice-item:has(input:focus-visible) { outline: 3px solid var(--pidu-focus); outline-offset: 2px; }
+.wallet-icon { flex-shrink: 0; }
+.wallet-balance { font-size: 1.5rem; line-height: 1.2; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.wallet-purpose-business { color: var(--pidu-accent); font-weight: 600; }
+.wallet-totals { width: fit-content; max-width: 100%; }
+.wallet-archived > summary { cursor: pointer; font-weight: 500; }
+.wallet-note { overflow-wrap: anywhere; }
+.recurring-row { padding-block: 0.75rem; }
+.recurring-row.is-paused .fw-semibold { color: var(--pidu-muted); }
+.purpose-switch .btn { min-height: 38px; }
+
+/* Pilihan periode: ikon kalender menggantikan label di atas, supaya satu baris dengan tombol lain. */
+.period-preset { position: relative; }
+.period-preset .bi-calendar3 { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--pidu-muted); pointer-events: none; }
+.period-preset .form-select { min-width: 10.5rem; padding-left: 2.25rem; }
+.period-range .form-control { width: auto; }
+/* Di topbar: tinggi, sudut, dan latar sama dengan tombol bahasa, tema, dan akun. */
+.topbar-actions .period-picker .form-select,
+.topbar-actions .period-picker .form-control:not(.is-invalid) { background-color: color-mix(in srgb, var(--pidu-surface) 60%, transparent); border-color: var(--pidu-glass-border); border-radius: var(--pidu-radius-control); }
+.topbar-actions .purpose-switch .btn { min-height: 44px; }
+.report-toolbar .purpose-switch.glass-strip { padding: 0.25rem; }
+.today-reminder { flex-basis: 100%; padding: 0.5rem 0.75rem; border-radius: var(--pidu-radius-control); background: var(--pidu-peach); color: var(--pidu-ink); font-size: 0.875rem; }
+.today-reminder .bi-bell { color: var(--pidu-accent); }

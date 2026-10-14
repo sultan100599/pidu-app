@@ -15,6 +15,7 @@ class StoreTransactionRequest extends ApiRequest
             'transaction_date' => ['required', 'date_format:Y-m-d'],
             'type' => ['required', Rule::enum(TransactionType::class)],
             'category_id' => ['required', 'integer', $this->categoryRule()],
+            'wallet_id' => ['nullable', 'integer', $this->walletRule()],
             'amount' => ['required', 'numeric', 'gt:0', 'max:999999999999', 'decimal:0,2'],
             'payment_method' => ['nullable', Rule::enum(PaymentMethod::class)],
             'description' => ['nullable', 'string', 'max:255'],
@@ -27,6 +28,7 @@ class StoreTransactionRequest extends ApiRequest
         return array_merge(parent::messages(), [
             'amount.gt' => __('validation.custom_messages.amount_positive'),
             'category_id.exists' => __('validation.custom_messages.transaction_category'),
+            'wallet_id.exists' => __('validation.custom_messages.wallet_invalid'),
         ]);
     }
 
@@ -38,6 +40,16 @@ class StoreTransactionRequest extends ApiRequest
         return Rule::exists('categories', 'id')
             ->where('user_id', $this->user()->id)
             ->where('type', (string) $this->input('type'))
+            ->where('is_active', true);
+    }
+
+    /**
+     * Dompet harus milik user dan aktif. Tanpa wallet_id, transaksi masuk ke dompet utama.
+     */
+    protected function walletRule(): Exists
+    {
+        return Rule::exists('wallets', 'id')
+            ->where('user_id', $this->user()->id)
             ->where('is_active', true);
     }
 

@@ -131,6 +131,17 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 - Aman untuk data asli: tes menyalakan backend sendiri (port 8002, `backend/database/e2e.sqlite` yang dibuat ulang tiap kali) dan frontend sendiri (port 8011), memakai Chrome yang sudah terpasang.
 - Batas percobaan masuk kini diatur `AUTH_THROTTLE_PER_MINUTE` (default 5; tes memakai 1000). Proxy Vite bisa diarahkan lewat `PIDU_API_URL`.
 
+### Phase 18: Dompet, Usaha/Pribadi, transaksi rutin, pengingat (14 Okt, Claude)
+- **Dompet** (menu baru): tunai / rekening bank / e-wallet, tanda Pribadi atau Usaha, saldo awal per dompet, arsipkan atau hapus (hapus hanya untuk dompet tanpa catatan; minimal satu dompet tetap aktif). Migrasi membuat "Dompet Utama" berisi saldo awal lama dan memasukkan semua transaksi lama ke sana (dicoba dulu di salinan database; database asli dicadangkan ke `backend/storage/app/pre-phase18/` sebelum migrasi).
+- **Pindah uang** antar-dompet, tidak dihitung pemasukan/pengeluaran; riwayatnya di halaman Dompet dan bisa dihapus.
+- Form Catat: pilihan **Dompet** (muncul kalau dompet lebih dari satu, default dompet terakhir dipakai) dan **Ulangi otomatis** (tiap bulan / tiap minggu) di "Detail lain".
+- **Transaksi rutin** (`/recurring`, tombol "Rutin" di halaman Transaksi): dicatat oleh `pidu:recurring` tiap jam lewat scheduler `npm start`; jadwal yang terlewat saat aplikasi mati ikut dibuat, tanggal 31 tidak bergeser, dijeda lalu jalan lagi tidak membuat yang terlewat selama jeda.
+- Saringan **Semua / Pribadi / Usaha** di dashboard dan semua laporan (hanya tampil kalau punya dompet usaha dan pribadi). Kartu "Uang kamu sekarang" menampilkan rincian per dompet. Daftar transaksi punya saringan Dompet.
+- **Pengingat**: banner di dashboard mulai jam 17.00 kalau hari itu belum ada catatan, tombol Catat dan "Nanti saja" (tertutup sampai besok).
+- Export/backup Excel punya kolom **Dompet**; impor membaca kolom Dompet (opsional; nama baru dibuat jadi dompet baru).
+- Saldo awal di halaman Akun dipindah ke halaman Dompet.
+- Tes: backend 108 lolos (baru: `WalletTest`, `RecurringTest`, impor kolom Dompet); e2e 13 lolos (baru: `wallets.spec.js`). Rincian `docs/lead/report-18.md`. Audit antislop `anti-slop/audit-002-2026-10-14.md` (7 temuan) menunggu pilihan nomor.
+
 ## 5. Anti-slop (aturan UI untuk AI agent)
 
 **Sumber:** https://github.com/miqdadbadjuber/anti-slop (versi 3.2.19). Dipasang 29 Sep 2026; dipakai (mode "selama pengerjaan") untuk redesign Phase 11–12 oleh Codex.
@@ -164,13 +175,13 @@ Hanya folder skill yang dipasang, tanpa repo utuh (sama dengan yang dilakukan in
 
 ### Rencana berikutnya (hasil review QA 13 Okt, urutan disetujui user; hosting ditunda)
 
-**Phase 18: Dompet, Usaha/Pribadi, transaksi rutin, pengingat** (rancangan sudah disampaikan, menunggu "lanjut" dari user)
-- [ ] Dompet: nama (Tunai, BRI, DANA, Kas Warung, dll.), jenis (tunai/rekening/e-wallet), tanda **Pribadi** atau **Usaha**, saldo awal per dompet. Saldo awal akun lama dipindah ke "Dompet Utama" dan semua transaksi lama masuk ke sana.
-- [ ] Form catat memilih dompet (default dompet terakhir).
-- [ ] Transfer antar-dompet (bukan pemasukan/pengeluaran).
-- [ ] Saringan Semua / Pribadi / Usaha di dashboard dan laporan; kartu "Uang kamu sekarang" menampilkan rincian per dompet.
-- [ ] Transaksi rutin (mis. listrik tiap tanggal 5), dibuat otomatis oleh scheduler di `npm start`.
-- [ ] Pengingat: **banner di aplikasi saja** (pilihan user), "Belum ada catatan hari ini" + tombol Catat, bisa ditutup sampai besok.
+**Phase 18: Dompet, Usaha/Pribadi, transaksi rutin, pengingat** (selesai 14 Okt, lihat riwayat di atas)
+- [x] Dompet: nama (Tunai, BRI, DANA, Kas Warung, dll.), jenis (tunai/rekening/e-wallet), tanda **Pribadi** atau **Usaha**, saldo awal per dompet. Saldo awal akun lama dipindah ke "Dompet Utama" dan semua transaksi lama masuk ke sana.
+- [x] Form catat memilih dompet (default dompet terakhir).
+- [x] Transfer antar-dompet (bukan pemasukan/pengeluaran).
+- [x] Saringan Semua / Pribadi / Usaha di dashboard dan laporan; kartu "Uang kamu sekarang" menampilkan rincian per dompet.
+- [x] Transaksi rutin (mis. listrik tiap tanggal 5), dibuat otomatis oleh scheduler di `npm start`.
+- [x] Pengingat: **banner di aplikasi saja** (pilihan user), "Belum ada catatan hari ini" + tombol Catat, bisa ditutup sampai besok.
 
 **Phase 19: Rapikan & lengkapi**
 - [ ] Ganti istilah (pilihan user: semua): Dashboard → Ringkasan, Budget → Anggaran, Export → Unduh, Impor → Unggah, Cash → Tunai, Export & Backup → Unduh & Cadangan.
@@ -178,7 +189,8 @@ Hanya folder skill yang dipasang, tanpa repo utuh (sama dengan yang dilakukan in
 - [ ] Sisa audit antislop `anti-slop/audit-001-2026-10-13.md` no. 3–7: kotak Filter di HP, dashboard HP terlalu panjang, placeholder "0" di Nominal, link "Ubah" terlalu kecil, jarak pilihan di kartu Unduh data.
 - [ ] Cek aksesibilitas resmi: Lighthouse, pembaca layar, navigasi keyboard penuh.
 - [ ] Data demo diperpanjang sampai bulan berjalan (sekarang berhenti 28 Sep).
-- [ ] Hapus akun, dan "keluar dari semua perangkat" di halaman Akun.
+- [ ] Hapus akun, dan "keluar dari semua perangkat" di halaman Akun. Catatan: menghapus user langsung akan gagal karena transaksi/transaksi rutin menahan dompet & kategori; hapus berurutan (transaksi, pindahan, rutin, budget, dompet, kategori, token, user).
+- [ ] Pilih nomor perbaikan dari audit antislop Phase 18 (`anti-slop/audit-002-2026-10-14.md`).
 
 **Menunggu dari user**
 - [ ] Isi `MAIL_USERNAME` (alamat Gmail) dan `MAIL_PASSWORD` (App Password 16 huruf) di `backend/.env`, ganti `MAIL_MAILER=smtp`, lalu email lupa password diuji sungguhan.

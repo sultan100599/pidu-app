@@ -11,6 +11,8 @@ import EmptyState from '../../components/ui/EmptyState'
 import ErrorState from '../../components/ui/ErrorState'
 import Pagination from '../../components/ui/Pagination'
 import { useCategories } from '../../hooks/useCategories'
+import { useWallets } from '../../hooks/useWallets'
+import { Link } from 'react-router-dom'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDate } from '../../utils/format'
 import { getPeriodRange, isCustomRangeInvalid } from '../../utils/period'
@@ -24,7 +26,7 @@ import TransactionTable from './TransactionTable'
 const PER_PAGE_OPTIONS = [15, 25, 50, 100]
 const SEARCH_DELAY = 400
 // Kunci filter di URL (selain page/per_page/sort/dir). Dipakai juga oleh export (Phase 8).
-const FILTER_KEYS = ['search', 'type', 'category_id', 'payment_method', 'period', 'start_date', 'end_date']
+const FILTER_KEYS = ['search', 'type', 'category_id', 'payment_method', 'wallet_id', 'period', 'start_date', 'end_date']
 
 // Baca state halaman dari query string. Semua nilai default = string kosong.
 function readQuery(searchParams) {
@@ -35,6 +37,7 @@ function readQuery(searchParams) {
     type: get('type'),
     category_id: get('category_id'),
     payment_method: get('payment_method'),
+    wallet_id: get('wallet_id'),
     period: get('period') || 'all',
     start_date: get('start_date'),
     end_date: get('end_date'),
@@ -53,7 +56,7 @@ function toApiParams(query) {
     sort: query.sort,
     dir: query.dir,
   }
-  for (const key of ['search', 'type', 'category_id', 'payment_method']) {
+  for (const key of ['search', 'type', 'category_id', 'payment_method', 'wallet_id']) {
     if (query[key]) params[key] = query[key]
   }
   const range = getPeriodRange(query.period, query.start_date, query.end_date)
@@ -63,7 +66,7 @@ function toApiParams(query) {
 
 function countActiveFilters(query) {
   return (
-    ['search', 'type', 'category_id', 'payment_method'].filter((key) => query[key]).length +
+    ['search', 'type', 'category_id', 'payment_method', 'wallet_id'].filter((key) => query[key]).length +
     (query.period !== 'all' ? 1 : 0)
   )
 }
@@ -73,6 +76,8 @@ export default function TransactionsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = readQuery(searchParams)
   const { categories } = useCategories()
+  const { wallets } = useWallets()
+  const showWallet = wallets.length > 1
   const { dataVersion, openCreate, openEdit, refreshTransactions, userId } = useTransactions()
 
   // --- sinkron URL -------------------------------------------------------
@@ -234,6 +239,7 @@ export default function TransactionsPage() {
             onSort={handleSort}
             onEdit={openEdit}
             onDelete={deleteTransaction}
+            showWallet={showWallet}
           />
         </div>
         <div className="d-md-none">
@@ -260,6 +266,7 @@ export default function TransactionsPage() {
             transactions={transactions}
             onEdit={openEdit}
             onDelete={deleteTransaction}
+            showWallet={showWallet}
           />
         </div>
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-2">
@@ -297,6 +304,10 @@ export default function TransactionsPage() {
         }
         actions={
           <>
+            <Link to="/recurring" className="btn btn-outline-secondary">
+              <i className="bi bi-arrow-repeat me-1" aria-hidden="true"></i>
+              {t('Rutin')}
+            </Link>
             {/* Export memakai filter & urutan yang sama dengan daftar (tanpa pagination). */}
             <ExportMenu params={exportParams} disabled={customInvalid || !data || data.meta.total === 0} />
             <button
@@ -323,6 +334,9 @@ export default function TransactionsPage() {
         onCategoryChange={(category_id) => updateQuery({ category_id })}
         paymentMethod={query.payment_method}
         onPaymentMethodChange={(payment_method) => updateQuery({ payment_method })}
+        wallets={wallets}
+        walletId={query.wallet_id}
+        onWalletChange={(wallet_id) => updateQuery({ wallet_id })}
         period={query.period}
         onPeriodChange={handlePeriodChange}
         customStart={query.start_date}

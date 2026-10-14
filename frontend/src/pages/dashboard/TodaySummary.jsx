@@ -6,6 +6,40 @@ import { useFetch } from '../../hooks/useFetch'
 import { formatRupiah, toYmd } from '../../utils/format'
 import { greeting } from '../../utils/dashboard'
 import { SkeletonBar } from '../../components/ui/PageSkeleton'
+import { useTransactions } from '../../context/TransactionContext'
+
+// Pengingat muncul mulai sore, saat hari ini belum ada catatan sama sekali.
+const REMINDER_HOUR = 17
+const reminderKey = (userId) => `pidu:reminder-dismissed:${userId}`
+
+function readDismissed(userId) {
+  try {
+    return localStorage.getItem(reminderKey(userId))
+  } catch {
+    return null
+  }
+}
+
+function Reminder({ today, userId }) {
+  const t = useT()
+  const { openCreate } = useTransactions()
+  const [dismissed, setDismissed] = useState(() => readDismissed(userId))
+  if (dismissed === today) return null
+  function dismiss() {
+    setDismissed(today)
+    try {
+      localStorage.setItem(reminderKey(userId), today)
+    } catch { /* tanpa storage, pengingat hanya tertutup sampai halaman dimuat ulang */ }
+  }
+  return (
+    <div className="today-reminder d-flex flex-wrap align-items-center gap-2 mt-2" role="status">
+      <i className="bi bi-bell" aria-hidden="true"></i>
+      <span className="me-auto">{t('Belum ada catatan hari ini. Ada belanja atau pemasukan yang belum dicatat?')}</span>
+      <button type="button" className="btn btn-sm btn-primary" onClick={openCreate}>{t('Catat')}</button>
+      <button type="button" className="btn btn-sm btn-outline-secondary" onClick={dismiss}>{t('Nanti saja')}</button>
+    </div>
+  )
+}
 
 export default function TodaySummary() {
   const t = useT()
@@ -33,5 +67,6 @@ export default function TodaySummary() {
         ? t('Budget bulan ini lebih {amount}', { amount: formatRupiah(-remaining) })
         : t('Sisa budget bulan ini {amount}', { amount: formatRupiah(remaining) })}</span>}
     </div>
+    {day.data && day.data.totals.count === 0 && now.getHours() >= REMINDER_HOUR && user && <Reminder today={today} userId={user.id} />}
   </section>
 }

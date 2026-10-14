@@ -13,6 +13,9 @@ export default function TransactionFilters({
   onCategoryChange,
   paymentMethod,
   onPaymentMethodChange,
+  wallets = [],
+  walletId,
+  onWalletChange,
   period,
   onPeriodChange,
   customStart,
@@ -29,6 +32,8 @@ export default function TransactionFilters({
   const options = type ? categories.filter((c) => c.type === type) : categories
   const expenseOptions = options.filter((c) => c.type === 'expense')
   const incomeOptions = options.filter((c) => c.type === 'income')
+  // Saringan dompet hanya muncul kalau dompetnya lebih dari satu; kolom lain menyempit.
+  const showWallet = wallets.length > 1
 
   return (
     <div className="card transaction-filters mb-3">
@@ -53,7 +58,7 @@ export default function TransactionFilters({
 
         <div className={`collapse d-md-block ${open ? 'show' : ''}`}>
           <div className="row g-2 align-items-end">
-            <div className="col-12 col-lg-3">
+            <div className={`col-12 ${showWallet ? 'col-lg-2' : 'col-lg-3'}`}>
               <label htmlFor="filter-search" className="form-label small mb-1">
                 {t('Cari')}
               </label>
@@ -84,7 +89,7 @@ export default function TransactionFilters({
                 ))}
               </select>
             </div>
-            <div className="col-6 col-md-3 col-lg-3">
+            <div className={`col-6 col-md-3 ${showWallet ? 'col-lg-2' : 'col-lg-3'}`}>
               <label htmlFor="filter-category" className="form-label small mb-1">
                 {t('Kategori')}
               </label>
@@ -115,6 +120,21 @@ export default function TransactionFilters({
                 )}
               </select>
             </div>
+            {showWallet && (
+              <div className="col-6 col-md-3 col-lg-2">
+                <label htmlFor="filter-wallet" className="form-label small mb-1">
+                  {t('Dompet')}
+                </label>
+                <select id="filter-wallet" className="form-select" value={walletId} onChange={(e) => onWalletChange(e.target.value)}>
+                  <option value="">{t('Semua dompet')}</option>
+                  {wallets.map((w) => (
+                    <option key={w.id} value={w.id}>
+                      {w.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="col-6 col-md-3 col-lg-2">
               <label htmlFor="filter-payment" className="form-label small mb-1">
                 {t('Metode')}

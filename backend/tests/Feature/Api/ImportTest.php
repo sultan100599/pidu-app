@@ -123,6 +123,23 @@ class ImportTest extends TestCase
             ->assertJsonPath('summary.income', 1000000);
     }
 
+    public function test_wallet_column_matches_or_creates_wallets(): void
+    {
+        $this->getJson('/api/wallets'); // dompet utama dibuat seperti saat daftar
+        $this->user->wallets()->create(['name' => 'Kas Warung', 'kind' => 'cash', 'purpose' => 'business']);
+        $file = $this->xlsx([
+            ['Tanggal', 'Jenis', 'Kategori', 'Nominal', 'Dompet'],
+            ['2026-09-01', 'Pengeluaran', 'Makanan', 25000, 'kas warung'],
+            ['2026-09-02', 'Pengeluaran', 'Makanan', 18000, 'DANA'],
+            ['2026-09-03', 'Pengeluaran', 'Makanan', 5000, null],
+        ]);
+
+        $this->import($file, ['dry_run' => 0])->assertCreated()->assertJsonPath('data.imported', 3);
+
+        $names = $this->user->transactions()->with('wallet')->orderBy('transaction_date')->get()->pluck('wallet.name')->all();
+        $this->assertSame(['Kas Warung', 'DANA', 'Dompet Utama'], $names);
+    }
+
     public function test_reimporting_an_export_skips_duplicates(): void
     {
         Transaction::factory()->create(['user_id' => $this->user->id, 'category_id' => $this->food->id, 'transaction_date' => '2026-09-01', 'amount' => 25000, 'description' => 'Nasi']);

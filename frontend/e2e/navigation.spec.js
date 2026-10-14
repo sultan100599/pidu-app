@@ -7,7 +7,7 @@ test('satu menu Laporan dengan tab, judul halaman di bar atas', async ({ page, r
   await page.goto('/')
 
   const sidebar = page.getByRole('complementary', { name: 'Menu navigasi' })
-  await expect(sidebar.getByRole('link')).toHaveCount(7)
+  await expect(sidebar.getByRole('link')).toHaveCount(8)
   await sidebar.getByRole('link', { name: 'Laporan' }).click()
   await expect(page).toHaveURL(/\/reports\/daily$/)
 

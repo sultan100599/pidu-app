@@ -2,11 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { TransactionContext } from '../../context/TransactionContext'
 import { useAuth } from '../../context/AuthContext'
 import { useCategories } from '../../hooks/useCategories'
+import { useWallets } from '../../hooks/useWallets'
 import TransactionFormModal from '../../pages/transactions/TransactionFormModal'
 
 function TransactionDialog({ form, onClose, onSaved }) {
   const { categories, loading, error, refetch } = useCategories()
-  return <TransactionFormModal show transaction={form.transaction} categories={categories}
+  const { wallets } = useWallets()
+  return <TransactionFormModal show transaction={form.transaction} categories={categories} wallets={wallets}
     categoriesLoading={loading} categoriesError={error} onRetryCategories={refetch}
     onClose={onClose} onSaved={onSaved} />
 }

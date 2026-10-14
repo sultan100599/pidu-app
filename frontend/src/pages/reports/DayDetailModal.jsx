@@ -4,13 +4,16 @@ import * as reportsApi from '../../api/reports'
 import CategoryBadge from '../../components/CategoryBadge'
 import Modal from '../../components/ui/Modal'
 import { useFetch } from '../../hooks/useFetch'
+import { usePurpose } from '../../hooks/usePurpose'
 import { getErrorMessage } from '../../utils/errors'
 import { formatDate, formatRupiah } from '../../utils/format'
 
 // Detail transaksi pada satu tanggal (dipakai Rekap Harian & Kalender). date = null → tertutup.
 export default function DayDetailModal({ date, onClose }) {
   const t = useT()
-  const { data, error, loading, reload } = useFetch(date, (signal) => reportsApi.day(date, { signal }))
+  const { withPurpose } = usePurpose()
+  const params = withPurpose({})
+  const { data, error, loading, reload } = useFetch(date && `${date}:${JSON.stringify(params)}`, (signal) => reportsApi.day(date, { params, signal }))
   const ready = data && data.date === date
 
   const footer = (

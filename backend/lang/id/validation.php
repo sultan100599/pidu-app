@@ -74,6 +74,13 @@ return [
         'opening_balance' => 'saldo awal',
         'current_password' => 'password lama',
         'token' => 'token',
+        'wallet_id' => 'dompet',
+        'from_wallet_id' => 'dompet asal',
+        'to_wallet_id' => 'dompet tujuan',
+        'kind' => 'jenis dompet',
+        'purpose' => 'dipakai untuk',
+        'frequency' => 'jadwal',
+        'transfer_date' => 'tanggal',
     ],
     'custom_messages' => [
         'current_password_wrong' => 'Password lama salah.',
@@ -86,5 +93,9 @@ return [
         'budget_duplicate' => 'Budget kategori ini untuk bulan tersebut sudah ada.',
         'period_limit' => 'Rentang tanggal maksimal 5 tahun.',
         'file_size' => 'Ukuran file maksimal 5 MB.',
+        'wallet_duplicate' => 'Nama dompet sudah dipakai.',
+        'wallet_invalid' => 'Dompet tidak ditemukan atau sudah diarsipkan.',
+        'transfer_same' => 'Dompet asal dan tujuan harus berbeda.',
+        'recurring_start' => 'Tanggal mulai paling jauh 1 tahun ke belakang atau 1 tahun ke depan.',
     ],
 ];

@@ -135,6 +135,28 @@ p.glass-strip { width: fit-content; max-width: 100%; }
   .app-main, .app-main-dashboard { padding-left: 0 !important; }
 }
 
+/* Halaman masuk/daftar: kartu dan tombol bahasa/tema memakai kaca yang sama dengan panel aplikasi. */
+.auth-card {
+  border: 1px solid var(--pidu-glass-border);
+  border-radius: var(--pidu-float-radius);
+  box-shadow: var(--pidu-glass-shadow) !important;
+}
+.auth-card > .card-body {
+  background-color: var(--pidu-glass);
+  background-image: none;
+  -webkit-backdrop-filter: var(--pidu-glass-blur);
+  backdrop-filter: var(--pidu-glass-blur);
+}
+/* Di halaman ini tidak ada lapisan peredup di atas foto, jadi kaca tema terang dibuat lebih padat
+   supaya teks abu-abu tetap >= 4,5:1 walau kartu berada di atas kayu gelap (lebar HP). */
+[data-bs-theme='light'] .auth-card { --pidu-glass: color-mix(in srgb, var(--pidu-surface) 86%, transparent); }
+.auth-tools .btn {
+  background-color: var(--pidu-glass);
+  -webkit-backdrop-filter: var(--pidu-glass-blur);
+  backdrop-filter: var(--pidu-glass-blur);
+  border-color: var(--pidu-glass-border);
+}
+
 /* Blur besar berat di HP: dikurangi, tampilannya tetap buram. */
 @media (max-width: 991.98px) {
   :root { --pidu-glass-blur: blur(10px) saturate(130%); --pidu-float-gap: 0.625rem; }
@@ -150,7 +172,9 @@ p.glass-strip { width: fit-content; max-width: 100%; }
 /* Browser tanpa backdrop-filter, atau pengguna yang meminta transparansi dikurangi: panel padat. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root { --pidu-glass: var(--pidu-surface); --pidu-glass-peach: var(--pidu-peach); }
+  [data-bs-theme] .auth-card { --pidu-glass: var(--pidu-surface); }
 }
 @media (prefers-reduced-transparency: reduce) {
   :root { --pidu-glass: var(--pidu-surface); --pidu-glass-peach: var(--pidu-peach); --pidu-glass-blur: none; }
+  [data-bs-theme] .auth-card { --pidu-glass: var(--pidu-surface); }
 }

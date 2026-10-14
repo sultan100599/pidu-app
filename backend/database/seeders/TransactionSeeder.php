@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\WalletService;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -221,6 +222,7 @@ class TransactionSeeder extends Seeder
         return [
             'user_id' => $this->user->id,
             'category_id' => $this->cat[$category],
+            'wallet_id' => app(WalletService::class)->primaryFor($this->user)->id,
             'transaction_date' => $date,
             'type' => $type,
             'amount' => $amount,

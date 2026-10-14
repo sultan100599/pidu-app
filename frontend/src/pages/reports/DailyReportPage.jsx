@@ -4,6 +4,7 @@ import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
 import PeriodPicker, { usePeriodQuery } from '../../components/PeriodPicker'
 import { useFetch } from '../../hooks/useFetch'
+import { usePurpose } from '../../hooks/usePurpose'
 import { formatDate, formatDayMonth } from '../../utils/format'
 import DayDetailModal from './DayDetailModal'
 import ReportShell from './ReportShell'
@@ -14,7 +15,9 @@ export default function DailyReportPage() {
   const t = useT()
   const periodQuery = usePeriodQuery('this_month')
   const { range } = periodQuery
-  const fetchState = useFetch(range ? JSON.stringify(range) : null, (signal) => reportsApi.daily(range, { signal }))
+  const { withPurpose } = usePurpose()
+  const params = range && withPurpose(range)
+  const fetchState = useFetch(params ? JSON.stringify(params) : null, (signal) => reportsApi.daily(params, { signal }))
   const { data } = fetchState
   const [hideEmpty, setHideEmpty] = useState(true)
   const [detailDate, setDetailDate] = useState(null)

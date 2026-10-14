@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
 import { useFetch } from '../../hooks/useFetch'
+import { usePurpose } from '../../hooks/usePurpose'
 import { toYmd } from '../../utils/format'
 import ReportShell from './ReportShell'
 import ReportTabs from './ReportTabs'
@@ -20,7 +21,9 @@ export default function MonthlyReportPage() {
   const year = Number(searchParams.get('year')) || currentYear
   const setYear = (y) => setSearchParams(y === currentYear ? {} : { year: String(y) })
 
-  const fetchState = useFetch(String(year), (signal) => reportsApi.monthly({ year }, { signal }))
+  const { withPurpose } = usePurpose()
+  const params = withPurpose({ year })
+  const fetchState = useFetch(JSON.stringify(params), (signal) => reportsApi.monthly(params, { signal }))
   const { data } = fetchState
   const rows = data?.rows ?? []
 

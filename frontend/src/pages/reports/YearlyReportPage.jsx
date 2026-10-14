@@ -3,6 +3,7 @@ import { useT } from '../../i18n/LocaleProvider'
 import * as reportsApi from '../../api/reports'
 import PageHeader from '../../components/PageHeader'
 import { useFetch } from '../../hooks/useFetch'
+import { usePurpose } from '../../hooks/usePurpose'
 import ReportShell from './ReportShell'
 import ReportTabs from './ReportTabs'
 import ReportTable from './ReportTable'
@@ -10,7 +11,9 @@ import ReportTable from './ReportTable'
 export default function YearlyReportPage() {
   const t = useT()
   const navigate = useNavigate()
-  const fetchState = useFetch('yearly', (signal) => reportsApi.yearly({}, { signal }))
+  const { withPurpose } = usePurpose()
+  const params = withPurpose({})
+  const fetchState = useFetch(`yearly:${JSON.stringify(params)}`, (signal) => reportsApi.yearly(params, { signal }))
   const { data } = fetchState
   const rows = data?.rows ?? []
 

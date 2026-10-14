@@ -155,7 +155,7 @@ class ReportService
             'totals' => $this->transactions->totals($user, $period, $filters),
             'transactions' => TransactionResource::collection(
                 $this->transactions->query($user, $period, $filters)
-                    ->with('category')
+                    ->with('category', 'wallet')
                     ->orderByRaw(TypeOrder::expenseFirst('transactions.type'))
                     ->orderByDesc('amount')
                     ->orderByDesc('id')

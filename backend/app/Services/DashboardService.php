@@ -17,6 +17,7 @@ class DashboardService
     public function __construct(
         private TransactionService $transactions,
         private BudgetService $budgets,
+        private WalletService $wallets,
     ) {}
 
     public function build(User $user, Period $period, array $filters): array
@@ -37,17 +38,14 @@ class DashboardService
                     : null,
                 'transaction_count' => $totals['count'],
             ],
-            'wallet' => [
-                'current_balance' => $this->transactions->currentBalance($user),
-                'opening_balance' => $user->opening_balance === null ? null : Money::of($user->opening_balance),
-            ],
+            'wallet' => $this->wallets->summary($user, $filters),
             'chart' => $this->chart($user, $period, $filters),
             'category_breakdown' => $breakdown,
             'top_categories' => array_slice($breakdown, 0, 5),
             'largest_transactions' => TransactionResource::collection(
                 $this->transactions->query($user, $period, $filters)
                     ->ofType('expense')
-                    ->with('category')
+                    ->with('category', 'wallet')
                     ->orderByDesc('amount')
                     ->orderByDesc('id')
                     ->limit(5)

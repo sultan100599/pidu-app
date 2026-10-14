@@ -6,6 +6,7 @@ use App\Enums\PaymentMethod;
 use App\Enums\TransactionType;
 use App\Imports\RawRowsImport;
 use App\Models\User;
+use App\Services\WalletService;
 use App\Support\Money;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\UploadedFile;
@@ -38,7 +39,10 @@ class TransactionImportService
         'metode' => 'payment_method', 'metode pembayaran' => 'payment_method', 'payment_method' => 'payment_method', 'payment method' => 'payment_method',
         'nominal' => 'amount', 'jumlah' => 'amount', 'amount' => 'amount',
         'métode' => 'payment_method', 'métode pamayaran' => 'payment_method', 'method' => 'payment_method',
+        'dompet' => 'wallet', 'dompét' => 'wallet', 'wallet' => 'wallet',
     ];
+
+    public function __construct(private WalletService $wallets) {}
 
     private const REQUIRED = ['date' => 'Tanggal', 'category' => 'Kategori', 'amount' => 'Nominal'];
 
@@ -125,7 +129,8 @@ class TransactionImportService
     }
 
     /**
-     * Simpan baris valid (analisis harus bersih). Kategori baru dibuat. Semua dalam satu transaksi DB.
+     * Simpan baris valid (analisis harus bersih). Kategori dan dompet baru dibuat; baris tanpa
+     * kolom Dompet masuk ke dompet utama. Semua dalam satu transaksi DB.
      *
      * @return array{imported: int, skipped_duplicates: int, new_categories: int}
      */
@@ -135,6 +140,8 @@ class TransactionImportService
             $now = now();
             $created = 0;
             $categoryIds = $this->categoryIndex($user);
+            $walletIds = $user->wallets()->pluck('id', 'name')->mapWithKeys(fn ($id, $name) => [Str::lower($name) => $id])->all();
+            $primaryWallet = null;
 
             $inserts = [];
             $skipped = 0;
@@ -155,9 +162,19 @@ class TransactionImportService
                     ])->id;
                     $created++;
                 }
+                if (($row['wallet'] ?? null) === null) {
+                    $walletId = ($primaryWallet ??= $this->wallets->primaryFor($user))->id;
+                } else {
+                    $walletId = $walletIds[Str::lower($row['wallet'])] ??= $user->wallets()->create([
+                        'name' => $row['wallet'],
+                        'kind' => 'cash',
+                        'purpose' => 'personal',
+                    ])->id;
+                }
                 $inserts[] = [
                     'user_id' => $user->id,
                     'category_id' => $categoryIds[$key],
+                    'wallet_id' => $walletId,
                     'transaction_date' => $row['date'],
                     'type' => $row['type'],
                     'amount' => $row['amount'],
@@ -223,7 +240,7 @@ class TransactionImportService
     private function pick(array $raw, array $columns): array
     {
         $cells = [];
-        foreach (['date', 'type', 'category', 'description', 'notes', 'payment_method', 'amount'] as $field) {
+        foreach (['date', 'type', 'category', 'description', 'notes', 'payment_method', 'wallet', 'amount'] as $field) {
             $value = isset($columns[$field]) ? ($raw[$columns[$field]] ?? null) : null;
             $cells[$field] = is_string($value) ? trim($value) : $value;
         }
@@ -294,6 +311,11 @@ class TransactionImportService
         if ($description !== null && mb_strlen($description) > 255) {
             $errors[] = __('validation.max.string', ['attribute' => __('validation.attributes.description'), 'max' => 255]);
         }
+        $wallet = $c['wallet'] === null || $c['wallet'] === '' ? null : (string) $c['wallet'];
+        if ($wallet !== null && mb_strlen($wallet) > 50) {
+            $errors[] = __('validation.max.string', ['attribute' => __('validation.attributes.wallet_id'), 'max' => 50]);
+        }
+
         $notes = $c['notes'] === null || $c['notes'] === '' ? null : (string) $c['notes'];
         if ($notes !== null && mb_strlen($notes) > 5000) {
             $errors[] = __('validation.max.string', ['attribute' => __('validation.attributes.notes'), 'max' => 5000]);
@@ -305,6 +327,7 @@ class TransactionImportService
             'category' => $category,
             'amount' => $amount,
             'payment_method' => $method,
+            'wallet' => $wallet,
             'description' => $description,
             'notes' => $notes,
         ], $errors];
@@ -359,7 +382,7 @@ class TransactionImportService
     }
 
     /**
-     * @return string|null|false  'income'|'expense', null = kosong & tak bisa ditebak, false = teks tak dikenal
+     * @return string|null|false 'income'|'expense', null = kosong & tak bisa ditebak, false = teks tak dikenal
      */
     private function parseType(mixed $value, ?float $amount): string|null|false
     {

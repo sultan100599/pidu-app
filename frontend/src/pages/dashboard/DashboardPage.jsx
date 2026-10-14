@@ -7,6 +7,8 @@ import BudgetProgress from '../../components/BudgetProgress'
 import CategoryBadge from '../../components/CategoryBadge'
 import PageHeader from '../../components/PageHeader'
 import PeriodPicker, { usePeriodQuery } from '../../components/PeriodPicker'
+import PurposeSwitch from '../../components/PurposeSwitch'
+import { usePurpose } from '../../hooks/usePurpose'
 import SummaryCards from '../../components/SummaryCards'
 import EmptyState from '../../components/ui/EmptyState'
 import ErrorState from '../../components/ui/ErrorState'
@@ -126,6 +128,28 @@ function LargestTransactions({ transactions }) {
   )
 }
 
+// Satu dompet: saldo awal. Beberapa dompet: rincian saldo per dompet.
+function WalletNote({ wallet }) {
+  const t = useT()
+  const list = wallet.wallets ?? []
+  if (list.length > 1) {
+    const shown = list.slice(0, 3)
+    return (
+      <div className="small text-body-secondary wallet-note">
+        {shown.map((w) => `${w.name} ${formatRupiah(w.balance)}`).join(' · ')}
+        {list.length > shown.length && ' · ' + t('{count} lainnya', { count: list.length - shown.length })}
+        {' · '}<Link to="/wallets">{t('Dompet')}</Link>
+      </div>
+    )
+  }
+  if (!(wallet.opening_balance > 0)) return null
+  return (
+    <div className="small text-body-secondary">
+      {t('Termasuk saldo awal {amount}', { amount: formatRupiah(wallet.opening_balance) })} · <Link to="/wallets">{t('Ubah')}</Link>
+    </div>
+  )
+}
+
 function BudgetList({ budgets }) {
   const t = useT()
   if (budgets.length === 0) {
@@ -154,10 +178,12 @@ export default function DashboardPage() {
   const { openCreate } = useTransactions()
   const periodQuery = usePeriodQuery('this_month')
   const { range } = periodQuery
-  const key = range ? JSON.stringify(range) : null
-  const { data, error, loading, reload } = useFetch(key, (signal) => reportsApi.dashboard(range, { signal }))
+  const { purpose, setPurpose, withPurpose } = usePurpose()
+  const params = range && withPurpose(range)
+  const key = params ? JSON.stringify(params) : null
+  const { data, error, loading, reload } = useFetch(key, (signal) => reportsApi.dashboard(params, { signal }))
   const previousInfo = previousPeriod(range)
-  const previous = previousInfo && { start_date: previousInfo.start_date, end_date: previousInfo.end_date }
+  const previous = previousInfo && withPurpose({ start_date: previousInfo.start_date, end_date: previousInfo.end_date })
   const comparisonFetch = useFetch(previous ? `comparison:${JSON.stringify(previous)}` : null,
     (signal) => reportsApi.dashboard(previous, { signal }))
   const comparison = {
@@ -189,11 +215,7 @@ export default function DashboardPage() {
           summary={{ ...summary, count: summary.transaction_count }}
           comparison={comparison}
           wallet={wallet}
-          walletNote={wallet.opening_balance > 0 && (
-            <div className="small text-body-secondary">
-              {t('Termasuk saldo awal {amount}', { amount: formatRupiah(wallet.opening_balance) })} · <Link to="/account">{t('Ubah')}</Link>
-            </div>
-          )}
+          walletNote={<WalletNote wallet={wallet} />}
         >
           <StatTile
             label="Rata-rata pengeluaran / hari"
@@ -275,7 +297,12 @@ export default function DashboardPage() {
       <PageHeader
         title="Dashboard"
         subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)}` : ' '}
-        actions={<PeriodPicker query={periodQuery} idPrefix="dash-period" />}
+        actions={
+          <div className="d-flex flex-wrap align-items-center gap-2">
+            <PurposeSwitch value={purpose} onChange={setPurpose} />
+            <PeriodPicker query={periodQuery} idPrefix="dash-period" />
+          </div>
+        }
       />
       <TodaySummary />
       <div className="dashboard-content" aria-busy={loading}>

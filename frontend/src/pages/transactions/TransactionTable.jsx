@@ -19,7 +19,7 @@ function SortableHeader({ label, column, sort, dir, onSort, className = '' }) {
   )
 }
 
-export default function TransactionTable({ transactions, sort, dir, onSort, onEdit, onDelete }) {
+export default function TransactionTable({ transactions, sort, dir, onSort, onEdit, onDelete, showWallet = false }) {
   const t = useT()
   return (
     <div className="card">
@@ -47,6 +47,9 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
                   ) : (
                     <span className="text-body-secondary">{trx.category?.name ?? t('Tanpa kategori')}</span>
                   )}
+                  {trx.recurring_transaction_id && (
+                    <i className="bi bi-arrow-repeat text-body-secondary ms-2" role="img" aria-label={t('Transaksi rutin')} title={t('Transaksi rutin')}></i>
+                  )}
                   {trx.notes && (
                     <div className="small text-body-secondary text-truncate" style={{ maxWidth: 320 }}>
                       {trx.notes}
@@ -56,7 +59,10 @@ export default function TransactionTable({ transactions, sort, dir, onSort, onEd
                 <td>
                   <CategoryBadge category={trx.category} />
                 </td>
-                <td className="text-nowrap">{t(trx.payment_method_label)}</td>
+                <td className="text-nowrap">
+                  {t(trx.payment_method_label)}
+                  {showWallet && trx.wallet && <div className="small text-body-secondary">{trx.wallet.name}</div>}
+                </td>
                 <td
                   className={`text-end fw-semibold text-nowrap ${trx.type === 'income' ? 'text-success' : 'text-danger'}`}
                 >

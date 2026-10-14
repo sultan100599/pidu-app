@@ -74,6 +74,13 @@ return [
         'opening_balance' => 'opening balance',
         'current_password' => 'current password',
         'token' => 'token',
+        'wallet_id' => 'wallet',
+        'from_wallet_id' => 'source wallet',
+        'to_wallet_id' => 'destination wallet',
+        'kind' => 'wallet type',
+        'purpose' => 'used for',
+        'frequency' => 'schedule',
+        'transfer_date' => 'date',
     ],
     'custom_messages' => [
         'current_password_wrong' => 'The current password is incorrect.',
@@ -86,5 +93,9 @@ return [
         'budget_duplicate' => 'A budget for this category and month already exists.',
         'period_limit' => 'The date range cannot exceed 5 years.',
         'file_size' => 'The file cannot exceed 5 MB.',
+        'wallet_duplicate' => 'That wallet name is already used.',
+        'wallet_invalid' => 'The wallet was not found or has been archived.',
+        'transfer_same' => 'The source and destination wallets must be different.',
+        'recurring_start' => 'The start date must be within 1 year before or after today.',
     ],
 ];

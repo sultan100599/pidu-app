@@ -22,6 +22,12 @@ class TransactionResource extends JsonResource
                 'color' => $this->category->color,
                 'type' => $this->category->type->value,
             ]),
+            'wallet' => $this->whenLoaded('wallet', fn () => $this->wallet ? [
+                'id' => $this->wallet->id,
+                'name' => $this->wallet->name,
+                'purpose' => $this->wallet->purpose->value,
+            ] : null),
+            'recurring_transaction_id' => $this->recurring_transaction_id,
             'amount' => Money::of($this->amount),
             'payment_method' => $this->payment_method->value,
             'payment_method_label' => $this->payment_method->label(),

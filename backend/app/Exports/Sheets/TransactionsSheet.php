@@ -43,7 +43,7 @@ class TransactionsSheet implements FromQuery, ShouldAutoSize, WithColumnFormatti
 
     public function headings(): array
     {
-        return ['Tanggal', 'Jenis', 'Kategori', 'Deskripsi', 'Catatan', 'Metode', 'Nominal'];
+        return ['Tanggal', 'Jenis', 'Kategori', 'Deskripsi', 'Catatan', 'Metode', 'Dompet', 'Nominal'];
     }
 
     /**
@@ -58,6 +58,7 @@ class TransactionsSheet implements FromQuery, ShouldAutoSize, WithColumnFormatti
             $trx->description,
             $trx->notes,
             $trx->payment_method->label('id'),
+            $trx->wallet?->name,
             // Pengeluaran negatif supaya kolom bisa langsung dijumlah = saldo.
             ($trx->type->value === 'expense' ? -1 : 1) * (float) $trx->amount,
         ];
@@ -65,7 +66,7 @@ class TransactionsSheet implements FromQuery, ShouldAutoSize, WithColumnFormatti
 
     public function columnFormats(): array
     {
-        return ['A' => self::DATE, 'G' => self::MONEY];
+        return ['A' => self::DATE, 'H' => self::MONEY];
     }
 
     public function registerEvents(): array
@@ -75,9 +76,9 @@ class TransactionsSheet implements FromQuery, ShouldAutoSize, WithColumnFormatti
                 $sheet = $event->sheet->getDelegate();
                 $this->styleHeader($sheet);
                 $this->appendTotals($sheet, [
-                    ['Total pemasukan', 'G', $this->totals['income']],
-                    ['Total pengeluaran', 'G', -$this->totals['expense']],
-                    ['Saldo', 'G', $this->totals['balance']],
+                    ['Total pemasukan', 'H', $this->totals['income']],
+                    ['Total pengeluaran', 'H', -$this->totals['expense']],
+                    ['Saldo', 'H', $this->totals['balance']],
                 ]);
             },
         ];

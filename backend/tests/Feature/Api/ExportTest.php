@@ -13,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Tests\TestCase;
 
 class ExportTest extends TestCase
@@ -47,7 +48,7 @@ class ExportTest extends TestCase
     /**
      * Unduh xlsx sungguhan lalu buka dengan PhpSpreadsheet.
      */
-    private function downloadSpreadsheet(string $url): \PhpOffice\PhpSpreadsheet\Spreadsheet
+    private function downloadSpreadsheet(string $url): Spreadsheet
     {
         $response = $this->get($url, ['Accept' => 'application/json'])->assertOk();
         $this->assertStringContainsString('spreadsheetml', $response->headers->get('content-type'));
@@ -68,17 +69,18 @@ class ExportTest extends TestCase
         $book = $this->downloadSpreadsheet('/api/export/excel?start_date=2026-09-01&end_date=2026-09-30&type=expense&sort=amount&dir=asc');
         $sheet = $book->getSheetByName('Transaksi');
 
-        $this->assertSame(['Tanggal', 'Jenis', 'Kategori', 'Deskripsi', 'Catatan', 'Metode', 'Nominal'], $sheet->rangeToArray('A1:G1')[0]);
+        $this->assertSame(['Tanggal', 'Jenis', 'Kategori', 'Deskripsi', 'Catatan', 'Metode', 'Dompet', 'Nominal'], $sheet->rangeToArray('A1:H1')[0]);
         // 2 pengeluaran September, urut nominal naik; pengeluaran bernilai negatif
         $this->assertSame('Makan', $sheet->getCell('D2')->getValue());
-        $this->assertEquals(-10000, $sheet->getCell('G2')->getValue());
-        $this->assertEquals(-20000, $sheet->getCell('G3')->getValue());
+        $this->assertSame('Dompet Utama', $sheet->getCell('G2')->getValue());
+        $this->assertEquals(-10000, $sheet->getCell('H2')->getValue());
+        $this->assertEquals(-20000, $sheet->getCell('H3')->getValue());
         $this->assertSame('dd/mm/yyyy', $sheet->getStyle('A2')->getNumberFormat()->getFormatCode());
         // baris kosong, lalu total
         $this->assertNull($sheet->getCell('A4')->getValue());
         $this->assertSame('Total pengeluaran', $sheet->getCell('A6')->getValue());
-        $this->assertEquals(-30000, $sheet->getCell('G6')->getValue());
-        $this->assertEquals(-30000, $sheet->getCell('G7')->getValue()); // saldo
+        $this->assertEquals(-30000, $sheet->getCell('H6')->getValue());
+        $this->assertEquals(-30000, $sheet->getCell('H7')->getValue()); // saldo
         $this->assertSame(7, $sheet->getHighestRow());
     }
 

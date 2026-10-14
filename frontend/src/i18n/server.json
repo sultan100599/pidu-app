@@ -295,6 +295,86 @@
         "Upami sanés anjeun nu nyuhunkeun, antepkeun émail ieu. Password anjeun teu robih."
     ],
     [
+        "Kategori masih dipakai transaksi rutin, jadi tidak bisa dihapus. Hapus atau ubah transaksi rutinnya dulu.",
+        "This category is used by a recurring transaction, so it cannot be deleted. Delete or change that recurring transaction first.",
+        "Kategori masih dianggo ku transaksi rutin, janten teu tiasa dipupus. Pupus atanapi robih heula transaksi rutinna."
+    ],
+    [
+        "Dompet ditambahkan.",
+        "Wallet added.",
+        "Dompét parantos ditambihkeun."
+    ],
+    [
+        "Dompet disimpan.",
+        "Wallet saved.",
+        "Dompét parantos disimpen."
+    ],
+    [
+        "Dompet dihapus.",
+        "Wallet deleted.",
+        "Dompét parantos dipupus."
+    ],
+    [
+        "Dompet diarsipkan dan tidak muncul lagi di form.",
+        "Wallet archived. It no longer appears in the form.",
+        "Dompét diarsipkeun sareng teu muncul deui dina formulir."
+    ],
+    [
+        "Dompet dipakai lagi.",
+        "Wallet is in use again.",
+        "Dompét dianggo deui."
+    ],
+    [
+        "Dompet ini sudah punya catatan, jadi tidak bisa dihapus. Arsipkan saja.",
+        "This wallet already has records, so it cannot be deleted. Archive it instead.",
+        "Dompét ieu parantos gaduh catetan, janten teu tiasa dipupus. Arsipkeun waé."
+    ],
+    [
+        "Harus ada minimal satu dompet yang dipakai.",
+        "At least one wallet must stay in use.",
+        "Kedah aya sahenteuna hiji dompét anu dianggo."
+    ],
+    [
+        "Uang sudah dipindahkan.",
+        "Money moved.",
+        "Artos parantos dipindahkeun."
+    ],
+    [
+        "Catatan pindah uang dihapus.",
+        "Transfer record deleted.",
+        "Catetan mindahkeun artos parantos dipupus."
+    ],
+    [
+        "Transaksi rutin disimpan.",
+        "Recurring transaction saved.",
+        "Transaksi rutin parantos disimpen."
+    ],
+    [
+        "Transaksi rutin disimpan. {count} transaksi sudah dicatat.",
+        "Recurring transaction saved. {count} transactions have been recorded.",
+        "Transaksi rutin parantos disimpen. {count} transaksi parantos dicatet."
+    ],
+    [
+        "Transaksi rutin disimpan. Perubahan berlaku mulai jadwal berikutnya.",
+        "Recurring transaction saved. Changes apply from the next date.",
+        "Transaksi rutin parantos disimpen. Parobihan lumaku ti jadwal salajengna."
+    ],
+    [
+        "Transaksi rutin dihapus. Transaksi yang sudah tercatat tetap ada.",
+        "Recurring transaction deleted. Transactions already recorded stay.",
+        "Transaksi rutin parantos dipupus. Transaksi anu parantos kacatet tetep aya."
+    ],
+    [
+        "Transaksi rutin dijeda.",
+        "Recurring transaction paused.",
+        "Transaksi rutin direureuhkeun."
+    ],
+    [
+        "Transaksi rutin jalan lagi.",
+        "Recurring transaction running again.",
+        "Transaksi rutin jalan deui."
+    ],
+    [
         "Januari",
         "January",
         "Januari"
@@ -825,6 +905,76 @@
         "Token"
     ],
     [
+        "dompet",
+        "wallet",
+        "dompét"
+    ],
+    [
+        "Dompet",
+        "Wallet",
+        "Dompét"
+    ],
+    [
+        "dompet asal",
+        "source wallet",
+        "dompét asal"
+    ],
+    [
+        "Dompet asal",
+        "Source wallet",
+        "Dompét asal"
+    ],
+    [
+        "dompet tujuan",
+        "destination wallet",
+        "dompét tujuan"
+    ],
+    [
+        "Dompet tujuan",
+        "Destination wallet",
+        "Dompét tujuan"
+    ],
+    [
+        "jenis dompet",
+        "wallet type",
+        "jinis dompét"
+    ],
+    [
+        "Jenis dompet",
+        "Wallet type",
+        "Jinis dompét"
+    ],
+    [
+        "dipakai untuk",
+        "used for",
+        "dianggo kanggo"
+    ],
+    [
+        "Dipakai untuk",
+        "Used for",
+        "Dianggo kanggo"
+    ],
+    [
+        "jadwal",
+        "schedule",
+        "jadwal"
+    ],
+    [
+        "Jadwal",
+        "Schedule",
+        "Jadwal"
+    ],
+    [
+        "tanggal",
+        "date",
+        "ping kaping"
+    ],
+    [
+        "Tanggal",
+        "Date",
+        "Ping kaping"
+    ],
+    [
         "Password lama salah.",
         "The current password is incorrect.",
         "Password lami lepat."
@@ -873,5 +1023,25 @@
         "Ukuran file maksimal 5 MB.",
         "The file cannot exceed 5 MB.",
         "Ukuran berkas maksimal 5 MB."
+    ],
+    [
+        "Nama dompet sudah dipakai.",
+        "That wallet name is already used.",
+        "Nami dompét parantos dianggo."
+    ],
+    [
+        "Dompet tidak ditemukan atau sudah diarsipkan.",
+        "The wallet was not found or has been archived.",
+        "Dompét teu kapendak atanapi parantos diarsipkeun."
+    ],
+    [
+        "Dompet asal dan tujuan harus berbeda.",
+        "The source and destination wallets must be different.",
+        "Dompét asal sareng tujuan kedah béda."
+    ],
+    [
+        "Tanggal mulai paling jauh 1 tahun ke belakang atau 1 tahun ke depan.",
+        "The start date must be within 1 year before or after today.",
+        "Ping kaping mimiti paling tebih 1 taun ka tukang atanapi 1 taun ka payun."
     ]
 ]

@@ -3,14 +3,14 @@ import { useT } from '../i18n/LocaleProvider'
 import { toast } from '../i18n/toast'
 import * as authApi from '../api/auth'
 import PageHeader from '../components/PageHeader'
-import AmountInput from '../components/ui/AmountInput'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getErrorMessage, getFieldErrors } from '../utils/errors'
 
 function ProfileCard() {
   const t = useT()
   const { user, setUser } = useAuth()
-  const [form, setForm] = useState(() => ({ name: user?.name ?? '', opening_balance: user?.opening_balance ?? 0 }))
+  const [form, setForm] = useState(() => ({ name: user?.name ?? '' }))
   const [errors, setErrors] = useState({})
   const [saving, setSaving] = useState(false)
 
@@ -20,7 +20,7 @@ function ProfileCard() {
     if (!form.name.trim()) return setErrors({ name: 'Nama wajib diisi.' })
     setSaving(true)
     try {
-      const response = await authApi.updateAccount({ name: form.name.trim(), opening_balance: form.opening_balance ?? 0 })
+      const response = await authApi.updateAccount({ name: form.name.trim() })
       setUser(response.data.data)
       toast.success(response.data.message)
     } catch (err) {
@@ -48,20 +48,8 @@ function ProfileCard() {
             />
             {errors.name && <div className="invalid-feedback">{t(errors.name)}</div>}
           </div>
-          <div className="mb-1">
-            <label htmlFor="account-opening" className="form-label">{t('Saldo awal')}</label>
-            <AmountInput
-              id="account-opening"
-              value={form.opening_balance}
-              invalid={Boolean(errors.opening_balance)}
-              allowDecimals={Boolean(Number(user?.opening_balance) % 1)}
-              aria-describedby="account-opening-hint"
-              onChange={(value) => { setForm((prev) => ({ ...prev, opening_balance: value })); setErrors({}) }}
-            />
-            {errors.opening_balance && <div className="invalid-feedback d-block">{t(errors.opening_balance)}</div>}
-          </div>
-          <p id="account-opening-hint" className="form-text mb-3">
-            {t('Uang yang kamu pegang sebelum mulai mencatat di Pidu. Saldo di dashboard dihitung dari angka ini.')}
+          <p className="form-text mb-3">
+            {t('Saldo awal diatur per dompet di halaman')} <Link to="/wallets">{t('Dompet')}</Link>.
           </p>
           <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving && <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>}
@@ -148,7 +136,7 @@ function PasswordCard() {
 export default function AccountPage() {
   return (
     <div className="account-page">
-      <PageHeader title="Akun" subtitle="Nama, saldo awal, dan password" />
+      <PageHeader title="Akun" subtitle="Nama dan password" />
       <ProfileCard />
       <PasswordCard />
     </div>

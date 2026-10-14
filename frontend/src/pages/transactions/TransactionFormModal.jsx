@@ -3,21 +3,24 @@ import { useT } from '../../i18n/LocaleProvider'
 import { Link } from 'react-router-dom'
 import { toast } from '../../i18n/toast'
 import * as transactionsApi from '../../api/transactions'
+import * as recurringApi from '../../api/recurring'
 import AmountInput from '../../components/ui/AmountInput'
 import Modal from '../../components/ui/Modal'
-import { PAYMENT_METHODS } from '../../constants/enums'
+import { FREQUENCIES, PAYMENT_METHODS } from '../../constants/enums'
 import { getErrorMessage, getFieldErrors } from '../../utils/errors'
 import { toYmd } from '../../utils/format'
 import { useAuth } from '../../context/AuthContext'
 import CategoryIcon from '../../components/CategoryIcon'
 import { readPreferences, rememberTransaction } from '../../utils/transactionPreferences'
 
-function initialForm(transaction, payment = 'cash') {
+function initialForm(transaction, payment = 'cash', wallet = '') {
   if (transaction) {
     return {
       type: transaction.type,
       transaction_date: transaction.transaction_date,
       category_id: String(transaction.category?.id ?? ''),
+      wallet_id: String(transaction.wallet?.id ?? ''),
+      repeat: '',
       amount: transaction.amount,
       payment_method: transaction.payment_method,
       description: transaction.description ?? '',
@@ -28,6 +31,8 @@ function initialForm(transaction, payment = 'cash') {
     type: 'expense',
     transaction_date: toYmd(new Date()),
     category_id: '',
+    wallet_id: wallet,
+    repeat: '',
     amount: null,
     payment_method: payment,
     description: '',
@@ -44,12 +49,18 @@ function validate(form) {
 }
 
 // Layout memasang ulang form setiap kali dialog dibuka.
-export default function TransactionFormModal({ show, transaction, categories, categoriesLoading, categoriesError, onRetryCategories, onClose, onSaved }) {
+export default function TransactionFormModal({ show, transaction, categories, wallets = [], categoriesLoading, categoriesError, onRetryCategories, onClose, onSaved }) {
   const t = useT()
   const { user } = useAuth()
   const [preferences, setPreferences] = useState(() => readPreferences(user?.id))
   const isEdit = Boolean(transaction)
   const [form, setForm] = useState(() => initialForm(transaction, preferences.payment))
+  // Dompet aktif (+ dompet arsip milik transaksi yang diedit). Default: dompet terakhir dipakai.
+  const walletOptions = wallets.filter((w) => w.is_active || String(w.id) === form.wallet_id)
+  const activeWallets = wallets.filter((w) => w.is_active)
+  const defaultWallet = String((activeWallets.find((w) => w.id === preferences.wallet) ?? activeWallets[0])?.id ?? '')
+  const walletId = form.wallet_id || (isEdit ? '' : defaultWallet)
+  const showWallets = walletOptions.length > 1 || (isEdit && walletOptions.some((w) => !w.is_active))
   const [errors, setErrors] = useState({})
   const [formError, setFormError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -124,15 +135,19 @@ export default function TransactionFormModal({ show, transaction, categories, ca
       description: form.description.trim() || null,
       notes: form.notes.trim() || null,
     }
+    if (walletId) payload.wallet_id = Number(walletId)
 
     setSubmitting(true)
     setFormError('')
     try {
+      // "Ulangi" membuat transaksi rutin mulai tanggal ini; transaksi pertamanya dicatat oleh server.
       const response = isEdit
         ? await transactionsApi.update(transaction.id, payload)
-        : await transactionsApi.create(payload)
+        : form.repeat
+          ? await recurringApi.create({ ...payload, frequency: form.repeat, start_date: form.transaction_date, notes: undefined, transaction_date: undefined })
+          : await transactionsApi.create(payload)
       toast.success(response.data.message)
-      setPreferences(rememberTransaction(user?.id, form, usageCounts))
+      setPreferences(rememberTransaction(user?.id, { ...form, wallet_id: walletId }, usageCounts))
       onSaved()
       if (addAnother) {
         setForm((prev) => ({
@@ -140,6 +155,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
           type: prev.type,
           transaction_date: prev.transaction_date,
           payment_method: prev.payment_method,
+          wallet_id: walletId,
         }))
         setErrors({})
         document.getElementById('trx-amount')?.focus()
@@ -149,7 +165,8 @@ export default function TransactionFormModal({ show, transaction, categories, ca
     } catch (err) {
       if (err.response?.status === 422) {
         const fieldErrors = getFieldErrors(err)
-        if (fieldErrors.payment_method || fieldErrors.notes) setDetailsOpen(true)
+        if (fieldErrors.start_date) fieldErrors.transaction_date = fieldErrors.start_date
+        if (fieldErrors.payment_method || fieldErrors.notes || fieldErrors.frequency) setDetailsOpen(true)
         setErrors(fieldErrors)
       } else {
         setFormError(getErrorMessage(err))
@@ -284,6 +301,29 @@ export default function TransactionFormModal({ show, transaction, categories, ca
           )}
         </div>
 
+        {showWallets && (
+          <div className="mb-3">
+            <label htmlFor="trx-wallet" className="form-label">
+              {t('Dompet')}
+            </label>
+            <select
+              id="trx-wallet"
+              className={`form-select ${errors.wallet_id ? 'is-invalid' : ''}`}
+              value={walletId}
+              onChange={(e) => setField('wallet_id', e.target.value)}
+            >
+              {walletOptions.map((w) => (
+                <option key={w.id} value={w.id}>
+                  {w.name}
+                  {w.purpose === 'business' ? ' · ' + t('Usaha') : ''}
+                  {w.is_active ? '' : ' ' + t('(diarsipkan)')}
+                </option>
+              ))}
+            </select>
+            {errors.wallet_id && <div className="invalid-feedback">{t(errors.wallet_id)}</div>}
+          </div>
+        )}
+
         <div className="row g-3 mb-3">
           <div className="col-sm-5">
             <label htmlFor="trx-date" className="form-label">
@@ -319,7 +359,7 @@ export default function TransactionFormModal({ show, transaction, categories, ca
           <summary>
             {t('Detail lain')}{' '}
             <span className="text-body-secondary small">
-              · {t(PAYMENT_METHODS[form.payment_method] ?? 'Lainnya')}{form.notes.trim() ? ' · ' + t('ada catatan') : ''}
+              · {t(PAYMENT_METHODS[form.payment_method] ?? 'Lainnya')}{form.repeat ? ' · ' + t(FREQUENCIES[form.repeat]) : ''}{form.notes.trim() ? ' · ' + t('ada catatan') : ''}
             </span>
           </summary>
           <div className="form-details-body">
@@ -341,6 +381,31 @@ export default function TransactionFormModal({ show, transaction, categories, ca
               </select>
               {errors.payment_method && <div className="invalid-feedback">{t(errors.payment_method)}</div>}
             </div>
+
+            {!isEdit && (
+              <div className="mb-3">
+                <label htmlFor="trx-repeat" className="form-label">
+                  {t('Ulangi otomatis')}
+                </label>
+                <select
+                  id="trx-repeat"
+                  className={`form-select ${errors.frequency ? 'is-invalid' : ''}`}
+                  value={form.repeat}
+                  onChange={(e) => setField('repeat', e.target.value)}
+                  aria-describedby="trx-repeat-help"
+                >
+                  <option value="">{t('Tidak')}</option>
+                  {Object.entries(FREQUENCIES).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {t(label)}
+                    </option>
+                  ))}
+                </select>
+                <div id="trx-repeat-help" className="form-text">
+                  {t('Untuk tagihan atau gaji yang sama setiap periode. Pidu mencatatnya sendiri pada tanggalnya; atur di halaman Transaksi rutin.')}
+                </div>
+              </div>
+            )}
 
             <div>
               <label htmlFor="trx-notes" className="form-label">

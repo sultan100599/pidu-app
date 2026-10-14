@@ -18,6 +18,8 @@ import ImportPage from './pages/import/ImportPage'
 
 import TransactionsPage from './pages/transactions/TransactionsPage'
 import AccountPage from './pages/AccountPage'
+import WalletsPage from './pages/wallets/WalletsPage'
+import RecurringPage from './pages/recurring/RecurringPage'
 import { useTheme } from './context/ThemeContext'
 
 // Halaman bergrafik dimuat terpisah (lazy) supaya Chart.js tidak ikut di bundle awal
@@ -49,6 +51,8 @@ export default function App() {
           <Route element={<AppLayout />}>
             <Route index element={<DashboardPage />} />
             <Route path="transactions" element={<TransactionsPage />} />
+            <Route path="recurring" element={<RecurringPage />} />
+            <Route path="wallets" element={<WalletsPage />} />
             <Route path="categories" element={<CategoriesPage />} />
             <Route path="reports" element={<Navigate to="/reports/daily" replace />} />
             <Route path="reports/daily" element={<DailyReportPage />} />

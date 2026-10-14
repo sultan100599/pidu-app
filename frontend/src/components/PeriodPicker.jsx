@@ -43,11 +43,12 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
   }
 
   return (
-    <div className="d-flex flex-wrap align-items-end gap-2">
-      <div>
-        <label htmlFor={`${idPrefix}-preset`} className="form-label small mb-1">
+    <div className="period-picker d-flex flex-wrap align-items-center gap-2">
+      <div className="period-preset">
+        <label htmlFor={`${idPrefix}-preset`} className="visually-hidden">
           {t('Periode')}
         </label>
+        <i className="bi bi-calendar3" aria-hidden="true"></i>
         <select
           id={`${idPrefix}-preset`}
           className="form-select form-select-sm"
@@ -63,8 +64,8 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
       </div>
       {period === 'custom' && (
         <>
-          <div>
-            <label htmlFor={`${idPrefix}-start`} className="form-label small mb-1">
+          <div className="period-range d-flex align-items-center gap-2">
+            <label htmlFor={`${idPrefix}-start`} className="visually-hidden">
               {t('Dari')}
             </label>
             <input
@@ -74,9 +75,8 @@ export default function PeriodPicker({ query, idPrefix = 'period' }) {
               value={start}
               onChange={(e) => update({ start_date: e.target.value })}
             />
-          </div>
-          <div>
-            <label htmlFor={`${idPrefix}-end`} className="form-label small mb-1">
+            <span className="text-body-secondary" aria-hidden="true">–</span>
+            <label htmlFor={`${idPrefix}-end`} className="visually-hidden">
               {t('Sampai')}
             </label>
             <input

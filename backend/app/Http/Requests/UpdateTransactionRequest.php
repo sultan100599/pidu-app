@@ -33,4 +33,18 @@ class UpdateTransactionRequest extends StoreTransactionRequest
 
         return $rule;
     }
+
+    /**
+     * Dompet yang sudah diarsipkan tetap boleh bila wallet_id tidak berubah.
+     */
+    protected function walletRule(): Exists
+    {
+        $rule = Rule::exists('wallets', 'id')->where('user_id', $this->user()->id);
+
+        if ((int) $this->input('wallet_id') !== $this->transaction()->wallet_id) {
+            $rule->where('is_active', true);
+        }
+
+        return $rule;
+    }
 }

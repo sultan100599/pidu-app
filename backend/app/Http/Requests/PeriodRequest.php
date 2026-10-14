@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\PaymentMethod;
 use App\Enums\TransactionType;
+use App\Enums\WalletPurpose;
 use App\Support\Period;
 use Carbon\CarbonImmutable;
 use Illuminate\Validation\Rule;
@@ -30,6 +31,11 @@ class PeriodRequest extends ApiRequest
                 Rule::exists('categories', 'id')->where('user_id', $this->user()->id),
             ],
             'payment_method' => ['nullable', Rule::enum(PaymentMethod::class)],
+            'wallet_id' => [
+                'nullable', 'integer',
+                Rule::exists('wallets', 'id')->where('user_id', $this->user()->id),
+            ],
+            'purpose' => ['nullable', Rule::enum(WalletPurpose::class)],
         ];
     }
 
@@ -63,12 +69,12 @@ class PeriodRequest extends ApiRequest
     }
 
     /**
-     * @return array{type?:string, category_id?:int, payment_method?:string, search?:string}
+     * @return array{type?:string, category_id?:int, payment_method?:string, wallet_id?:int, purpose?:string, search?:string}
      */
     public function filters(): array
     {
         return array_filter(
-            $this->safe()->only(['type', 'category_id', 'payment_method', 'search']),
+            $this->safe()->only(['type', 'category_id', 'payment_method', 'wallet_id', 'purpose', 'search']),
             fn ($v) => $v !== null && $v !== ''
         );
     }
