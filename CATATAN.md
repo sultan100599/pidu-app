@@ -166,6 +166,17 @@ Hanya folder skill yang dipasang, tanpa repo utuh (sama dengan yang dilakukan in
 - Cek kontras warna: `python .claude/skills/antislop-human/contrast-check.py "#0d6efd" "#ffffff"`
 - Update: `npx antislop-ai --update`. Hapus: folder `.claude/skills/antislop*` dan blok `<!-- antislop:start -->` … `<!-- antislop:end -->` di `CLAUDE.md`.
 
+### Skill lain dan pola kerja (14 Okt 2026)
+- `.claude/skills/impeccable/`: skill desain (v4.5.2), dipakai untuk membangun dan merapikan UI. `/impeccable document` tidak dijalankan.
+- `.claude/skills/improve-ui/` (ibelick/ui-skills, MIT, commit 9a0cb1e): audit UI yang hanya membaca. Mencari maksimal 3 hal yang bertentangan dengan aturan desain Pidu sendiri, lalu menulis rencana perbaikan ke `design-plans/` setelah dipilih. ui-ux-pro-max sengaja tidak dipasang karena membuat arah desain baru dari katalog dan bentrok dengan `DESIGN.md`.
+- **Pola kerja tiap phase** (rinciannya di `CLAUDE.md`, bagian "Pidu workflow"):
+  1. Baca catatan dan tanya mode antislop.
+  2. Bangun dengan antislop (inti + sub-skill sesuai area) dan impeccable.
+  3. Tes, lalu cek di browser Anbo.
+  4. Audit dengan improve-ui di subagent terpisah (ditambah audit antislop kalau mode "di akhir").
+  5. Kamu memilih nomor temuan, lalu diperbaiki.
+  6. Tulis report berisi daftar skill yang dipakai, lalu commit dan tanya sebelum phase berikutnya.
+
 ## 6. Yang perlu dilakukan
 
 - [x] Restart `npm start` supaya scheduler backup harian berjalan (sudah dilakukan user).
