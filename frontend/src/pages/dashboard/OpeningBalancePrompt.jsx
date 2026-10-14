@@ -20,7 +20,7 @@ export default function OpeningBalancePrompt({ onSaved }) {
     try {
       const response = await authApi.updateAccount({ opening_balance: value })
       setUser(response.data.data)
-      toast.success(value > 0 ? 'Saldo awal disimpan.' : 'Saldo dimulai dari Rp 0. Bisa diubah kapan saja di menu Akun.')
+      toast.success(value > 0 ? 'Saldo awal disimpan.' : 'Saldo dimulai dari Rp 0. Bisa diubah kapan saja di halaman Dompet.')
       onSaved()
     } catch (err) {
       setError(getFieldErrors(err).opening_balance ?? getErrorMessage(err))

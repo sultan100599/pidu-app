@@ -3,7 +3,7 @@ import { toYmd } from './format'
 // Preset periode untuk filter transaksi. Tanggal dihitung dengan objek Date
 // lokal + toYmd (bukan toISOString) supaya sesuai timezone user.
 export const PERIOD_PRESETS = [
-  { value: 'all', label: 'Semua' },
+  { value: 'all', label: 'Semua tanggal' },
   { value: 'this_month', label: 'Bulan ini' },
   { value: 'last_month', label: 'Bulan lalu' },
   { value: 'last_30_days', label: '30 hari terakhir' },

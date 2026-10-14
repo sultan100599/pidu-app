@@ -103,7 +103,7 @@ function DownloadCard() {
                 <label htmlFor="exp-period" className="form-label small mb-1">{t('Periode')}</label>
                 <select id="exp-period" className="form-select" value={period} onChange={(e) => changePeriod(e.target.value)}>
                   {PERIOD_PRESETS.map((p) => (
-                    <option key={p.value} value={p.value}>{t(p.value === 'all' ? 'Semua tanggal' : p.label)}</option>
+                    <option key={p.value} value={p.value}>{t(p.label)}</option>
                   ))}
                 </select>
               </div>

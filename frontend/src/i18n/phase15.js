@@ -34,7 +34,7 @@ export default [
   ['Mulai dari Rp 0', 'Start from Rp 0', 'Mimitian ti Rp 0'],
   ['Isi jumlah uang, atau pilih mulai dari Rp 0.', 'Enter an amount, or choose to start from Rp 0.', 'Eusian jumlah artos, atanapi pilih mimitian ti Rp 0.'],
   ['Saldo awal disimpan.', 'Opening balance saved.', 'Saldo awal parantos disimpen.'],
-  ['Saldo dimulai dari Rp 0. Bisa diubah kapan saja di menu Akun.', 'Your balance starts from Rp 0. You can change it any time in the Account menu.', 'Saldo dimimitian ti Rp 0. Tiasa dirobih iraha waé dina ménu Akun.'],
+  ['Saldo dimulai dari Rp 0. Bisa diubah kapan saja di halaman Dompet.', 'Your balance starts from Rp 0. You can change it any time on the Wallets page.', 'Saldo dimimitian ti Rp 0. Tiasa dirobih iraha waé dina kaca Dompet.'],
   ['Anggaran bulan ini lebih {amount}', 'This month is over budget by {amount}', 'Anggaran bulan ieu langkung {amount}'],
 
   ['Jenis laporan', 'Report type', 'Jinis laporan'],

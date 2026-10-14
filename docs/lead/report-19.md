@@ -80,6 +80,12 @@ Dijalankan di subagent terpisah dan hanya membaca kode. Dua temuan lolos tiga bu
 
 Rekomendasi auditor ("perbaiki dulu"): no. 1.
 
+User memilih no. 1 dan 2. Rencananya ditulis di `design-plans/01-saldo-awal-toast-ke-dompet.md` dan `design-plans/02-preset-semua-tanggal.md`, lalu dikerjakan:
+- Toast saldo awal sekarang menyebut halaman Dompet (id/en/su).
+- Preset `all` sekarang berlabel "Semua tanggal" di sumbernya (`utils/period.js`), sehingga label khusus di kartu Unduh data tidak diperlukan lagi.
+
+Setelah itu `check-locales`, lint, dan 16 tes e2e kembali lolos.
+
 ## Catatan
 - Cadangan database otomatis (`storage/app/backups/database/`) masih bisa memuat data akun yang sudah dihapus sampai cadangan itu tergeser cadangan baru.
 - Teks Sunda baru (`phase19.js`, 21 baris) perlu dibaca penutur asli.
