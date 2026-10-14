@@ -38,7 +38,7 @@ class ImportTemplateExport implements WithMultipleSheets
             ['Kategori pengeluaran Anda', null, $byType('expense')],
             ['Kategori pemasukan Anda', null, $byType('income')],
             [null, null, null],
-            ['Catatan', null, 'Maks. 5.000 baris per impor. Baris yang sama persis dengan transaksi yang sudah ada (tanggal, jenis, kategori, nominal, deskripsi) dilewati. File hasil Export/Backup Pidu-App bisa langsung diimpor.'],
+            ['Catatan', null, 'Maks. 5.000 baris sekali unggah. Baris yang sama persis dengan transaksi yang sudah ada (tanggal, jenis, kategori, nominal, deskripsi) dilewati. File unduhan atau cadangan Pidu-App bisa langsung diunggah.'],
         ];
 
         return [

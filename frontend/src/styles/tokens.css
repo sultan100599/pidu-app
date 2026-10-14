@@ -104,7 +104,7 @@
 :root,
 [data-bs-theme] {
   --pidu-font: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --pidu-heading-font: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --pidu-heading-font: 'Zen Maru Gothic', 'Segoe UI', system-ui, sans-serif;
   --pidu-radius-sm: 0.5rem;
   --pidu-radius-control: 0.75rem;
   --pidu-radius-card: 1.25rem;

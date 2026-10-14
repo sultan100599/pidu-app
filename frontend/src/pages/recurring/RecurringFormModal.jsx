@@ -20,6 +20,7 @@ export default function RecurringFormModal({ rule, categories, wallets, onClose,
     category_id: String(rule?.category?.id ?? ''),
     wallet_id: String(rule?.wallet?.id ?? activeWallets[0]?.id ?? ''),
     description: rule?.description ?? '',
+    notes: rule?.notes ?? '',
     frequency: rule?.frequency ?? 'monthly',
     start_date: rule?.start_date ?? toYmd(new Date()),
   }))
@@ -59,6 +60,7 @@ export default function RecurringFormModal({ rule, categories, wallets, onClose,
       category_id: Number(form.category_id),
       wallet_id: form.wallet_id ? Number(form.wallet_id) : null,
       description: form.description.trim() || null,
+      notes: form.notes.trim() || null,
     }
     if (!isEdit) Object.assign(payload, { frequency: form.frequency, start_date: form.start_date })
     setSubmitting(true)
@@ -124,6 +126,14 @@ export default function RecurringFormModal({ rule, categories, wallets, onClose,
             {t('Deskripsi')} <span className="text-body-secondary small">{t('(opsional)')}</span>
           </label>
           <input id="recurring-description" className="form-control" maxLength={255} value={form.description} onChange={(e) => setField('description', e.target.value)} placeholder={t('mis. Listrik PLN')} />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="recurring-notes" className="form-label">
+            {t('Catatan')} <span className="text-body-secondary small">{t('(opsional)')}</span>
+          </label>
+          <textarea id="recurring-notes" rows={2} maxLength={5000} className={`form-control ${errors.notes ? 'is-invalid' : ''}`} value={form.notes} onChange={(e) => setField('notes', e.target.value)}></textarea>
+          {errors.notes && <div className="invalid-feedback">{t(errors.notes)}</div>}
         </div>
 
         {walletOptions.length > 1 && (

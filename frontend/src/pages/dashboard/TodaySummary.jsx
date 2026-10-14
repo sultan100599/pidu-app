@@ -9,7 +9,6 @@ import { SkeletonBar } from '../../components/ui/PageSkeleton'
 import { useTransactions } from '../../context/TransactionContext'
 
 // Pengingat muncul mulai sore, saat hari ini belum ada catatan sama sekali.
-const REMINDER_HOUR = 17
 const reminderKey = (userId) => `pidu:reminder-dismissed:${userId}`
 
 function readDismissed(userId) {
@@ -63,10 +62,10 @@ export default function TodaySummary() {
     <div className="text-body-secondary" aria-busy={day.loading || budget.loading}>
       {day.loading ? <><SkeletonBar className="today-skeleton" /><span className="visually-hidden">{t('Memuat pengeluaran hari ini…')}</span></> : day.error ? <span>{t('Pengeluaran hari ini belum tersedia.')} <button className="btn btn-sm btn-outline-secondary" onClick={day.reload}>{t('Coba lagi')}</button></span> :
         <span>{Number(day.data?.totals.expense) === 0 ? t('Belum ada pengeluaran hari ini') : t('Pengeluaran hari ini {amount}', { amount: formatRupiah(day.data?.totals.expense) })}</span>}
-      {budget.loading ? <span className="visually-hidden">{t('Memuat budget bulan ini…')}</span> : budget.error ? <span> · {t('Budget bulan ini belum tersedia.')} <button className="btn btn-sm btn-outline-secondary" onClick={budget.reload}>{t('Coba lagi')}</button></span> : budgets.length > 0 && <span> · {remaining < 0
-        ? t('Budget bulan ini lebih {amount}', { amount: formatRupiah(-remaining) })
-        : t('Sisa budget bulan ini {amount}', { amount: formatRupiah(remaining) })}</span>}
+      {budget.loading ? <span className="visually-hidden">{t('Memuat anggaran bulan ini…')}</span> : budget.error ? <span> · {t('Anggaran bulan ini belum tersedia.')} <button className="btn btn-sm btn-outline-secondary" onClick={budget.reload}>{t('Coba lagi')}</button></span> : budgets.length > 0 && <span> · {remaining < 0
+        ? t('Anggaran bulan ini lebih {amount}', { amount: formatRupiah(-remaining) })
+        : t('Sisa anggaran bulan ini {amount}', { amount: formatRupiah(remaining) })}</span>}
     </div>
-    {day.data && day.data.totals.count === 0 && now.getHours() >= REMINDER_HOUR && user && <Reminder today={today} userId={user.id} />}
+    {day.data && day.data.totals.count === 0 && user?.reminder_hour != null && now.getHours() >= user.reminder_hour && <Reminder today={today} userId={user.id} />}
   </section>
 }

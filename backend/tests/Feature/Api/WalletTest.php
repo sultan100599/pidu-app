@@ -124,6 +124,10 @@ class WalletTest extends TestCase
 
         $this->trx($main, 'expense', 1000);
         $this->deleteJson("/api/wallets/$main")->assertStatus(422)->assertJsonValidationErrors('wallet');
+        // Daftar dompet memberi tahu mana yang sudah dipakai (tombol Hapus disembunyikan).
+        $list = collect($this->getJson('/api/wallets')->json('data'))->keyBy('id');
+        $this->assertTrue($list[$main]['in_use']);
+        $this->assertFalse($list[$spare]['in_use']);
 
         $this->patchJson("/api/wallets/$main/toggle")->assertOk()->assertJsonPath('data.is_active', false);
         // Dompet terakhir yang aktif tidak bisa diarsipkan / dihapus.

@@ -4,6 +4,7 @@ import icons from './icons.js'
 import server from './server.json' with { type: 'json' }
 import phase15 from './phase15.js'
 import phase18 from './phase18.js'
+import phase19 from './phase19.js'
 
 const entries = [
   [
@@ -17,9 +18,9 @@ const entries = [
     "Pilih basa"
   ],
   [
-    "Dashboard",
-    "Dashboard",
-    "Dasbor"
+    "Ringkasan",
+    "Overview",
+    "Ringkesan"
   ],
   [
     "Transaksi",
@@ -37,19 +38,19 @@ const entries = [
     "Laporan"
   ],
   [
-    "Budget",
+    "Anggaran",
     "Budget",
     "Anggaran"
   ],
   [
-    "Impor",
-    "Import",
-    "Impor"
+    "Unggah",
+    "Upload",
+    "Unggah"
   ],
   [
-    "Export & Backup",
-    "Export & Backup",
-    "Ékspor & Cadangan"
+    "Unduh & Cadangan",
+    "Download & Backup",
+    "Unduh & Cadangan"
   ],
   [
     "Rekap Harian",
@@ -327,7 +328,7 @@ const entries = [
     "Jumlah transaksi"
   ],
   [
-    "Cash",
+    "Tunai",
     "Cash",
     "Tunai"
   ],
@@ -517,7 +518,7 @@ const entries = [
     "Mintonkeun {from}–{to} tina {total}"
   ],
   [
-    "Pemakaian budget {name}: {percent}%, {status}",
+    "Pemakaian anggaran {name}: {percent}%, {status}",
     "Budget usage for {name}: {percent}%, {status}",
     "Pamakéan anggaran {name}: {percent}%, {status}"
   ],
@@ -562,17 +563,17 @@ const entries = [
     "Pangeluaran dinten ieu {amount}"
   ],
   [
-    "Memuat budget bulan ini…",
+    "Memuat anggaran bulan ini…",
     "Loading this month’s budget…",
     "Nuju dimuat anggaran sasih ieu…"
   ],
   [
-    "Budget bulan ini belum tersedia.",
+    "Anggaran bulan ini belum tersedia.",
     "This month’s budget is unavailable.",
     "Anggaran sasih ieu teu acan sayogi."
   ],
   [
-    "Sisa budget bulan ini {amount}",
+    "Sisa anggaran bulan ini {amount}",
     "Budget remaining this month: {amount}",
     "Sésa anggaran sasih ieu {amount}"
   ],
@@ -609,5 +610,5 @@ const entries = [
 ]
 
 export const dictionaries = Object.fromEntries(['id', 'en', 'su'].map((locale, index) => [locale,
-  Object.fromEntries([...server, ...entries, ...areas, ...files, ...phase15, ...phase18].map((row) => [row[0], row[index]]).concat(icons.map((row) => [row[0], row[index + 1]]))),
+  Object.fromEntries([...server, ...entries, ...areas, ...files, ...phase15, ...phase18, ...phase19].map((row) => [row[0], row[index]]).concat(icons.map((row) => [row[0], row[index + 1]]))),
 ]))

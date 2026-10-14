@@ -153,8 +153,8 @@ class ExportService
                 ['C' => self::MONEY, 'E' => self::PERCENT],
             ),
             new ArraySheet(
-                'Budget',
-                ['Bulan', 'Kategori', 'Budget', 'Terpakai', 'Sisa', 'Persentase', 'Status'],
+                'Anggaran',
+                ['Bulan', 'Kategori', 'Anggaran', 'Terpakai', 'Sisa', 'Persentase', 'Status'],
                 $budgets,
                 ['C' => self::MONEY, 'D' => self::MONEY, 'E' => self::MONEY, 'F' => self::PERCENT],
             ),

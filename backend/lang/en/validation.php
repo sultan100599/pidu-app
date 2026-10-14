@@ -44,6 +44,7 @@ return [
         'file' => 'The :attribute must be between :min and :max kilobytes.',
     ],
     'attributes' => [
+        'reminder_hour' => 'reminder time',
         'name' => 'name',
         'email' => 'email',
         'password' => 'password',

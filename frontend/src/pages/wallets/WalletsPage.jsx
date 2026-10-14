@@ -19,7 +19,7 @@ import TransferFormModal from './TransferFormModal'
 
 const tone = (value) => (value < 0 ? 'text-danger' : '')
 
-function WalletCard({ wallet, canTransfer, onEdit, onTransfer, onArchive, onDelete, busy }) {
+function WalletCard({ wallet, canTransfer, canArchive, onEdit, onTransfer, onArchive, onDelete, busy }) {
   const t = useT()
   const kind = WALLET_KINDS[wallet.kind] ?? WALLET_KINDS.cash
   return (
@@ -50,12 +50,17 @@ function WalletCard({ wallet, canTransfer, onEdit, onTransfer, onArchive, onDele
               <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => onEdit(wallet)} aria-label={t('Ubah dompet {name}', { name: wallet.name })} title={t('Ubah')}>
                 <i className="bi bi-pencil" aria-hidden="true"></i>
               </button>
-              <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => onArchive(wallet)} disabled={busy} aria-label={t('Arsipkan dompet {name}', { name: wallet.name })} title={t('Arsipkan')}>
-                <i className="bi bi-archive" aria-hidden="true"></i>
-              </button>
-              <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => onDelete(wallet)} aria-label={t('Hapus dompet {name}', { name: wallet.name })} title={t('Hapus')}>
-                <i className="bi bi-trash" aria-hidden="true"></i>
-              </button>
+              {/* Dompet aktif terakhir tidak bisa diarsipkan; dompet yang punya catatan tidak bisa dihapus. */}
+              {canArchive && (
+                <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => onArchive(wallet)} disabled={busy} aria-label={t('Arsipkan dompet {name}', { name: wallet.name })} title={t('Arsipkan')}>
+                  <i className="bi bi-archive" aria-hidden="true"></i>
+                </button>
+              )}
+              {!wallet.in_use && (
+                <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => onDelete(wallet)} aria-label={t('Hapus dompet {name}', { name: wallet.name })} title={t('Hapus')}>
+                  <i className="bi bi-trash" aria-hidden="true"></i>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -188,6 +193,7 @@ export default function WalletsPage() {
               key={wallet.id}
               wallet={wallet}
               canTransfer={active.length > 1}
+              canArchive={active.length > 1}
               busy={busyId === wallet.id}
               onEdit={(w) => setForm({ wallet: w })}
               onTransfer={(w) => setTransfer({ from: w.id })}
@@ -196,6 +202,11 @@ export default function WalletsPage() {
             />
           ))}
         </div>
+        {active.length > 1 && active.some((w) => w.in_use) && (
+          <p className="glass-strip small text-body-secondary mt-3 mb-0">
+            {t('Dompet yang sudah punya catatan tidak bisa dihapus. Arsipkan saja supaya tidak muncul lagi di form Catat.')}
+          </p>
+        )}
         {archived.length > 0 && (
           <details className="card mt-4 wallet-archived">
             <summary className="card-body py-2">{t('Diarsipkan ({count})', { count: archived.length })}</summary>
@@ -207,9 +218,11 @@ export default function WalletsPage() {
                   <button type="button" className="btn btn-sm btn-outline-primary" onClick={() => toggle(w)} disabled={busyId === w.id}>
                     {t('Pakai lagi')}
                   </button>
-                  <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => setDeleting(w)} aria-label={t('Hapus dompet {name}', { name: w.name })}>
-                    <i className="bi bi-trash" aria-hidden="true"></i>
-                  </button>
+                  {!w.in_use && (
+                    <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => setDeleting(w)} aria-label={t('Hapus dompet {name}', { name: w.name })}>
+                      <i className="bi bi-trash" aria-hidden="true"></i>
+                    </button>
+                  )}
                 </li>
               ))}
             </ul>
@@ -254,7 +267,7 @@ export default function WalletsPage() {
         />
       )}
       <ConfirmDialog show={Boolean(deleting)} onClose={() => setDeleting(null)} onConfirm={confirmDelete} loading={deleteBusy} title="Hapus dompet">
-        {deleting && t('Hapus dompet "{name}"? Dompet yang sudah punya catatan tidak bisa dihapus, hanya bisa diarsipkan.', { name: deleting.name })}
+        {deleting && t('Hapus dompet "{name}"? Dompet ini belum punya catatan, jadi tidak ada transaksi yang ikut terhapus.', { name: deleting.name })}
       </ConfirmDialog>
       <ConfirmDialog show={Boolean(transferDelete)} onClose={() => setTransferDelete(null)} onConfirm={confirmTransferDelete} loading={deleteBusy} title="Hapus pindahan">
         {transferDelete && t('Hapus catatan pindah {amount} dari {from} ke {to}? Saldo kedua dompet ikut kembali.', {

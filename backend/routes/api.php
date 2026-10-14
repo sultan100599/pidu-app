@@ -34,6 +34,8 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::put('account', [AccountController::class, 'update']);
     Route::put('account/password', [AccountController::class, 'password'])->middleware('throttle:5,1');
+    Route::post('account/logout-all', [AccountController::class, 'logoutAll']);
+    Route::delete('account', [AccountController::class, 'destroy'])->middleware('throttle:5,1');
 
     Route::get('transactions', [TransactionController::class, 'index']);
     Route::post('transactions', [TransactionController::class, 'store']);

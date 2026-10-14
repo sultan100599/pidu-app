@@ -22,6 +22,7 @@ class RecurringTransaction extends Model
         'amount',
         'payment_method',
         'description',
+        'notes',
         'frequency',
         'start_date',
         'run_count',

@@ -16,15 +16,44 @@ class BudgetSeeder extends Seeder
      * di bulan tersebut (dari TransactionSeeder) dibagi rasio target,
      * sehingga terdapat kategori dengan status ok (<80%),
      * warning (80–99%), dan exceeded (>=100%).
+     * Bulan berjalan memakai nominal yang sama (seperti "Salin anggaran bulan lalu"),
+     * supaya panel Anggaran di Ringkasan demo tidak kosong.
      */
     public function run(): void
     {
         $demo = User::where('email', 'demo@pidu.test')->firstOrFail();
 
-        if ($demo->budgets()->exists()) {
+        if ($demo->budgets()->doesntExist()) {
+            $this->seedSeptember($demo);
+        }
+        $this->copyToCurrentMonth($demo);
+    }
+
+    private function copyToCurrentMonth(User $demo): void
+    {
+        $today = now();
+        if ($demo->budgets()->where('year', $today->year)->where('month', $today->month)->exists()) {
             return;
         }
 
+        $rows = $demo->budgets()->where('year', 2026)->where('month', 9)->get()
+            ->map(fn (Budget $b) => [
+                'user_id' => $demo->id,
+                'category_id' => $b->category_id,
+                'month' => $today->month,
+                'year' => $today->year,
+                'amount' => $b->amount,
+                'created_at' => $today,
+                'updated_at' => $today,
+            ])->all();
+
+        if ($rows !== []) {
+            Budget::insert($rows);
+        }
+    }
+
+    private function seedSeptember(User $demo): void
+    {
         $categories = $demo->categories()->get()->keyBy('name');
 
         // rasio target: used / budget

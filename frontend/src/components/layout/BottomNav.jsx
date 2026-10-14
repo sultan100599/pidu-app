@@ -25,13 +25,13 @@ export default function BottomNav() {
   )
   return (
     <nav className="bottom-nav d-lg-none" aria-label={t('Navigasi utama')} ref={navRef}>
-      {item('/', 'bi-house', 'Dashboard')}
+      {item('/', 'bi-house', 'Ringkasan')}
       {item('/transactions', 'bi-receipt', 'Transaksi')}
       <button type="button" className="bottom-nav-item bottom-nav-create" onClick={openCreate}>
         <i className="bi bi-plus-lg icon-tile" aria-hidden="true" /><span>{t('Catat')}</span>
       </button>
       {item('/reports', 'bi-bar-chart', 'Laporan', false)}
-      {item('/budgets', 'bi-piggy-bank', 'Budget')}
+      {item('/budgets', 'bi-piggy-bank', 'Anggaran')}
     </nav>
   )
 }

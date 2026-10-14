@@ -19,6 +19,10 @@ class WalletResource extends JsonResource
             'is_active' => $this->is_active,
             'balance' => $this->when($this->resource->hasAttribute('balance'), fn () => $this->balance),
             'transactions_count' => $this->whenCounted('transactions'),
+            'in_use' => $this->when(
+                $this->resource->hasAttribute('transactions_exists'),
+                fn () => $this->transactions_exists || $this->transfers_out_exists || $this->transfers_in_exists || $this->recurring_transactions_exists,
+            ),
         ];
     }
 }

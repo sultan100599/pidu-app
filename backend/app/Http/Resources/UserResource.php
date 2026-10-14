@@ -14,6 +14,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'opening_balance' => $this->opening_balance === null ? null : (float) $this->opening_balance,
+            'reminder_hour' => $this->reminder_hour,
         ];
     }
 }

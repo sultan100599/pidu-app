@@ -85,7 +85,7 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
   )
 
   return (
-    <Modal show={show} onClose={close} title={isEdit ? 'Edit Budget' : 'Tambah Budget'} footer={footer} busy={submitting}>
+    <Modal show={show} onClose={close} title={isEdit ? 'Edit Anggaran' : 'Tambah Anggaran'} footer={footer} busy={submitting}>
       {formError && (
         <div className="alert alert-danger py-2" role="alert">
           {t(formError)}
@@ -141,7 +141,7 @@ export default function BudgetFormModal({ show, budget, defaultMonth, defaultYea
         </div>
 
         <p className="form-text mb-0">
-          {t('Berlaku untuk {period}. Ganti bulan lewat tombol panah di halaman Budget.', { period: `${MONTH_NAMES[form.month - 1]} ${form.year}` })}
+          {t('Berlaku untuk {period}. Ganti bulan lewat tombol panah di halaman Anggaran.', { period: `${MONTH_NAMES[form.month - 1]} ${form.year}` })}
         </p>
       </form>
     </Modal>

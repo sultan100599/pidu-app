@@ -98,23 +98,28 @@ export function AuthProvider({ children }) {
     return newUser
   }
 
+  // Bersihkan sesi di perangkat ini, mis. setelah keluar dari semua perangkat atau hapus akun.
+  function endSession(message = 'Berhasil logout.') {
+    setToken(null)
+    setTokenState(null)
+    setUser(null)
+    resetSessionExpiredFlag()
+    toast.success(message)
+    navigate('/login')
+  }
+
   async function logout() {
     try {
       await authApi.logout()
     } catch {
       // Token mungkin sudah tidak valid; tetap lanjutkan logout lokal.
     }
-    setToken(null)
-    setTokenState(null)
-    setUser(null)
-    resetSessionExpiredFlag()
-    toast.success('Berhasil logout.')
-    navigate('/login')
+    endSession()
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, token, initializing, bootError, bootRetrying, retryBootstrap, login, register, logout, setUser }}
+      value={{ user, token, initializing, bootError, bootRetrying, retryBootstrap, login, register, logout, endSession, setUser }}
     >
       {children}
     </AuthContext.Provider>

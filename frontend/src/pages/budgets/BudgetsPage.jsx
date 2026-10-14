@@ -53,7 +53,7 @@ function Overview({ totals, budgets }) {
         <BudgetProgress
           budget={overall}
           height={12}
-          title={<span className="fw-semibold">{t('Total budget')}</span>}
+          title={<span className="fw-semibold">{t('Total anggaran')}</span>}
           aside={
             <span className={`fw-semibold ${budgetStatus(overall.status).text}`}>
               {percentage.toLocaleString('id-ID')}%
@@ -81,7 +81,7 @@ function BudgetCard({ budget, onEdit, onDelete }) {
     <div className="col">
       <div className="card budget-card h-100">
         <div className="card-body">
-          <Link to={transactionsLink(budget)} className="budget-detail-link text-reset text-decoration-none" aria-label={t('Lihat transaksi budget {name}', { name: category.name })}>
+          <Link to={transactionsLink(budget)} className="budget-detail-link text-reset text-decoration-none" aria-label={t('Lihat transaksi anggaran {name}', { name: category.name })}>
             <BudgetProgress
               budget={budget}
               title={
@@ -102,7 +102,7 @@ function BudgetCard({ budget, onEdit, onDelete }) {
               <button
                 type="button"
                 className="btn btn-sm btn-outline-primary"
-                aria-label={t('Edit budget {name}', { name: category.name })}
+                aria-label={t('Edit anggaran {name}', { name: category.name })}
                 onClick={() => onEdit(budget)}
               >
                 <i className="bi bi-pencil" aria-hidden="true"></i>
@@ -110,7 +110,7 @@ function BudgetCard({ budget, onEdit, onDelete }) {
               <button
                 type="button"
                 className="btn btn-sm btn-outline-danger"
-                aria-label={t('Hapus budget {name}', { name: category.name })}
+                aria-label={t('Hapus anggaran {name}', { name: category.name })}
                 onClick={() => onDelete(budget)}
               >
                 <i className="bi bi-trash" aria-hidden="true"></i>
@@ -187,7 +187,7 @@ export default function BudgetsPage() {
           skipped += 1
         }
       }
-      toast.success(t('{copied} budget disalin, {skipped} dilewati.', { copied, skipped }))
+      toast.success(t('{copied} anggaran disalin, {skipped} dilewati.', { copied, skipped }))
       reload()
     } catch (err) {
       toast.error(getErrorMessage(err))
@@ -215,13 +215,13 @@ export default function BudgetsPage() {
     content = (
       <EmptyState
         icon="bi-piggy-bank"
-        title={t('Belum ada budget untuk {period}', { period: monthLabel(month, year) })}
+        title={t('Belum ada anggaran untuk {period}', { period: monthLabel(month, year) })}
         description="Tetapkan batas pengeluaran per kategori supaya pengeluaran lebih terkendali."
         action={
           <div className="d-flex flex-wrap justify-content-center gap-2">
             <button type="button" className="btn btn-primary" onClick={openCreate}>
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-              {t('Tambah Budget')}
+              {t('Tambah Anggaran')}
             </button>
             {canCopy && copyButton(false)}
           </div>
@@ -244,14 +244,14 @@ export default function BudgetsPage() {
   return (
     <>
       <PageHeader
-        title="Budget"
+        title="Anggaran"
         subtitle={t('Batas pengeluaran per kategori · {period}', { period: monthLabel(month, year) })}
         actions={
           // Saat kosong, tombol yang sama sudah ada di tengah halaman.
           !(data && budgets.length === 0) && (
             <button type="button" className="btn btn-primary" onClick={openCreate}>
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
-              {t('Tambah Budget')}
+              {t('Tambah Anggaran')}
             </button>
           )
         }
@@ -301,14 +301,14 @@ export default function BudgetsPage() {
 
       <ConfirmDialog
         show={Boolean(deleting.budget)}
-        title="Hapus budget?"
+        title="Hapus anggaran?"
         loading={deleting.loading}
         onClose={() => setDeleting({ budget: null, loading: false })}
         onConfirm={confirmDelete}
       >
         {deleting.budget && (
           <p className="mb-0">
-            {t('Budget {name} untuk {period} ({amount}) akan dihapus. Transaksi tidak ikut terhapus.', {
+            {t('Anggaran {name} untuk {period} ({amount}) akan dihapus. Transaksi tidak ikut terhapus.', {
               name: deleting.budget.category.name, period: monthLabel(month, year), amount: formatRupiah(deleting.budget.amount),
             })}
           </p>
@@ -317,7 +317,7 @@ export default function BudgetsPage() {
 
       <ConfirmDialog
         show={copying.show}
-        title="Salin budget bulan lalu?"
+        title="Salin anggaran bulan lalu?"
         confirmLabel="Salin"
         confirmVariant="primary"
         loading={copying.loading}
@@ -325,7 +325,7 @@ export default function BudgetsPage() {
         onConfirm={confirmCopy}
       >
         <p className="mb-0">
-          {t('Semua budget {from} akan disalin ke {to}. Kategori yang sudah punya budget di {to} dilewati.', {
+          {t('Semua anggaran {from} akan disalin ke {to}. Kategori yang sudah punya anggaran di {to} dilewati.', {
             from: monthLabel(prev.month, prev.year), to: monthLabel(month, year),
           })}
         </p>

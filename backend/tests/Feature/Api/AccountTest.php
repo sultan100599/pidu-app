@@ -134,4 +134,58 @@ class AccountTest extends TestCase
         $this->getJson('/api/budgets?year=2026&month=10')->assertJsonPath('previous_month_count', 1);
         $this->getJson('/api/budgets?year=2026&month=9')->assertJsonPath('previous_month_count', 0);
     }
+
+    public function test_reminder_hour_can_be_changed_or_turned_off(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $this->getJson('/api/auth/me')->assertJsonPath('data.reminder_hour', 17);
+        $this->putJson('/api/account', ['reminder_hour' => 12])->assertOk()->assertJsonPath('data.reminder_hour', 12);
+        $this->putJson('/api/account', ['reminder_hour' => null])->assertOk()->assertJsonPath('data.reminder_hour', null);
+        $this->putJson('/api/account', ['reminder_hour' => 24])->assertStatus(422)->assertJsonValidationErrors('reminder_hour');
+        $this->assertNull($user->fresh()->reminder_hour);
+    }
+
+    public function test_logout_all_removes_every_token(): void
+    {
+        $user = User::factory()->create();
+        $user->createToken('hp');
+        $current = $user->createToken('laptop')->plainTextToken;
+
+        $this->withToken($current)->postJson('/api/account/logout-all')
+            ->assertOk()
+            ->assertJsonPath('message', 'Kamu sudah keluar dari semua perangkat.');
+        $this->assertSame(0, $user->tokens()->count());
+    }
+
+    public function test_delete_account_needs_password_and_removes_all_data(): void
+    {
+        $user = User::factory()->create(['password' => Hash::make('rahasia123')]);
+        $other = User::factory()->create();
+        $token = $user->createToken('hp')->plainTextToken;
+        $this->withToken($token);
+
+        $wallets = $this->getJson('/api/wallets')->json('data');
+        $second = $this->postJson('/api/wallets', ['name' => 'Kas Warung', 'kind' => 'cash', 'purpose' => 'business'])->json('data.id');
+        $category = Category::factory()->create(['user_id' => $user->id]);
+        Transaction::factory()->create(['user_id' => $user->id, 'category_id' => $category->id, 'wallet_id' => $second]);
+        Budget::factory()->create(['user_id' => $user->id, 'category_id' => $category->id]);
+        $this->postJson('/api/transfers', ['from_wallet_id' => $wallets[0]['id'], 'to_wallet_id' => $second, 'amount' => 1000, 'transfer_date' => now()->toDateString()])->assertCreated();
+        $this->postJson('/api/recurring', ['type' => 'expense', 'category_id' => $category->id, 'amount' => 5000, 'frequency' => 'monthly', 'start_date' => now()->toDateString()])->assertCreated();
+
+        $this->deleteJson('/api/account', ['password' => 'salah'])->assertStatus(422)->assertJsonValidationErrors('password');
+        $this->assertNotNull($user->fresh());
+
+        $this->deleteJson('/api/account', ['password' => 'rahasia123'])
+            ->assertOk()
+            ->assertJsonPath('message', 'Akun dan semua datamu sudah dihapus.');
+
+        $this->assertNull($user->fresh());
+        foreach (['transactions', 'transfers', 'recurring_transactions', 'budgets', 'wallets', 'categories'] as $table) {
+            $this->assertDatabaseMissing($table, ['user_id' => $user->id]);
+        }
+        $this->assertDatabaseMissing('personal_access_tokens', ['tokenable_id' => $user->id]);
+        $this->assertNotNull($other->fresh());
+    }
 }

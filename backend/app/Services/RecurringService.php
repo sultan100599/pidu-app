@@ -50,6 +50,7 @@ class RecurringService
                     'amount' => $rule->amount,
                     'payment_method' => $rule->payment_method->value,
                     'description' => $rule->description,
+                    'notes' => $rule->notes,
                 ]);
                 $rule->run_count++;
                 $rule->next_date = $rule->occurrence($rule->run_count);

@@ -48,3 +48,12 @@ Permintaan user: dashboard "frosted glass", sidebar kiri dan bar atas "floating"
 - **Pengecualian antislop R-10 (kaca di sidebar + topbar + kartu sekaligus) dipilih user secara sadar** pada 13 Okt 2026 ("Semua, seperti template"). Modal dan dropdown tetap padat supaya formulir mudah dibaca.
 - Syarat yang tetap berlaku: kepadatan panel 72% di atas peredup 55% (teks sekunder >= 4,5:1 di kondisi foto terburuk), blur dikurangi di HP, panel jadi padat untuk browser tanpa backdrop-filter dan untuk pengguna yang meminta transparansi dikurangi. Semua di `frontend/src/styles/glass.css`.
 
+
+## Tambahan Phase 19 (14 Okt 2026): font judul
+- Judul halaman, nama "Pidu" di sidebar, dan judul halaman Masuk memakai **Zen Maru Gothic 700**. Pemilik memilihnya dari tiga contoh: Shippori Mincho B1, Young Serif, dan Zen Maru Gothic.
+- Alasan:
+  - Ujung hurufnya membulat, sesuai arah "membulat".
+  - Dibuat di Jepang, jadi senada dengan nuansa washitsu tanpa ornamen tempelan.
+  - Huruf tanpa kait lebih mudah dibaca pengguna yang lebih tua.
+  - Keluar dari pola "latar krem + serif tebal" yang umum di aplikasi buatan AI.
+- Fraunces dihapus. Isi halaman tetap memakai font sistem (Segoe UI / system-ui). Font dimuat dari `@fontsource` (huruf latin saja), tanpa CDN.

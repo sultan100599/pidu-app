@@ -27,11 +27,14 @@ export default function WeeklyReportPage() {
   const { data } = fetchState
   const rows = data?.rows ?? []
 
+  // Subjudul memakai periode terpilih selagi data dimuat, supaya tata letak tidak bergeser.
+  const shownRange = data?.period ?? range
+
   return (
     <>
       <PageHeader
         title="Rekap Mingguan"
-        subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)} · ${t('minggu Senin–Minggu')}` : ' '}
+        subtitle={shownRange ? `${formatDate(shownRange.start_date)} – ${formatDate(shownRange.end_date)} · ${t('minggu Senin–Minggu')}` : ' '}
         actions={<PeriodPicker query={periodQuery} idPrefix="weekly-period" />}
       />
       <ReportTabs />

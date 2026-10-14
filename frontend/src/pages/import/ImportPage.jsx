@@ -184,7 +184,7 @@ export default function ImportPage() {
   return (
     <>
       <PageHeader
-        title="Impor"
+        title="Unggah"
         subtitle="Tambahkan banyak transaksi sekaligus dari file Excel atau CSV."
         actions={
           <button type="button" className="btn btn-outline-primary" onClick={downloadTemplate} disabled={busy === 'template'}>
@@ -235,8 +235,8 @@ export default function ImportPage() {
           <ul id="import-help" className="form-text import-help mb-0">
             <li>{t('Format .xlsx, .xls, atau .csv, paling besar 5 MB atau 5.000 baris.')}</li>
             <li>{t('Kolom wajib: Tanggal, Kategori, Nominal. Boleh ditambah Jenis, Deskripsi, Catatan, Metode.')}</li>
-            <li>{t('File hasil Export atau Backup Pidu bisa langsung diimpor.')}</li>
-            <li>{t('File diperiksa dulu. Belum ada yang disimpan sampai kamu menekan Impor.')}</li>
+            <li>{t('File unduhan atau cadangan Pidu bisa langsung diunggah.')}</li>
+            <li>{t('File diperiksa dulu. Belum ada yang disimpan sampai kamu menekan Unggah.')}</li>
           </ul>
           {busy === 'analyze' && (
             <div className="d-flex align-items-center gap-2 mt-3 text-body-secondary" role="status">
@@ -299,7 +299,7 @@ export default function ImportPage() {
                     onClick={() => setConfirming(true)}
                   >
                     <i className="bi bi-upload me-2" aria-hidden="true"></i>
-                    {importCount > 0 ? t('Impor {count} transaksi', { count: formatNumber(importCount) }) : t('Tidak ada yang perlu diimpor')}
+                    {importCount > 0 ? t('Unggah {count} transaksi', { count: formatNumber(importCount) }) : t('Tidak ada yang perlu diunggah')}
                   </button>
                   <button type="button" className="btn btn-outline-secondary" onClick={reset} disabled={busy != null}>
                     {t('Batal')}
@@ -316,8 +316,8 @@ export default function ImportPage() {
 
       <ConfirmDialog
         show={confirming}
-        title="Impor transaksi?"
-        confirmLabel="Impor"
+        title="Unggah transaksi?"
+        confirmLabel="Unggah"
         confirmVariant="primary"
         loading={busy === 'commit'}
         onClose={() => setConfirming(false)}
@@ -330,7 +330,7 @@ export default function ImportPage() {
           <p className="mb-2 small">{t('{count} kategori baru akan dibuat.', { count: analysis.new_categories.length })}</p>
         )}
         <p className="mb-0 small text-body-secondary">
-          {t('Semua baris disimpan sekaligus (jika gagal, tidak ada yang tersimpan). Transaksi yang sudah diimpor bisa dihapus dari halaman Transaksi.')}
+          {t('Semua baris disimpan sekaligus (jika gagal, tidak ada yang tersimpan). Transaksi yang sudah diunggah bisa dihapus dari halaman Transaksi.')}
         </p>
       </ConfirmDialog>
     </>

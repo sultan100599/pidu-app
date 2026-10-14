@@ -22,6 +22,7 @@ class StoreRecurringRequest extends ApiRequest
             'amount' => ['required', 'numeric', 'gt:0', 'max:999999999999', 'decimal:0,2'],
             'payment_method' => ['nullable', Rule::enum(PaymentMethod::class)],
             'description' => ['nullable', 'string', 'max:255'],
+            'notes' => ['nullable', 'string', 'max:5000'],
             'frequency' => ['required', Rule::enum(Frequency::class)],
             'start_date' => [
                 'required', 'date_format:Y-m-d',

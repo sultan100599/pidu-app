@@ -14,7 +14,7 @@ export default function NotFoundPage() {
           <p className="text-body-secondary">{t('Halaman yang kamu cari tidak ada.')}</p>
           <Link to="/" className="btn btn-primary">
             <i className="bi bi-speedometer2 me-2" aria-hidden="true"></i>
-            {t('Kembali ke Dashboard')}
+            {t('Kembali ke Ringkasan')}
           </Link>
         </div>
       </div>

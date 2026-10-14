@@ -36,7 +36,7 @@ export default function TransactionFilters({
   const showWallet = wallets.length > 1
 
   return (
-    <div className="card transaction-filters mb-3">
+    <div className={`card transaction-filters mb-3 ${open ? '' : 'is-closed'}`}>
       <div className="card-body py-2 py-md-3">
         <div className={`d-flex justify-content-between align-items-center d-md-none ${open ? 'mb-2' : ''}`}>
           <button

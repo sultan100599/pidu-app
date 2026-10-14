@@ -4,16 +4,16 @@ export default [
   ["English", "English", "Basa Inggris"],
   ["Basa Sunda", "Sundanese", "Basa Sunda"],
   ["Memperbarui data...", "Updating data...", "Nuju ngamutahirkeun data..."],
-  ["Pidu-App: catat pemasukan & pengeluaran, rekap harian sampai tahunan, budget, dan export Excel/PDF.", "Pidu-App: track income and expenses, daily to yearly reports, budgets, and Excel/PDF exports.", "Pidu-App: catet panghasilan sareng pangeluaran, rekap poéan dugi ka taunan, anggaran, sareng ékspor Excel/PDF."],
+  ["Pidu-App: catat pemasukan & pengeluaran, rekap harian sampai tahunan, anggaran, dan unduh Excel/PDF.", "Pidu-App: track income and expenses, daily to yearly reports, budgets, and Excel/PDF downloads.", "Pidu-App: catet panghasilan sareng pangeluaran, rekap poéan dugi ka taunan, anggaran, sareng unduh Excel/PDF."],
   [
-    "Export transaksi",
-    "Export transactions",
-    "Ékspor transaksi"
+    "Unduh transaksi",
+    "Download transactions",
+    "Unduh transaksi"
   ],
   [
-    "Daftar transaksi beserta total pemasukan, pengeluaran, dan saldo. Untuk filter kategori, metode, atau pencarian, gunakan Export di halaman Transaksi.",
-    "Transaction list with income, expenses and balance totals. For category, payment method or search filters, use Export on the Transactions page.",
-    "Daptar transaksi sareng total panghasilan, pangeluaran, katut saldo. Kanggo saringan kategori, métode, atanapi pamilarian, anggo Ékspor dina kaca Transaksi."
+    "Daftar transaksi beserta total pemasukan, pengeluaran, dan saldo. Untuk filter kategori, metode, atau pencarian, gunakan tombol Unduh di halaman Transaksi.",
+    "Transaction list with income, expenses and balance totals. For category, payment method or search filters, use Download on the Transactions page.",
+    "Daptar transaksi sareng total panghasilan, pangeluaran, katut saldo. Kanggo saringan kategori, métode, atanapi pamilarian, anggo tombol Unduh dina kaca Transaksi."
   ],
   [
     "Buka Transaksi",
@@ -26,9 +26,9 @@ export default [
     "PDF maksimal 2.000 transaksi; kanggo data langkung seueur mangga anggo Excel."
   ],
   [
-    "Export semua ke Excel",
-    "Export all to Excel",
-    "Ékspor sadayana ka Excel"
+    "Unduh semua ke Excel",
+    "Download all as Excel",
+    "Unduh sadayana ka Excel"
   ],
   [
     "Satu file Excel berisi seluruh data satu tahun, dengan angka yang sama seperti halaman laporan.",
@@ -61,47 +61,47 @@ export default [
     "Taunan"
   ],
   [
-    "Export semua {year}",
-    "Export all for {year}",
-    "Ékspor sadayana {year}"
+    "Unduh semua {year}",
+    "Download all for {year}",
+    "Unduh sadayana {year}"
   ],
   [
-    "Unduh data keuangan ke Excel atau PDF, dan kelola backup.",
+    "Unduh data keuangan ke Excel atau PDF, dan kelola cadangan.",
     "Download financial data as Excel or PDF and manage backups.",
     "Unduh data kauangan kana Excel atanapi PDF, sareng atur cadangan."
   ],
   [
-    "Backup",
+    "Cadangan",
     "Backup",
     "Cadangan"
   ],
   [
-    "Backup sekarang",
+    "Cadangkan sekarang",
     "Back up now",
     "Cadangkeun ayeuna"
   ],
   [
-    "Backup berisi semua transaksi Anda dalam satu file Excel.",
+    "Cadangan berisi semua transaksi Anda dalam satu file Excel.",
     "A backup contains all your transactions in one Excel file.",
     "Cadangan ngandung sadaya transaksi anjeun dina hiji berkas Excel."
   ],
   [
-    "Dibuat otomatis setiap hari pukul {time} selama aplikasi berjalan; {count} backup terbaru disimpan.",
+    "Dibuat otomatis setiap hari pukul {time} selama aplikasi berjalan; {count} cadangan terbaru disimpan.",
     "Created automatically every day at {time} while the app is running; the latest {count} backups are kept.",
     "Didamel otomatis unggal dinten tabuh {time} salami aplikasi jalan; {count} cadangan pangénggalna disimpen."
   ],
   [
-    "Untuk memulihkan data, unduh backup lalu unggah di halaman Impor. Transaksi yang sudah ada otomatis dilewati.",
-    "To restore data, download a backup and upload it on the Import page. Existing transactions are skipped automatically.",
-    "Kanggo mulangkeun data, unduh cadangan teras unggah dina kaca Impor. Transaksi anu parantos aya otomatis diliwatan."
+    "Untuk memulihkan data, unduh cadangan lalu unggah di halaman Unggah. Transaksi yang sudah ada otomatis dilewati.",
+    "To restore data, download a backup and upload it on the Upload page. Existing transactions are skipped automatically.",
+    "Kanggo mulangkeun data, unduh cadangan teras unggah dina kaca Unggah. Transaksi anu parantos aya otomatis diliwatan."
   ],
   [
-    "Buka Impor",
-    "Open Import",
-    "Buka Impor"
+    "Buka halaman Unggah",
+    "Open Upload",
+    "Buka kaca Unggah"
   ],
   [
-    "Belum ada backup.",
+    "Belum ada cadangan.",
     "No backups yet.",
     "Teu acan aya cadangan."
   ],
@@ -111,7 +111,7 @@ export default [
     "pangénggalna"
   ],
   [
-    "Unduh backup {date}",
+    "Unduh cadangan {date}",
     "Download backup from {date}",
     "Unduh cadangan {date}"
   ],
@@ -176,9 +176,9 @@ export default [
     "Kolom wajib: Ping kaping, Kategori, Nominal. Kolom opsional: Jinis, Pedaran, Catetan, Métode."
   ],
   [
-    "File hasil Export atau Backup Pidu-App bisa langsung diimpor. File hanya diperiksa dulu; tidak ada yang disimpan sebelum Anda menekan Impor.",
-    "Pidu-App exports and backups can be imported directly. The file is checked first; nothing is saved until you select Import.",
-    "Berkas Ékspor atanapi Cadangan Pidu-App tiasa langsung diimpor. Berkas dipariksa heula; teu aya anu disimpen sateuacan anjeun mencét Impor."
+    "File unduhan atau cadangan Pidu-App bisa langsung diunggah. File hanya diperiksa dulu; tidak ada yang disimpan sebelum Anda menekan Unggah.",
+    "Pidu-App downloads and backups can be uploaded directly. The file is checked first; nothing is saved until you select Upload.",
+    "Berkas unduhan atanapi cadangan Pidu-App tiasa langsung diunggah. Berkas dipariksa heula; teu aya anu disimpen sateuacan anjeun mencét Unggah."
   ],
   [
     "Memeriksa file…",
@@ -236,19 +236,19 @@ export default [
     "Aya {count} baris anu lepat. Mangga lereskeun dina berkas, teras pilih deui berkasna."
   ],
   [
-    "Impor {count} transaksi",
-    "Import {count} transactions",
-    "Impor {count} transaksi"
+    "Unggah {count} transaksi",
+    "Upload {count} transactions",
+    "Unggah {count} transaksi"
   ],
   [
-    "Tidak ada yang perlu diimpor",
-    "Nothing to import",
-    "Teu aya anu kedah diimpor"
+    "Tidak ada yang perlu diunggah",
+    "Nothing to upload",
+    "Teu aya anu kedah diunggah"
   ],
   [
-    "Impor transaksi?",
-    "Import transactions?",
-    "Impor transaksi?"
+    "Unggah transaksi?",
+    "Upload transactions?",
+    "Unggah transaksi?"
   ],
   [
     "{count} transaksi dari {file} akan ditambahkan.",
@@ -261,9 +261,9 @@ export default [
     "{count} kategori énggal badé didamel."
   ],
   [
-    "Semua baris disimpan sekaligus (jika gagal, tidak ada yang tersimpan). Transaksi yang sudah diimpor bisa dihapus dari halaman Transaksi.",
-    "All rows are saved together. If the import fails, nothing is saved. Imported transactions can be deleted from the Transactions page.",
-    "Sadaya baris disimpen sakaligus. Upami gagal, teu aya anu disimpen. Transaksi anu parantos diimpor tiasa dipupus tina kaca Transaksi."
+    "Semua baris disimpan sekaligus (jika gagal, tidak ada yang tersimpan). Transaksi yang sudah diunggah bisa dihapus dari halaman Transaksi.",
+    "All rows are saved together. If the upload fails, nothing is saved. Uploaded transactions can be deleted from the Transactions page.",
+    "Sadaya baris disimpen sakaligus. Upami gagal, teu aya anu disimpen. Transaksi anu parantos diunggah tiasa dipupus tina kaca Transaksi."
   ],
   [
     "Berhasil logout.",

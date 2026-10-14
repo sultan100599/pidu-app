@@ -45,7 +45,7 @@ export default function BackupCard() {
         <div className="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
           <h2 className="h5 mb-0">
             <i className="bi bi-shield-check me-2 text-info" aria-hidden="true"></i>
-            {t('Backup')}
+            {t('Cadangan')}
           </h2>
           <button type="button" className="btn btn-outline-primary btn-sm" onClick={create} disabled={busy != null}>
             {busy === 'create' ? (
@@ -53,14 +53,14 @@ export default function BackupCard() {
             ) : (
               <i className="bi bi-plus-lg me-1" aria-hidden="true"></i>
             )}
-            {t('Backup sekarang')}
+            {t('Cadangkan sekarang')}
           </button>
         </div>
         <p className="text-body-secondary small">
-          {t('Backup berisi semua transaksi kamu dalam satu file Excel.')}
-          {data && ' ' + t('Dibuat otomatis setiap hari pukul {time} selama aplikasi berjalan; {count} backup terbaru disimpan.', { time: data.schedule, count: data.keep })}
-          {' '}{t('Untuk memulihkan data, unduh backup lalu unggah di halaman Impor. Transaksi yang sudah ada otomatis dilewati.')}
-          {' '}<Link to="/import">{t('Buka Impor')}</Link>
+          {t('Cadangan berisi semua transaksi kamu dalam satu file Excel.')}
+          {data && ' ' + t('Dibuat otomatis setiap hari pukul {time} selama aplikasi berjalan; {count} cadangan terbaru disimpan.', { time: data.schedule, count: data.keep })}
+          {' '}{t('Untuk memulihkan data, unduh cadangan lalu unggah di halaman Unggah. Transaksi yang sudah ada otomatis dilewati.')}
+          {' '}<Link to="/import">{t('Buka halaman Unggah')}</Link>
         </p>
 
         {error && !data ? (
@@ -77,7 +77,7 @@ export default function BackupCard() {
             </div>
           </div>
         ) : backups.length === 0 ? (
-          <p className="text-center text-body-secondary border rounded py-3 mb-0">{t('Belum ada backup.')}</p>
+          <p className="text-center text-body-secondary border rounded py-3 mb-0">{t('Belum ada cadangan.')}</p>
         ) : (
           <ul className={`list-group opacity-transition ${loading ? 'opacity-50' : ''}`}>
             {backups.map((b, i) => (
@@ -96,7 +96,7 @@ export default function BackupCard() {
                   className="btn btn-sm btn-outline-primary text-nowrap"
                   onClick={() => download(b.name)}
                   disabled={busy != null}
-                  aria-label={t('Unduh backup {date}', { date: formatDateTime(b.created_at) })}
+                  aria-label={t('Unduh cadangan {date}', { date: formatDateTime(b.created_at) })}
                 >
                   {busy === b.name ? (
                     <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>

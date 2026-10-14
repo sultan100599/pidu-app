@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Laravel\Sanctum\Sanctum;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -36,7 +37,7 @@ class BackupTest extends TestCase
 
     private function usesSqlite(): bool
     {
-        return \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite';
+        return DB::getDriverName() === 'sqlite';
     }
 
     protected function tearDown(): void
@@ -116,7 +117,7 @@ class BackupTest extends TestCase
 
         $this->postJson('/api/backups')
             ->assertCreated()
-            ->assertJsonPath('message', 'Backup berhasil dibuat.')
+            ->assertJsonPath('message', 'Cadangan berhasil dibuat.')
             ->assertJsonPath('data.name', 'pidu-backup-20260915-100000.xlsx');
 
         $this->getJson('/api/backups')

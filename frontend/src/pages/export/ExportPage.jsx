@@ -10,7 +10,7 @@ import { TRANSACTION_TYPES } from '../../constants/enums'
 import { getErrorMessage } from '../../utils/errors'
 import { getPeriodRange, isCustomRangeInvalid, PERIOD_PRESETS } from '../../utils/period'
 
-const ALL_SHEETS = ['Transaksi', 'Harian', 'Mingguan', 'Bulanan', 'Tahunan', 'Kategori', 'Budget']
+const ALL_SHEETS = ['Transaksi', 'Harian', 'Mingguan', 'Bulanan', 'Tahunan', 'Kategori', 'Anggaran']
 
 function useDownload() {
   const t = useT()
@@ -93,7 +93,7 @@ function DownloadCard() {
         <fieldset className="mb-3">
           <legend className="visually-hidden">{t('Pilih isi file')}</legend>
           {choice('transactions', 'Daftar transaksi', 'Satu periode, beserta total pemasukan, pengeluaran, dan selisih.')}
-          {choice('year', 'Laporan lengkap satu tahun', 'Excel berisi transaksi, rekap harian sampai tahunan, kategori, dan budget.')}
+          {choice('year', 'Laporan lengkap satu tahun', 'Excel berisi transaksi, rekap harian sampai tahunan, kategori, dan anggaran.')}
         </fieldset>
 
         {kind === 'transactions' ? (
@@ -143,7 +143,7 @@ function DownloadCard() {
                 onClick={() => run('pdf', () => exportApi.transactionsPdf(params))} />
             </div>
             <p className="small text-body-secondary mt-2 mb-0">
-              {t('Perlu filter kategori atau metode? Pakai tombol Export di halaman Transaksi.')} <Link to="/transactions">{t('Buka Transaksi')}</Link>
+              {t('Perlu filter kategori atau metode? Pakai tombol Unduh di halaman Transaksi.')} <Link to="/transactions">{t('Buka Transaksi')}</Link>
             </p>
           </>
         ) : (
@@ -170,7 +170,7 @@ function DownloadCard() {
 export default function ExportPage() {
   return (
     <>
-      <PageHeader title="Export & Backup" subtitle="Unduh data ke Excel atau PDF, dan simpan cadangan." />
+      <PageHeader title="Unduh & Cadangan" subtitle="Unduh data ke Excel atau PDF, dan simpan cadangan." />
       <div className="row g-3">
         <div className="col-lg-6">
           <DownloadCard />

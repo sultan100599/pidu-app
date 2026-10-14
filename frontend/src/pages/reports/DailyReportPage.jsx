@@ -25,11 +25,14 @@ export default function DailyReportPage() {
   const rows = data?.rows ?? []
   const visibleRows = hideEmpty ? rows.filter((r) => r.count > 0) : rows
 
+  // Subjudul memakai periode terpilih selagi data dimuat, supaya tata letak tidak bergeser.
+  const shownRange = data?.period ?? range
+
   return (
     <>
       <PageHeader
         title="Rekap Harian"
-        subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)}` : ' '}
+        subtitle={shownRange ? `${formatDate(shownRange.start_date)} – ${formatDate(shownRange.end_date)}` : ' '}
         actions={<PeriodPicker query={periodQuery} idPrefix="daily-period" />}
       />
       <ReportTabs />

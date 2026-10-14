@@ -131,7 +131,7 @@ class ExportTest extends TestCase
 
         $this->getJson('/api/export/pdf')
             ->assertStatus(422)
-            ->assertJsonPath('message', 'PDF dibatasi 2.000 transaksi (hasil filter: 2.001). Persempit filter atau gunakan export Excel.');
+            ->assertJsonPath('message', 'PDF dibatasi 2.000 transaksi (hasil filter: 2.001). Persempit filter atau unduh sebagai Excel.');
     }
 
     public function test_export_all_has_seven_sheets_with_report_numbers(): void
@@ -145,7 +145,7 @@ class ExportTest extends TestCase
         $book = $this->downloadSpreadsheet('/api/export/all?year=2026');
 
         $this->assertSame(
-            ['Transaksi', 'Harian', 'Mingguan', 'Bulanan', 'Tahunan', 'Kategori', 'Budget'],
+            ['Transaksi', 'Harian', 'Mingguan', 'Bulanan', 'Tahunan', 'Kategori', 'Anggaran'],
             $book->getSheetNames(),
         );
 
@@ -163,7 +163,7 @@ class ExportTest extends TestCase
         $lastWeekly = $mingguan->getHighestRow();
         $this->assertEquals(150000, $mingguan->getCell("E{$lastWeekly}")->getValue()); // total = harian
 
-        $budget = $book->getSheetByName('Budget')->rangeToArray('A2:G2', null, false, false)[0];
+        $budget = $book->getSheetByName('Anggaran')->rangeToArray('A2:G2', null, false, false)[0];
         $this->assertEquals(['September 2026', 'Makanan', 40000, 50000, -10000, 125, 'Terlampaui'], $budget);
 
         $kategori = $book->getSheetByName('Kategori')->rangeToArray('A2:E3', null, false, false);

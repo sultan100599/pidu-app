@@ -232,7 +232,7 @@ export default function CategoriesPage() {
             <p className="mb-2">
               {t('Kategori akan dihapus permanen:')} <strong>{deleting.category.name}</strong>
             </p>
-            <p className="mb-0 small text-body-secondary">{t('Budget untuk kategori ini juga akan terhapus.')}</p>
+            <p className="mb-0 small text-body-secondary">{t('Anggaran untuk kategori ini juga akan terhapus.')}</p>
           </>
         )}
       </ConfirmDialog>

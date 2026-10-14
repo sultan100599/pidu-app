@@ -270,9 +270,9 @@ export default [
     "Bolaykeun"
   ],
   [
-    "Export",
-    "Export",
-    "Ékspor"
+    "Unduh",
+    "Download",
+    "Unduh"
   ],
   [
     "{filename} diunduh.",
@@ -290,12 +290,12 @@ export default [
     "Teu acan aya pangeluaran."
   ],
   [
-    "Belum ada budget untuk bulan tersebut.",
+    "Belum ada anggaran untuk bulan tersebut.",
     "No budget for this month yet.",
     "Teu acan aya anggaran kanggo sasih éta."
   ],
   [
-    "Atur budget",
+    "Atur anggaran",
     "Set a budget",
     "Atur anggaran"
   ],
@@ -365,7 +365,7 @@ export default [
     "Tingali transaksi"
   ],
   [
-    "Budget {period}",
+    "Anggaran {period}",
     "Budget for {period}",
     "Anggaran {period}"
   ],
@@ -510,9 +510,9 @@ export default [
     "Kaca anu dipilarian teu aya."
   ],
   [
-    "Kembali ke Dashboard",
-    "Back to Dashboard",
-    "Wangsul ka Dasbor"
+    "Kembali ke Ringkasan",
+    "Back to Overview",
+    "Wangsul ka Ringkesan"
   ],
   [
     "Edit Kategori",
@@ -610,7 +610,7 @@ export default [
     "Kategori ieu badé dipupus salamina:"
   ],
   [
-    "Budget untuk kategori ini juga akan terhapus.",
+    "Anggaran untuk kategori ini juga akan terhapus.",
     "Budgets for this category will also be deleted.",
     "Anggaran kanggo kategori ieu ogé badé dipupus."
   ],
@@ -640,32 +640,32 @@ export default [
     "sadayana"
   ],
   [
-    "Total budget",
+    "Total anggaran",
     "Total budget",
     "Total anggaran"
   ],
   [
-    "Lihat transaksi budget {name}",
+    "Lihat transaksi anggaran {name}",
     "View transactions for budget {name}",
     "Tingali transaksi anggaran {name}"
   ],
   [
-    "Edit budget {name}",
+    "Edit anggaran {name}",
     "Edit budget {name}",
     "Robih anggaran {name}"
   ],
   [
-    "Hapus budget {name}",
+    "Hapus anggaran {name}",
     "Delete budget {name}",
     "Pupus anggaran {name}"
   ],
   [
-    "Tidak ada budget di {period}.",
+    "Tidak ada anggaran di {period}.",
     "No budget for {period}.",
     "Teu aya anggaran dina {period}."
   ],
   [
-    "{copied} budget disalin, {skipped} dilewati.",
+    "{copied} anggaran disalin, {skipped} dilewati.",
     "{copied} budgets copied, {skipped} skipped.",
     "{copied} anggaran parantos disalin, {skipped} diliwatan."
   ],
@@ -675,7 +675,7 @@ export default [
     "Salin sasih kamari"
   ],
   [
-    "Belum ada budget untuk {period}",
+    "Belum ada anggaran untuk {period}",
     "No budget for {period} yet",
     "Teu acan aya anggaran kanggo {period}"
   ],
@@ -685,12 +685,12 @@ export default [
     "Tangtoskeun wates pangeluaran per kategori supados pangeluaran langkung kakontrol."
   ],
   [
-    "Tambah Budget",
+    "Tambah Anggaran",
     "Add budget",
     "Tambihan anggaran"
   ],
   [
-    "Edit Budget",
+    "Edit Anggaran",
     "Edit budget",
     "Robih anggaran"
   ],
@@ -700,17 +700,17 @@ export default [
     "Wates pangeluaran per kategori · {period}"
   ],
   [
-    "Hapus budget?",
+    "Hapus anggaran?",
     "Delete budget?",
     "Pupus anggaran?"
   ],
   [
-    "Budget {name} untuk {period} ({amount}) akan dihapus. Transaksi tidak ikut terhapus.",
+    "Anggaran {name} untuk {period} ({amount}) akan dihapus. Transaksi tidak ikut terhapus.",
     "Budget {name} for {period} ({amount}) will be deleted. Transactions will be kept.",
     "Anggaran {name} kanggo {period} ({amount}) badé dipupus. Transaksi tetep disimpen."
   ],
   [
-    "Salin budget bulan lalu?",
+    "Salin anggaran bulan lalu?",
     "Copy last month’s budget?",
     "Salin anggaran sasih kamari?"
   ],
@@ -720,7 +720,7 @@ export default [
     "Salin"
   ],
   [
-    "Semua budget {from} akan disalin ke {to}. Kategori yang sudah punya budget di {to} dilewati.",
+    "Semua anggaran {from} akan disalin ke {to}. Kategori yang sudah punya anggaran di {to} dilewati.",
     "All budgets from {from} will be copied to {to}. Categories with a budget for {to} will be skipped.",
     "Sadaya anggaran {from} badé disalin ka {to}. Kategori anu parantos gaduh anggaran dina {to} diliwatan."
   ],

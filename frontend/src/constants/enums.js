@@ -6,7 +6,7 @@ export const TRANSACTION_TYPES = {
 }
 
 export const PAYMENT_METHODS = {
-  cash: 'Cash',
+  cash: 'Tunai',
   transfer: 'Transfer',
   debit: 'Debit',
   credit_card: 'Kartu Kredit',

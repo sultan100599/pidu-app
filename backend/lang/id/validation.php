@@ -44,6 +44,7 @@ return [
         'file' => ':Attribute harus antara :min dan :max kilobyte.',
     ],
     'attributes' => [
+        'reminder_hour' => 'jam pengingat',
         'name' => 'nama',
         'email' => 'email',
         'password' => 'password',
@@ -90,7 +91,7 @@ return [
         'transaction_category' => 'Kategori tidak ditemukan, tidak aktif, atau tidak sesuai jenis transaksi.',
         'category_duplicate' => 'Nama kategori sudah ada untuk jenis ini.',
         'category_type_used' => 'Jenis kategori tidak bisa diubah karena sudah dipakai transaksi.',
-        'budget_duplicate' => 'Budget kategori ini untuk bulan tersebut sudah ada.',
+        'budget_duplicate' => 'Anggaran kategori ini untuk bulan tersebut sudah ada.',
         'period_limit' => 'Rentang tanggal maksimal 5 tahun.',
         'file_size' => 'Ukuran file maksimal 5 MB.',
         'wallet_duplicate' => 'Nama dompet sudah dipakai.',

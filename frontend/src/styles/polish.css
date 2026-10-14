@@ -1,9 +1,11 @@
+/* Judul: Zen Maru Gothic (pilihan pemilik 14 Okt 2026), huruf latin saja supaya ringan. */
 @font-face {
-  font-family: 'Fraunces';
+  font-family: 'Zen Maru Gothic';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('@fontsource/fraunces/files/fraunces-latin-700-normal.woff2') format('woff2');
+  src: url('@fontsource/zen-maru-gothic/files/zen-maru-gothic-latin-700-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 .page-header h1, .auth-heading h1, .sidebar-brand > span, .not-found h2 { font-weight: 700; }
@@ -98,6 +100,8 @@
 /* Nominal adalah isian utama form transaksi, jadi paling besar. */
 .amount-input-lg .form-control { font-size: 1.5rem; font-weight: 600; min-height: 3.25rem; }
 .amount-input-lg .input-group-text { font-size: 1.125rem; }
+/* Placeholder "0" tipis dan kecil supaya tidak dikira nominal yang sudah terisi (audit-001 no. 5). */
+.amount-input-lg .form-control::placeholder { font-size: 1rem; font-weight: 400; }
 .form-details { border-top: 1px solid var(--pidu-line); }
 .form-details > summary { display: flex; align-items: center; gap: 0.25rem; min-height: 44px; cursor: pointer; font-weight: 600; list-style: none; }
 .form-details > summary::-webkit-details-marker { display: none; }
@@ -124,8 +128,10 @@
 .import-help { padding-left: 1.1rem; margin-top: 0.75rem; }
 .import-help li + li { margin-top: 0.125rem; }
 
-.export-choice { padding: 0.375rem 0 0.375rem 1.75rem; }
-.export-choice .form-check-label { cursor: pointer; }
+/* Dua pilihan isi file rapat ke judul kartu, jarak mengikuti skala --pidu-space (audit-001 no. 7). */
+.export-choice { align-items: flex-start; gap: var(--pidu-space-3); margin: 0; padding: 0; }
+.export-choice .form-check-label { padding-block: var(--pidu-space-2); }
+.export-choice .form-check-input { margin: calc(var(--pidu-space-2) + 0.0625rem) 0 0; }
 
 /* Tombol hapus kategori yang masih dipakai: tetap bisa diklik untuk menjelaskan alasannya. */
 .btn.is-blocked { opacity: 0.55; }
@@ -155,6 +161,9 @@
 .wallet-totals { width: fit-content; max-width: 100%; }
 .wallet-archived > summary { cursor: pointer; font-weight: 500; }
 .wallet-note { overflow-wrap: anywhere; }
+.account-reminder-select { max-width: 12rem; }
+/* Link Ubah/Dompet di kartu saldo berdiri sendiri, jadi area tekannya 44px (audit-001 no. 6). */
+.wallet-note-link, .account-inline-link { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 0.25rem; font-weight: 600; }
 .recurring-row { padding-block: 0.75rem; }
 .recurring-row.is-paused .fw-semibold { color: var(--pidu-muted); }
 .purpose-switch .btn { min-height: 38px; }
@@ -168,6 +177,23 @@
 .topbar-actions .period-picker .form-select,
 .topbar-actions .period-picker .form-control:not(.is-invalid) { background-color: color-mix(in srgb, var(--pidu-surface) 60%, transparent); border-color: var(--pidu-glass-border); border-radius: var(--pidu-radius-control); }
 .topbar-actions .purpose-switch .btn { min-height: 44px; }
+
+/* HP: kartu angka kecil di Ringkasan dua kolom supaya grafik tidak terdorong 1,5 layar (audit-001 no. 4). */
+@media (max-width: 767.98px) {
+  .dashboard-room .dashboard-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+  .dashboard-room .dashboard-summary .balance-stack, .dashboard-room .dashboard-summary .dashboard-stat:last-child { grid-column: 1 / -1; }
+  .dashboard-summary .summary-slot:not(.balance-stack) .summary-icon { display: none; }
+  .dashboard-summary .summary-slot:not(.balance-stack) .summary-value { font-size: 1rem; }
+  .dashboard-summary .period-comparison { font-size: 0.75rem; }
+}
+
+/* HP, filter tertutup: cukup tombol Filter tanpa kartu pembungkus (audit-001 no. 3). */
+@media (max-width: 767.98px) {
+  .app-main .transaction-filters.is-closed { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .transaction-filters.is-closed > .card-body { padding: 0 !important; }
+  .transaction-filters.is-closed .btn-outline-secondary { min-height: 44px; background-color: var(--pidu-glass); -webkit-backdrop-filter: var(--pidu-glass-blur); backdrop-filter: var(--pidu-glass-blur); border-color: var(--pidu-glass-border); color: var(--pidu-ink); }
+  .transaction-filters.is-closed .btn-link { min-height: 44px; background-color: var(--pidu-glass); border-radius: var(--pidu-radius-control); }
+}
 .report-toolbar .purpose-switch.glass-strip { padding: 0.25rem; }
 .today-reminder { flex-basis: 100%; padding: 0.5rem 0.75rem; border-radius: var(--pidu-radius-control); background: var(--pidu-peach); color: var(--pidu-ink); font-size: 0.875rem; }
 .today-reminder .bi-bell { color: var(--pidu-accent); }

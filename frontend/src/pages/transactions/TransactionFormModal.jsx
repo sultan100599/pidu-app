@@ -144,7 +144,7 @@ export default function TransactionFormModal({ show, transaction, categories, wa
       const response = isEdit
         ? await transactionsApi.update(transaction.id, payload)
         : form.repeat
-          ? await recurringApi.create({ ...payload, frequency: form.repeat, start_date: form.transaction_date, notes: undefined, transaction_date: undefined })
+          ? await recurringApi.create({ ...payload, frequency: form.repeat, start_date: form.transaction_date, transaction_date: undefined })
           : await transactionsApi.create(payload)
       toast.success(response.data.message)
       setPreferences(rememberTransaction(user?.id, { ...form, wallet_id: walletId }, usageCounts))

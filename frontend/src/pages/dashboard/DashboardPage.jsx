@@ -138,14 +138,14 @@ function WalletNote({ wallet }) {
       <div className="small text-body-secondary wallet-note">
         {shown.map((w) => `${w.name} ${formatRupiah(w.balance)}`).join(' · ')}
         {list.length > shown.length && ' · ' + t('{count} lainnya', { count: list.length - shown.length })}
-        {' · '}<Link to="/wallets">{t('Dompet')}</Link>
+        {' · '}<Link to="/wallets" className="wallet-note-link">{t('Dompet')}</Link>
       </div>
     )
   }
   if (!(wallet.opening_balance > 0)) return null
   return (
     <div className="small text-body-secondary">
-      {t('Termasuk saldo awal {amount}', { amount: formatRupiah(wallet.opening_balance) })} · <Link to="/wallets">{t('Ubah')}</Link>
+      {t('Termasuk saldo awal {amount}', { amount: formatRupiah(wallet.opening_balance) })} · <Link to="/wallets" className="wallet-note-link">{t('Ubah')}</Link>
     </div>
   )
 }
@@ -155,9 +155,9 @@ function BudgetList({ budgets }) {
   if (budgets.length === 0) {
     return (
       <div className="text-center my-3">
-        <p className="text-body-secondary mb-2">{t('Belum ada budget untuk bulan tersebut.')}</p>
+        <p className="text-body-secondary mb-2">{t('Belum ada anggaran untuk bulan tersebut.')}</p>
         <Link to="/budgets" className="btn btn-sm btn-outline-primary">
-          {t('Atur budget')}
+          {t('Atur anggaran')}
         </Link>
       </div>
     )
@@ -278,7 +278,7 @@ export default function DashboardPage() {
           </Section>
           <Section
             className="dashboard-budget"
-            title={t('Budget {period}', { period: `${MONTH_NAMES[endMonth - 1]} ${endYear}` })}
+            title={t('Anggaran {period}', { period: `${MONTH_NAMES[endMonth - 1]} ${endYear}` })}
             action={
               <Link to="/budgets" className="small">
                 {t('Kelola')}
@@ -286,17 +286,26 @@ export default function DashboardPage() {
             }
           >
             <BudgetList budgets={budgets} />
+            {purpose && (
+              <p className="small text-body-secondary mt-2 mb-0">
+                <i className="bi bi-info-circle me-1" aria-hidden="true"></i>
+                {t('Anggaran dihitung dari semua dompet, tidak dipisah Pribadi atau Usaha.')}
+              </p>
+            )}
           </Section>
         </div>
       </>
     )
   }
 
+  // Rentang tanggal sudah diketahui dari periode yang dipilih, jadi subjudul tidak menunggu data (mencegah tata letak bergeser).
+  const headerRange = data?.period ?? range
+
   return (
     <div className="dashboard-room">
       <PageHeader
-        title="Dashboard"
-        subtitle={data ? `${formatDate(data.period.start_date)} – ${formatDate(data.period.end_date)}` : ' '}
+        title="Ringkasan"
+        subtitle={headerRange ? `${formatDate(headerRange.start_date)} – ${formatDate(headerRange.end_date)}` : ' '}
         actions={
           <div className="d-flex flex-wrap align-items-center gap-2">
             <PurposeSwitch value={purpose} onChange={setPurpose} />

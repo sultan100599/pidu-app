@@ -10,7 +10,7 @@ const FORMATS = [
   { key: 'pdf', label: 'PDF', icon: 'bi-file-earmark-pdf', run: exportApi.transactionsPdf },
 ]
 
-// Tombol dropdown "Export" (Excel / PDF) untuk transaksi dengan filter `params`.
+// Tombol dropdown "Unduh" (Excel / PDF) untuk transaksi dengan filter `params`.
 export default function ExportMenu({ params, disabled = false }) {
   const t = useT()
   const [open, setOpen] = useState(false)
@@ -64,7 +64,7 @@ export default function ExportMenu({ params, disabled = false }) {
         ) : (
           <i className="bi bi-download me-1" aria-hidden="true"></i>
         )}
-        {t('Export')}
+        {t('Unduh')}
       </button>
       {open && (
         <ul className="dropdown-menu dropdown-menu-end show position-absolute">

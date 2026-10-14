@@ -16,6 +16,7 @@ class RecurringResource extends JsonResource
             'amount' => Money::of($this->amount),
             'payment_method' => $this->payment_method->value,
             'description' => $this->description,
+            'notes' => $this->notes,
             'frequency' => $this->frequency->value,
             'start_date' => $this->start_date->toDateString(),
             'next_date' => $this->next_date->toDateString(),

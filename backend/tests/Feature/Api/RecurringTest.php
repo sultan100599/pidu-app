@@ -131,4 +131,11 @@ class RecurringTest extends TestCase
         $this->deleteJson("/api/recurring/{$foreign->id}")->assertNotFound();
         $this->getJson('/api/recurring')->assertJsonCount(0, 'data');
     }
+
+    public function test_notes_are_copied_to_each_created_transaction(): void
+    {
+        $json = $this->create(['start_date' => '2026-10-14', 'notes' => 'Token listrik rumah']);
+        $this->assertSame('Token listrik rumah', $json['data']['notes']);
+        $this->assertSame(['Token listrik rumah'], $this->user->transactions()->pluck('notes')->all());
+    }
 }

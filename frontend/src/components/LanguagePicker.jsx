@@ -9,8 +9,9 @@ export default function LanguagePicker() {
   const label = t('Bahasa: {current}. Ganti ke {next}', {
     current: t(current.name), next: t(next.name),
   })
+  // Nama aksesibel diawali teks yang terlihat (ID/EN/SU) supaya cocok dengan perintah suara (WCAG 2.5.3).
   return <button type="button" className="btn locale-button"
-    aria-label={label} title={label} onClick={() => setLocale(next.value)}>
+    aria-label={`${current.code}. ${label}`} title={label} onClick={() => setLocale(next.value)}>
     {current.code}
   </button>
 }

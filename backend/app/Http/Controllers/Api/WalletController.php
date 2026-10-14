@@ -20,7 +20,11 @@ class WalletController extends Controller
     {
         $this->service->primaryFor($request->user());
 
-        return WalletResource::collection($this->service->withBalances($request->user()));
+        // in_use: dompet yang punya catatan tidak bisa dihapus, jadi tombol Hapus tidak ditampilkan.
+        $wallets = $this->service->withBalances($request->user())
+            ->loadExists(['transactions', 'transfersOut', 'transfersIn', 'recurringTransactions']);
+
+        return WalletResource::collection($wallets);
     }
 
     public function store(StoreWalletRequest $request): JsonResponse

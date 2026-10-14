@@ -17,7 +17,7 @@ class ImportController extends Controller
 
     public function template(Request $request): BinaryFileResponse
     {
-        return Excel::download(new ImportTemplateExport($request->user()), 'pidu-template-impor.xlsx');
+        return Excel::download(new ImportTemplateExport($request->user()), 'pidu-template-unggah.xlsx');
     }
 
     /**

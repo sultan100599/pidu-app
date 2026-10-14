@@ -85,7 +85,7 @@ class BudgetTest extends TestCase
 
         $this->postJson('/api/budgets', $payload)
             ->assertStatus(422)
-            ->assertJsonPath('errors.category_id.0', 'Budget kategori ini untuk bulan tersebut sudah ada.');
+            ->assertJsonPath('errors.category_id.0', 'Anggaran kategori ini untuk bulan tersebut sudah ada.');
 
         $this->putJson("/api/budgets/$id", ['amount' => 750_000])
             ->assertOk()->assertJsonPath('data.amount', 750000);

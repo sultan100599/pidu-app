@@ -7,12 +7,12 @@ test('budget baru: tanpa salin bulan lalu, lalu terlampaui', async ({ page, requ
   await signIn(page, user)
   await page.goto('/budgets')
 
-  await expect(page.getByRole('heading', { name: /Belum ada budget untuk/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Belum ada anggaran untuk/ })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Salin bulan lalu' })).toHaveCount(0)
-  await expect(page.getByRole('button', { name: 'Tambah Budget' })).toHaveCount(1)
+  await expect(page.getByRole('button', { name: 'Tambah Anggaran' })).toHaveCount(1)
 
-  await page.getByRole('button', { name: 'Tambah Budget' }).click()
-  const dialog = page.getByRole('dialog', { name: 'Tambah Budget' })
+  await page.getByRole('button', { name: 'Tambah Anggaran' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Tambah Anggaran' })
   await expect(dialog.getByLabel('Bulan')).toHaveCount(0)
   await dialog.getByLabel('Kategori pengeluaran').selectOption({ label: 'Makanan' })
   await dialog.getByLabel('Batas pengeluaran').fill('20000')

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DeleteAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\UserResource;
+use App\Services\AccountService;
 use App\Services\WalletService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
@@ -42,5 +45,22 @@ class AccountController extends Controller
         $user->tokens()->whereKeyNot($user->currentAccessToken()->getKey())->delete();
 
         return response()->json(['message' => __('messages.password_changed')]);
+    }
+
+    /**
+     * Keluar dari semua perangkat, termasuk yang sedang dipakai.
+     */
+    public function logoutAll(Request $request): JsonResponse
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json(['message' => __('messages.logged_out_all')]);
+    }
+
+    public function destroy(DeleteAccountRequest $request, AccountService $accounts): JsonResponse
+    {
+        $accounts->delete($request->user());
+
+        return response()->json(['message' => __('messages.account_deleted')]);
     }
 }

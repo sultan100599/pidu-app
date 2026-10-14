@@ -142,6 +142,26 @@ Catatan: rencana awal menyebut Laravel 11 dan React 18. Laravel 11 sudah dibloki
 - Saldo awal di halaman Akun dipindah ke halaman Dompet.
 - Tes: backend 108 lolos (baru: `WalletTest`, `RecurringTest`, impor kolom Dompet); e2e 13 lolos (baru: `wallets.spec.js`). Rincian `docs/lead/report-18.md`. Audit antislop `anti-slop/audit-002-2026-10-14.md` (7 temuan) menunggu pilihan nomor.
 
+### Phase 19: Rapikan & lengkapi (14 Okt, Claude)
+- **Font judul** diganti dari Fraunces ke **Zen Maru Gothic** (kamu memilih dari 3 contoh di Anbo; alasannya di `DESIGN.md`).
+- **Istilah baru:** Ringkasan, Anggaran, Unduh, Unggah, Tunai, Unduh & Cadangan. Berlaku di menu, judul halaman, pesan server, sheet Excel, dan nama file template. Bahasa Inggris: Overview / Download / Upload.
+- **Halaman Akun:**
+  - Jam pengingat bisa diatur (07.00 sampai 21.00 atau Mati; bawaan 17.00).
+  - Tombol **Keluar dari semua perangkat**.
+  - **Hapus akun** dengan password; semua data dan file cadangannya ikut terhapus.
+- **Audit Phase 18 no. 1–3:**
+  - Tombol dompet yang pasti ditolak disembunyikan.
+  - Catatan ikut tersimpan di transaksi rutin.
+  - Panel Anggaran diberi keterangan saat saringan Pribadi/Usaha aktif.
+- **Audit Phase 15 no. 3–7:** tombol Filter di HP, kartu Ringkasan HP dua kolom, placeholder nominal, link 44px, jarak kartu Unduh data.
+- **Data demo** sampai hari ini, termasuk anggaran Oktober. Database asli dicadangkan ke `backend/storage/app/pre-phase19/` sebelum migrasi.
+- **Aksesibilitas:**
+  - Lighthouse 100 di Masuk, Ringkasan, Akun, dan Transaksi.
+  - Pergeseran tata letak Ringkasan HP turun dari 0,219 ke 0,037.
+  - Nama tombol bahasa sudah cocok dengan teksnya.
+  - Dialog bisa dipakai dengan keyboard.
+- **Tes:** backend 112, e2e 16. Rincian di `docs/lead/report-19.md`. Skill yang dipakai: antislop (semua sub-skill), impeccable, improve-ui.
+
 ## 5. Anti-slop (aturan UI untuk AI agent)
 
 **Sumber:** https://github.com/miqdadbadjuber/anti-slop (versi 3.2.19). Dipasang 29 Sep 2026; dipakai (mode "selama pengerjaan") untuk redesign Phase 11–12 oleh Codex.
@@ -194,14 +214,14 @@ Hanya folder skill yang dipasang, tanpa repo utuh (sama dengan yang dilakukan in
 - [x] Transaksi rutin (mis. listrik tiap tanggal 5), dibuat otomatis oleh scheduler di `npm start`.
 - [x] Pengingat: **banner di aplikasi saja** (pilihan user), "Belum ada catatan hari ini" + tombol Catat, bisa ditutup sampai besok.
 
-**Phase 19: Rapikan & lengkapi**
-- [ ] Ganti istilah (pilihan user: semua): Dashboard → Ringkasan, Budget → Anggaran, Export → Unduh, Impor → Unggah, Cash → Tunai, Export & Backup → Unduh & Cadangan.
-- [ ] Ganti font judul Fraunces (pilihan user): tunjukkan 2–3 contoh font serif hangat dulu, user memilih.
-- [ ] Sisa audit antislop `anti-slop/audit-001-2026-10-13.md` no. 3–7: kotak Filter di HP, dashboard HP terlalu panjang, placeholder "0" di Nominal, link "Ubah" terlalu kecil, jarak pilihan di kartu Unduh data.
-- [ ] Cek aksesibilitas resmi: Lighthouse, pembaca layar, navigasi keyboard penuh.
-- [ ] Data demo diperpanjang sampai bulan berjalan (sekarang berhenti 28 Sep).
-- [ ] Hapus akun, dan "keluar dari semua perangkat" di halaman Akun. Catatan: menghapus user langsung akan gagal karena transaksi/transaksi rutin menahan dompet & kategori; hapus berurutan (transaksi, pindahan, rutin, budget, dompet, kategori, token, user).
-- [ ] Pilih nomor perbaikan dari audit antislop Phase 18 (`anti-slop/audit-002-2026-10-14.md`).
+**Phase 19: Rapikan & lengkapi** (selesai 14 Okt, lihat riwayat di atas)
+- [x] Ganti istilah (pilihan user: semua): Dashboard → Ringkasan, Budget → Anggaran, Export → Unduh, Impor → Unggah, Cash → Tunai, Export & Backup → Unduh & Cadangan.
+- [x] Ganti font judul Fraunces (pilihan user): tunjukkan 2–3 contoh font serif hangat dulu, user memilih.
+- [x] Sisa audit antislop `anti-slop/audit-001-2026-10-13.md` no. 3–7: kotak Filter di HP, dashboard HP terlalu panjang, placeholder "0" di Nominal, link "Ubah" terlalu kecil, jarak pilihan di kartu Unduh data.
+- [x] Cek aksesibilitas resmi: Lighthouse, pembaca layar, navigasi keyboard penuh.
+- [x] Data demo diperpanjang sampai bulan berjalan (sekarang berhenti 28 Sep).
+- [x] Hapus akun, dan "keluar dari semua perangkat" di halaman Akun. Catatan: menghapus user langsung akan gagal karena transaksi/transaksi rutin menahan dompet & kategori; hapus berurutan (transaksi, pindahan, rutin, budget, dompet, kategori, token, user).
+- [x] Pilih nomor perbaikan dari audit antislop Phase 18 (`anti-slop/audit-002-2026-10-14.md`).
 
 **Menunggu dari user**
 - [ ] Isi `MAIL_USERNAME` (alamat Gmail) dan `MAIL_PASSWORD` (App Password 16 huruf) di `backend/.env`, ganti `MAIL_MAILER=smtp`, lalu email lupa password diuji sungguhan.

@@ -16,6 +16,11 @@ class TransactionSeeder extends Seeder
     /** @var array<int, array<string, mixed>> */
     private array $rows = [];
 
+    /** Rentang tanggal yang boleh disimpan: setelah $after, sampai $until (hari ini). */
+    private string $after = '';
+
+    private string $until = '9999-12-31';
+
     private User $user;
 
     /**
@@ -31,6 +36,9 @@ class TransactionSeeder extends Seeder
         $this->user = $demo;
         $this->cat = $demo->categories()->get()->keyBy('name')->map(fn ($c) => $c->id)->all();
 
+        $today = now()->startOfDay();
+        $this->until = $today->toDateString();
+
         if ($demo->transactions()->doesntExist()) {
             // 2024 & 2025: data ringan, 1 pemasukan + beberapa pengeluaran per bulan
             foreach ([2024, 2025] as $year) {
@@ -39,9 +47,15 @@ class TransactionSeeder extends Seeder
                 }
             }
 
-            // Juni–September 2026: data realistis lengkap (sampai 2026-09-28)
-            foreach ([6, 7, 8, 9] as $month) {
-                $this->seedFullMonth(2026, $month);
+            // Juni 2026 sampai bulan berjalan: data realistis lengkap, berhenti di hari ini.
+            $this->seedFullMonthsUntil(Carbon::create(2026, 6, 1), $today);
+        } else {
+            // Database lama: tambah data demo setelah transaksi terakhir sampai hari ini.
+            $last = $demo->transactions()->max('transaction_date');
+            if ($last && $last < $this->until) {
+                $this->after = Carbon::parse($last)->toDateString();
+                $this->seedFullMonthsUntil(Carbon::parse($last)->startOfMonth(), $today);
+                $this->after = '';
             }
         }
 
@@ -52,13 +66,16 @@ class TransactionSeeder extends Seeder
         }
     }
 
+    private function seedFullMonthsUntil(Carbon $from, Carbon $today): void
+    {
+        for ($month = $from->copy()->startOfMonth(); $month->lte($today); $month->addMonth()) {
+            $this->seedFullMonth($month->year, $month->month);
+        }
+    }
+
     private function seedFullMonth(int $year, int $month): void
     {
         $lastDay = Carbon::create($year, $month, 1)->daysInMonth;
-
-        if ($year === 2026 && $month === 9) {
-            $lastDay = 28; // hari ini 2026-09-28
-        }
 
         $d = fn (int $day) => sprintf('%04d-%02d-%02d', $year, $month, min($day, $lastDay));
 
@@ -239,6 +256,11 @@ class TransactionSeeder extends Seeder
      */
     private function flush(): void
     {
+        // Tanggal setelah hari ini (atau sebelum batas tambahan) tidak ikut disimpan.
+        $this->rows = array_values(array_filter(
+            $this->rows,
+            fn (array $row) => $row['transaction_date'] > $this->after && $row['transaction_date'] <= $this->until,
+        ));
         if ($this->rows === []) {
             return;
         }

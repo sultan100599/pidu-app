@@ -25,6 +25,12 @@ class User extends Authenticatable
         'email',
         'password',
         'opening_balance',
+        'reminder_hour',
+    ];
+
+    /** Bawaan baru daftar: pengingat mulai jam 17 (sama dengan default kolom). */
+    protected $attributes = [
+        'reminder_hour' => 17,
     ];
 
     public function sendPasswordResetNotification($token): void
@@ -83,6 +89,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'opening_balance' => 'decimal:2',
+            'reminder_hour' => 'integer',
         ];
     }
 }

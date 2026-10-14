@@ -44,6 +44,7 @@ return [
         'file' => ':Attribute kedah antawis :min sareng :max kilobyte.',
     ],
     'attributes' => [
+        'reminder_hour' => 'jam panginget',
         'name' => 'nami',
         'email' => 'email',
         'password' => 'kecap akses',

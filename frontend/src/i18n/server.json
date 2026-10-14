@@ -10,7 +10,7 @@
         "Parantos kaluar."
     ],
     [
-        "Backup berhasil dibuat.",
+        "Cadangan berhasil dibuat.",
         "Backup created.",
         "Cadangan parantos didamel."
     ],
@@ -30,17 +30,17 @@
         "Transaksi parantos dipupus."
     ],
     [
-        "Budget berhasil ditambahkan.",
+        "Anggaran berhasil ditambahkan.",
         "Budget added.",
         "Anggaran parantos ditambihan."
     ],
     [
-        "Budget berhasil diperbarui.",
+        "Anggaran berhasil diperbarui.",
         "Budget updated.",
         "Anggaran parantos diropéa."
     ],
     [
-        "Budget berhasil dihapus.",
+        "Anggaran berhasil dihapus.",
         "Budget deleted.",
         "Anggaran parantos dipupus."
     ],
@@ -120,9 +120,9 @@
         "Masih aya {count} baris anu lepat."
     ],
     [
-        "{count} transaksi berhasil diimpor.",
-        "{count} transactions imported.",
-        "{count} transaksi parantos diimpor."
+        "{count} transaksi berhasil diunggah.",
+        "{count} transactions uploaded.",
+        "{count} transaksi parantos diunggah."
     ],
     [
         "{count} duplikat dilewati.",
@@ -135,9 +135,9 @@
         "{count} kategori énggal parantos didamel."
     ],
     [
-        "Maksimal {count} baris per impor. Pecah file menjadi beberapa bagian.",
-        "Import up to {count} rows at a time. Split the file into smaller files.",
-        "Maksimal {count} baris sakali impor. Mangga bagi berkas kana sababaraha bagian."
+        "Maksimal {count} baris sekali unggah. Pecah file menjadi beberapa bagian.",
+        "Upload up to {count} rows at a time. Split the file into smaller files.",
+        "Maksimal {count} baris sakali unggah. Mangga bagi berkas kana sababaraha bagian."
     ],
     [
         "File tidak berisi baris transaksi.",
@@ -150,9 +150,9 @@
         "Berkas teu tiasa dibaca. Mangga anggo .xlsx, .xls, atanapi .csv."
     ],
     [
-        "Kolom wajib tidak ditemukan di baris pertama: {columns}. Gunakan template impor.",
-        "Required columns missing from the first row: {columns}. Use the import template.",
-        "Kolom wajib teu kapendak dina baris kahiji: {columns}. Mangga anggo témplat impor."
+        "Kolom wajib tidak ditemukan di baris pertama: {columns}. Gunakan template unggah.",
+        "Required columns missing from the first row: {columns}. Use the upload template.",
+        "Kolom wajib teu kapendak dina baris kahiji: {columns}. Mangga anggo témplat unggah."
     ],
     [
         "Tanggal tidak valid (gunakan tanggal Excel atau format dd/mm/yyyy).",
@@ -180,9 +180,9 @@
         "Métode teu dikenal (pilihan: {choices})."
     ],
     [
-        "PDF dibatasi {max} transaksi (hasil filter: {count}). Persempit filter atau gunakan export Excel.",
-        "PDF is limited to {max} transactions ({count} match your filters). Narrow the filters or export to Excel.",
-        "PDF diwatesan {max} transaksi (hasil saringan: {count}). Mangga heureutkeun saringan atanapi ékspor ka Excel."
+        "PDF dibatasi {max} transaksi (hasil filter: {count}). Persempit filter atau unduh sebagai Excel.",
+        "PDF is limited to {max} transactions ({count} match your filters). Narrow the filters or download as Excel.",
+        "PDF diwatesan {max} transaksi (hasil saringan: {count}). Mangga heureutkeun saringan atanapi unduh janten Excel."
     ],
     [
         "Minggu {number}",
@@ -200,7 +200,7 @@
         "Pangeluaran"
     ],
     [
-        "Cash",
+        "Tunai",
         "Cash",
         "Tunai"
     ],
@@ -238,6 +238,16 @@
         "Data akun disimpan.",
         "Account saved.",
         "Data akun parantos disimpen."
+    ],
+    [
+        "Kamu sudah keluar dari semua perangkat.",
+        "You have been signed out of every device.",
+        "Anjeun parantos kaluar tina sadaya perangkat."
+    ],
+    [
+        "Akun dan semua datamu sudah dihapus.",
+        "Your account and all its data have been deleted.",
+        "Akun sareng sadaya data anjeun parantos dipupus."
     ],
     [
         "Password berhasil diganti.",
@@ -603,6 +613,16 @@
         "{attribute} harus antara {min} dan {max} kilobyte.",
         "The {attribute} must be between {min} and {max} kilobytes.",
         "{attribute} kedah antawis {min} sareng {max} kilobyte."
+    ],
+    [
+        "jam pengingat",
+        "reminder time",
+        "jam panginget"
+    ],
+    [
+        "Jam pengingat",
+        "Reminder time",
+        "Jam panginget"
     ],
     [
         "nama",
@@ -1010,7 +1030,7 @@
         "Jinis kategori teu tiasa dirobih kumargi parantos dianggo ku transaksi."
     ],
     [
-        "Budget kategori ini untuk bulan tersebut sudah ada.",
+        "Anggaran kategori ini untuk bulan tersebut sudah ada.",
         "A budget for this category and month already exists.",
         "Anggaran kategori ieu kanggo sasih éta parantos aya."
     ],

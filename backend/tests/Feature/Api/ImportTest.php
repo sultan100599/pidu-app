@@ -106,7 +106,7 @@ class ImportTest extends TestCase
 
         $this->import($file, ['dry_run' => 0])
             ->assertCreated()
-            ->assertJsonPath('message', '3 transaksi berhasil diimpor. 2 kategori baru dibuat.')
+            ->assertJsonPath('message', '3 transaksi berhasil diunggah. 2 kategori baru dibuat.')
             ->assertJsonPath('data.imported', 3);
 
         $this->assertSame(3, $this->user->transactions()->count());
@@ -162,7 +162,7 @@ class ImportTest extends TestCase
         $three = $this->xlsx([self::HEADER, ...array_fill(0, 3, ['2026-09-01', 'Pengeluaran', 'Makanan', 'Nasi', null, 'Cash', 25000])]);
         $this->import($three, ['dry_run' => 0])
             ->assertCreated()
-            ->assertJsonPath('message', '1 transaksi berhasil diimpor. 2 duplikat dilewati.');
+            ->assertJsonPath('message', '1 transaksi berhasil diunggah. 2 duplikat dilewati.');
         $this->assertSame(3, Transaction::count());
 
         // skip_duplicates=0 → semua diimpor
@@ -205,7 +205,7 @@ class ImportTest extends TestCase
 
         $this->import($this->xlsx([['Tanggal', 'Keterangan'], ['2026-09-01', 'x']]))
             ->assertStatus(422)
-            ->assertJsonPath('errors.file.0', 'Kolom wajib tidak ditemukan di baris pertama: Kategori, Nominal. Gunakan template impor.');
+            ->assertJsonPath('errors.file.0', 'Kolom wajib tidak ditemukan di baris pertama: Kategori, Nominal. Gunakan template unggah.');
 
         $this->import($this->xlsx([self::HEADER]))
             ->assertStatus(422)->assertJsonPath('errors.file.0', 'File tidak berisi baris transaksi.');
@@ -217,7 +217,7 @@ class ImportTest extends TestCase
     public function test_template_download(): void
     {
         $response = $this->get('/api/import/template')->assertOk();
-        $this->assertStringContainsString('pidu-template-impor.xlsx', $response->headers->get('content-disposition'));
+        $this->assertStringContainsString('pidu-template-unggah.xlsx', $response->headers->get('content-disposition'));
 
         $path = tempnam(sys_get_temp_dir(), 'tpl').'.xlsx';
         copy($response->baseResponse->getFile()->getPathname(), $path);

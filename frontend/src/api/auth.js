@@ -28,6 +28,14 @@ export function updateAccount(payload) {
   return client.put('/account', payload)
 }
 
+export function logoutAll() {
+  return client.post('/account/logout-all')
+}
+
+export function deleteAccount(password) {
+  return client.delete('/account', { data: { password } })
+}
+
 export function changePassword({ current_password, password }) {
   return client.put('/account/password', { current_password, password })
 }
