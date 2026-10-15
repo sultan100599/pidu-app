@@ -32,3 +32,10 @@ npm-debug.log*
 # Tes end-to-end (Playwright)
 frontend/test-results/
 frontend/playwright-report/
+
+# Lokal saja, tidak ikut ke GitHub
+.claude/skills/
+.claude/agents/
+.claude/anbo-mcp.json
+.anbo/
+wp3439114.jpg
